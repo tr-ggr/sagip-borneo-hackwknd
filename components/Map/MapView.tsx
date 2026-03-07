@@ -3,12 +3,14 @@
 import { useEffect, useRef, useCallback } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
+import Feature from "ol/Feature";
 import TileLayer from "ol/layer/Tile";
 import VectorLayer from "ol/layer/Vector";
+import Point from "ol/geom/Point";
 import VectorSource from "ol/source/Vector";
-import XYZ from "ol/source/XYZ";
+import OSM from "ol/source/OSM";
 import { fromLonLat, toLonLat, transformExtent } from "ol/proj";
-import { Style, Fill, Stroke } from "ol/style";
+import { Style, Fill, Stroke, Circle as CircleStyle } from "ol/style";
 import GeoJSON from "ol/format/GeoJSON";
 import { defaults as defaultControls } from "ol/control";
 import type { MapBrowserEvent } from "ol";
@@ -65,6 +67,15 @@ const ASEAN_GEOJSON = {
 // Polygon ring (WGS84 lon/lat) extracted from ASEAN_GEOJSON for PIP check
 const ASEAN_RING = ASEAN_GEOJSON.features[0].geometry.coordinates[0] as [number, number][];
 
+// Outer ring for an inverted polygon mask that dims everything outside ASEAN.
+const OUTER_MASK_RING: [number, number][] = [
+  [-180, 85],
+  [180, 85],
+  [180, -85],
+  [-180, -85],
+  [-180, 85],
+];
+
 /**
  * Ray-casting point-in-polygon test (WGS84 lon/lat).
  * Returns true if the point [lon, lat] is inside the ASEAN polygon.
@@ -107,14 +118,35 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
-    // Dark tile layer using CartoDB dark matter (no API key needed)
+    // Light OSM basemap to match the requested map style.
     const tileLayer = new TileLayer({
-      source: new XYZ({
-        url: "https://{a-d}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        attributions:
-          '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      source: new OSM({
         maxZoom: 19,
       }),
+    });
+
+    const outsideMaskLayer = new VectorLayer({
+      source: new VectorSource({
+        features: new GeoJSON().readFeatures({
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              properties: { name: "Outside ASEAN Mask" },
+              geometry: {
+                type: "Polygon",
+                coordinates: [OUTER_MASK_RING, [...ASEAN_RING].reverse()],
+              },
+            },
+          ],
+        }, {
+          featureProjection: "EPSG:3857",
+        }),
+      }),
+      style: new Style({
+        fill: new Fill({ color: "rgba(10, 32, 52, 0.45)" }),
+      }),
+      zIndex: 1,
     });
 
     // ASEAN region subtle highlight layer
@@ -125,10 +157,10 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
         }),
       }),
       style: new Style({
-        fill: new Fill({ color: "rgba(0, 56, 147, 0.18)" }),
-        stroke: new Stroke({ color: "rgba(245, 211, 18, 0.55)", width: 1.8 }),
+        fill: new Fill({ color: "rgba(0, 56, 147, 0.06)" }),
+        stroke: new Stroke({ color: "rgba(245, 211, 18, 0.6)", width: 1.6 }),
       }),
-      zIndex: 1,
+      zIndex: 2,
     });
 
     // Marker layer for selected location
@@ -141,7 +173,7 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
 
     const map = new Map({
       target: mapRef.current,
-      layers: [tileLayer, regionLayer, markerLayer],
+      layers: [tileLayer, outsideMaskLayer, regionLayer, markerLayer],
       view: new View({
         center: fromLonLat([ASEAN_CENTER_WGS84.lon, ASEAN_CENTER_WGS84.lat]),
         zoom: ASEAN_DEFAULT_ZOOM,
@@ -181,9 +213,29 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
 
   // Fly to selected location when it changes externally (e.g., from search)
   useEffect(() => {
+    const markerSource = clickMarkerLayer.current?.getSource();
+    if (markerSource) markerSource.clear();
+
     if (selectedLat === undefined || selectedLon === undefined) return;
+
     const view = mapInstance.current?.getView();
-    if (!view) return;
+    if (!view || !markerSource) return;
+
+    const markerFeature = new Feature({
+      geometry: new Point(fromLonLat([selectedLon, selectedLat])),
+    });
+
+    markerFeature.setStyle(
+      new Style({
+        image: new CircleStyle({
+          radius: 8,
+          fill: new Fill({ color: "rgba(220, 38, 38, 0.95)" }),
+          stroke: new Stroke({ color: "#ffffff", width: 2.5 }),
+        }),
+      }),
+    );
+
+    markerSource.addFeature(markerFeature);
 
     view.animate({
       center: fromLonLat([selectedLon, selectedLat]),
@@ -196,7 +248,7 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
     <div
       ref={mapRef}
       className="w-full h-full"
-      style={{ background: "#06101f" }}
+      style={{ background: "#cfe8f3" }}
       aria-label="ASEAN interactive weather map"
     />
   );
