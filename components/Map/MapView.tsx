@@ -62,6 +62,26 @@ const ASEAN_GEOJSON = {
   ],
 };
 
+// Polygon ring (WGS84 lon/lat) extracted from ASEAN_GEOJSON for PIP check
+const ASEAN_RING = ASEAN_GEOJSON.features[0].geometry.coordinates[0] as [number, number][];
+
+/**
+ * Ray-casting point-in-polygon test (WGS84 lon/lat).
+ * Returns true if the point [lon, lat] is inside the ASEAN polygon.
+ */
+function isInsideAsean(lon: number, lat: number): boolean {
+  let inside = false;
+  for (let i = 0, j = ASEAN_RING.length - 1; i < ASEAN_RING.length; j = i++) {
+    const [xi, yi] = ASEAN_RING[i];
+    const [xj, yj] = ASEAN_RING[j];
+    const intersects =
+      (yi > lat) !== (yj > lat) &&
+      lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi;
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
 /**
  * MapView renders a full-screen OpenLayers map locked to the ASEAN region.
  * Click anywhere inside to select a location for weather data.
@@ -72,9 +92,13 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
   const clickMarkerLayer = useRef<VectorLayer<VectorSource> | null>(null);
 
   const handleMapClick = useCallback(
-    (evt: MapBrowserEvent<MouseEvent>) => {
+    (evt: MapBrowserEvent<PointerEvent>) => {
       const coordinate = evt.coordinate;
       const [lon, lat] = toLonLat(coordinate);
+
+      // Ignore clicks that fall outside the ASEAN polygon boundary
+      if (!isInsideAsean(lon, lat)) return;
+
       onLocationSelect(lat, lon);
     },
     [onLocationSelect],
@@ -101,8 +125,8 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
         }),
       }),
       style: new Style({
-        fill: new Fill({ color: "rgba(0, 56, 147, 0.06)" }),
-        stroke: new Stroke({ color: "rgba(245, 211, 18, 0.3)", width: 1.5 }),
+        fill: new Fill({ color: "rgba(0, 56, 147, 0.18)" }),
+        stroke: new Stroke({ color: "rgba(245, 211, 18, 0.55)", width: 1.8 }),
       }),
       zIndex: 1,
     });
@@ -131,11 +155,11 @@ export default function MapView({ onLocationSelect, selectedLat, selectedLon }: 
 
     map.on("click", handleMapClick);
 
-    // Change cursor to crosshair over map
-    map.on("pointermove", () => {
-      if (mapRef.current) {
-        mapRef.current.style.cursor = "crosshair";
-      }
+    // Change cursor based on whether pointer is inside the ASEAN boundary
+    map.on("pointermove", (evt) => {
+      if (!mapRef.current) return;
+      const [lon, lat] = toLonLat(evt.coordinate);
+      mapRef.current.style.cursor = isInsideAsean(lon, lat) ? "crosshair" : "not-allowed";
     });
 
     mapInstance.current = map;
