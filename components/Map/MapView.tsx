@@ -42,12 +42,20 @@ const ASEAN_GEOJSON = {
       properties: { name: "ASEAN Region" },
       geometry: {
         type: "Polygon",
-        // A simple approximation outline of the ASEAN region
+        // Approximation outline of the ASEAN region — wraps around Philippines
         coordinates: [[
+          // Western edge: Myanmar north → Malay peninsula
           [92.0, 28.5], [100.0, 28.5], [104.0, 22.0], [108.0, 21.5],
-          [110.0, 20.0], [117.0, 7.0], [120.0, 4.5], [126.5, 7.5],
-          [130.0, 6.0], [141.0, -7.0], [141.0, -11.5], [115.0, -11.5],
-          [105.0, -8.5], [95.0, 1.0], [92.0, 5.0], [92.0, 28.5],
+          // NE: up to northern Philippines / Luzon (~21°N)
+          [110.0, 20.0], [114.0, 22.0], [122.0, 21.5],
+          // East of Philippines: sweep down the eastern coast
+          [127.0, 18.0], [127.0, 10.0], [127.0, 5.5],
+          // South-east corner: eastern Indonesia / Papua
+          [141.0, -7.0], [141.0, -11.5],
+          // Southern edge back west: Indonesia, Timor-Leste
+          [115.0, -11.5], [105.0, -8.5],
+          // West coast back up: Sumatra, Malay peninsula, Myanmar
+          [95.0, 1.0], [92.0, 5.0], [92.0, 28.5],
         ]],
       },
     },
