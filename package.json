@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev:mobile": "nx run mobile:dev",
+    "dev:tracker": "nx run tracker:dev",
     "dev:api": "nx serve api"
   },
   "private": true,
