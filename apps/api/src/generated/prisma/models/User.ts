@@ -200,6 +200,21 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
+  familiesCreated?: Prisma.FamilyListRelationFilter
+  familyMemberships?: Prisma.FamilyMemberListRelationFilter
+  volunteerProfile?: Prisma.XOR<Prisma.VolunteerProfileNullableScalarRelationFilter, Prisma.VolunteerProfileWhereInput> | null
+  volunteerApplications?: Prisma.VolunteerApplicationListRelationFilter
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationListRelationFilter
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileListRelationFilter
+  helpRequests?: Prisma.HelpRequestListRelationFilter
+  helpAssignments?: Prisma.HelpAssignmentListRelationFilter
+  warningsCreated?: Prisma.WarningEventListRelationFilter
+  warningEventLogs?: Prisma.WarningEventLogListRelationFilter
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogListRelationFilter
+  helpRequestEvents?: Prisma.HelpRequestEventListRelationFilter
+  mapPinsReported?: Prisma.MapPinStatusListRelationFilter
+  locationSnapshot?: Prisma.XOR<Prisma.UserLocationSnapshotNullableScalarRelationFilter, Prisma.UserLocationSnapshotWhereInput> | null
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -212,6 +227,21 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
+  familiesCreated?: Prisma.FamilyOrderByRelationAggregateInput
+  familyMemberships?: Prisma.FamilyMemberOrderByRelationAggregateInput
+  volunteerProfile?: Prisma.VolunteerProfileOrderByWithRelationInput
+  volunteerApplications?: Prisma.VolunteerApplicationOrderByRelationAggregateInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationOrderByRelationAggregateInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileOrderByRelationAggregateInput
+  helpRequests?: Prisma.HelpRequestOrderByRelationAggregateInput
+  helpAssignments?: Prisma.HelpAssignmentOrderByRelationAggregateInput
+  warningsCreated?: Prisma.WarningEventOrderByRelationAggregateInput
+  warningEventLogs?: Prisma.WarningEventLogOrderByRelationAggregateInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogOrderByRelationAggregateInput
+  helpRequestEvents?: Prisma.HelpRequestEventOrderByRelationAggregateInput
+  mapPinsReported?: Prisma.MapPinStatusOrderByRelationAggregateInput
+  locationSnapshot?: Prisma.UserLocationSnapshotOrderByWithRelationInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -227,6 +257,21 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
+  familiesCreated?: Prisma.FamilyListRelationFilter
+  familyMemberships?: Prisma.FamilyMemberListRelationFilter
+  volunteerProfile?: Prisma.XOR<Prisma.VolunteerProfileNullableScalarRelationFilter, Prisma.VolunteerProfileWhereInput> | null
+  volunteerApplications?: Prisma.VolunteerApplicationListRelationFilter
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationListRelationFilter
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileListRelationFilter
+  helpRequests?: Prisma.HelpRequestListRelationFilter
+  helpAssignments?: Prisma.HelpAssignmentListRelationFilter
+  warningsCreated?: Prisma.WarningEventListRelationFilter
+  warningEventLogs?: Prisma.WarningEventLogListRelationFilter
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogListRelationFilter
+  helpRequestEvents?: Prisma.HelpRequestEventListRelationFilter
+  mapPinsReported?: Prisma.MapPinStatusListRelationFilter
+  locationSnapshot?: Prisma.XOR<Prisma.UserLocationSnapshotNullableScalarRelationFilter, Prisma.UserLocationSnapshotWhereInput> | null
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -265,6 +310,21 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -277,6 +337,21 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -289,6 +364,21 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -301,6 +391,21 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -368,6 +473,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -412,6 +522,228 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
+export type UserCreateNestedOneWithoutFamiliesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFamiliesCreatedInput, Prisma.UserUncheckedCreateWithoutFamiliesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFamiliesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFamiliesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFamiliesCreatedInput, Prisma.UserUncheckedCreateWithoutFamiliesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFamiliesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutFamiliesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFamiliesCreatedInput, Prisma.UserUpdateWithoutFamiliesCreatedInput>, Prisma.UserUncheckedUpdateWithoutFamiliesCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutFamilyMembershipsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFamilyMembershipsInput, Prisma.UserUncheckedCreateWithoutFamilyMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFamilyMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFamilyMembershipsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFamilyMembershipsInput, Prisma.UserUncheckedCreateWithoutFamilyMembershipsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFamilyMembershipsInput
+  upsert?: Prisma.UserUpsertWithoutFamilyMembershipsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFamilyMembershipsInput, Prisma.UserUpdateWithoutFamilyMembershipsInput>, Prisma.UserUncheckedUpdateWithoutFamilyMembershipsInput>
+}
+
+export type UserCreateNestedOneWithoutLocationSnapshotInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLocationSnapshotInput, Prisma.UserUncheckedCreateWithoutLocationSnapshotInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLocationSnapshotInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLocationSnapshotNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLocationSnapshotInput, Prisma.UserUncheckedCreateWithoutLocationSnapshotInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLocationSnapshotInput
+  upsert?: Prisma.UserUpsertWithoutLocationSnapshotInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLocationSnapshotInput, Prisma.UserUpdateWithoutLocationSnapshotInput>, Prisma.UserUncheckedUpdateWithoutLocationSnapshotInput>
+}
+
+export type UserCreateNestedOneWithoutVolunteerApplicationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApplicationsInput, Prisma.UserUncheckedCreateWithoutVolunteerApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutVolunteerReviewsGivenInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerReviewsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerReviewsGivenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerReviewsGivenInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutVolunteerApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApplicationsInput, Prisma.UserUncheckedCreateWithoutVolunteerApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerApplicationsInput
+  upsert?: Prisma.UserUpsertWithoutVolunteerApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVolunteerApplicationsInput, Prisma.UserUpdateWithoutVolunteerApplicationsInput>, Prisma.UserUncheckedUpdateWithoutVolunteerApplicationsInput>
+}
+
+export type UserUpdateOneWithoutVolunteerReviewsGivenNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerReviewsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerReviewsGivenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerReviewsGivenInput
+  upsert?: Prisma.UserUpsertWithoutVolunteerReviewsGivenInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVolunteerReviewsGivenInput, Prisma.UserUpdateWithoutVolunteerReviewsGivenInput>, Prisma.UserUncheckedUpdateWithoutVolunteerReviewsGivenInput>
+}
+
+export type UserCreateNestedOneWithoutVolunteerProfileInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerProfileInput, Prisma.UserUncheckedCreateWithoutVolunteerProfileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerProfileInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutVolunteerApprovalsGivenInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApprovalsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerApprovalsGivenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerApprovalsGivenInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutVolunteerProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerProfileInput, Prisma.UserUncheckedCreateWithoutVolunteerProfileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerProfileInput
+  upsert?: Prisma.UserUpsertWithoutVolunteerProfileInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVolunteerProfileInput, Prisma.UserUpdateWithoutVolunteerProfileInput>, Prisma.UserUncheckedUpdateWithoutVolunteerProfileInput>
+}
+
+export type UserUpdateOneWithoutVolunteerApprovalsGivenNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApprovalsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerApprovalsGivenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerApprovalsGivenInput
+  upsert?: Prisma.UserUpsertWithoutVolunteerApprovalsGivenInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVolunteerApprovalsGivenInput, Prisma.UserUpdateWithoutVolunteerApprovalsGivenInput>, Prisma.UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput>
+}
+
+export type UserCreateNestedOneWithoutWarningsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWarningsCreatedInput, Prisma.UserUncheckedCreateWithoutWarningsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarningsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWarningsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWarningsCreatedInput, Prisma.UserUncheckedCreateWithoutWarningsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarningsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutWarningsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWarningsCreatedInput, Prisma.UserUpdateWithoutWarningsCreatedInput>, Prisma.UserUncheckedUpdateWithoutWarningsCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutEvacuationRouteSuggestionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEvacuationRouteSuggestionsInput, Prisma.UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEvacuationRouteSuggestionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutEvacuationRouteSuggestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEvacuationRouteSuggestionsInput, Prisma.UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEvacuationRouteSuggestionsInput
+  upsert?: Prisma.UserUpsertWithoutEvacuationRouteSuggestionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEvacuationRouteSuggestionsInput, Prisma.UserUpdateWithoutEvacuationRouteSuggestionsInput>, Prisma.UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput>
+}
+
+export type UserCreateNestedOneWithoutHelpRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestsInput, Prisma.UserUncheckedCreateWithoutHelpRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHelpRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutHelpRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestsInput, Prisma.UserUncheckedCreateWithoutHelpRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHelpRequestsInput
+  upsert?: Prisma.UserUpsertWithoutHelpRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHelpRequestsInput, Prisma.UserUpdateWithoutHelpRequestsInput>, Prisma.UserUncheckedUpdateWithoutHelpRequestsInput>
+}
+
+export type UserCreateNestedOneWithoutHelpAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHelpAssignmentsInput, Prisma.UserUncheckedCreateWithoutHelpAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHelpAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutHelpAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHelpAssignmentsInput, Prisma.UserUncheckedCreateWithoutHelpAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHelpAssignmentsInput
+  upsert?: Prisma.UserUpsertWithoutHelpAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHelpAssignmentsInput, Prisma.UserUpdateWithoutHelpAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutHelpAssignmentsInput>
+}
+
+export type UserCreateNestedOneWithoutWarningEventLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWarningEventLogsInput, Prisma.UserUncheckedCreateWithoutWarningEventLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarningEventLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutWarningEventLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWarningEventLogsInput, Prisma.UserUncheckedCreateWithoutWarningEventLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWarningEventLogsInput
+  upsert?: Prisma.UserUpsertWithoutWarningEventLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWarningEventLogsInput, Prisma.UserUpdateWithoutWarningEventLogsInput>, Prisma.UserUncheckedUpdateWithoutWarningEventLogsInput>
+}
+
+export type UserCreateNestedOneWithoutVolunteerDecisionLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerDecisionLogsInput, Prisma.UserUncheckedCreateWithoutVolunteerDecisionLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerDecisionLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutVolunteerDecisionLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutVolunteerDecisionLogsInput, Prisma.UserUncheckedCreateWithoutVolunteerDecisionLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutVolunteerDecisionLogsInput
+  upsert?: Prisma.UserUpsertWithoutVolunteerDecisionLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutVolunteerDecisionLogsInput, Prisma.UserUpdateWithoutVolunteerDecisionLogsInput>, Prisma.UserUncheckedUpdateWithoutVolunteerDecisionLogsInput>
+}
+
+export type UserCreateNestedOneWithoutHelpRequestEventsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestEventsInput, Prisma.UserUncheckedCreateWithoutHelpRequestEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHelpRequestEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutHelpRequestEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestEventsInput, Prisma.UserUncheckedCreateWithoutHelpRequestEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutHelpRequestEventsInput
+  upsert?: Prisma.UserUpsertWithoutHelpRequestEventsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHelpRequestEventsInput, Prisma.UserUpdateWithoutHelpRequestEventsInput>, Prisma.UserUncheckedUpdateWithoutHelpRequestEventsInput>
+}
+
+export type UserCreateNestedOneWithoutMapPinsReportedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReportedInput, Prisma.UserUncheckedCreateWithoutMapPinsReportedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMapPinsReportedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutMapPinsReportedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReportedInput, Prisma.UserUncheckedCreateWithoutMapPinsReportedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMapPinsReportedInput
+  upsert?: Prisma.UserUpsertWithoutMapPinsReportedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMapPinsReportedInput, Prisma.UserUpdateWithoutMapPinsReportedInput>, Prisma.UserUncheckedUpdateWithoutMapPinsReportedInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   name: string
@@ -421,6 +753,21 @@ export type UserCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -432,6 +779,21 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -459,6 +821,21 @@ export type UserUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -470,6 +847,21 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -481,6 +873,21 @@ export type UserCreateWithoutAccountsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -492,6 +899,21 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -519,6 +941,21 @@ export type UserUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -530,6 +967,1821 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFamiliesCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFamiliesCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFamiliesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFamiliesCreatedInput, Prisma.UserUncheckedCreateWithoutFamiliesCreatedInput>
+}
+
+export type UserUpsertWithoutFamiliesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFamiliesCreatedInput, Prisma.UserUncheckedUpdateWithoutFamiliesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFamiliesCreatedInput, Prisma.UserUncheckedCreateWithoutFamiliesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFamiliesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFamiliesCreatedInput, Prisma.UserUncheckedUpdateWithoutFamiliesCreatedInput>
+}
+
+export type UserUpdateWithoutFamiliesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFamiliesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFamilyMembershipsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFamilyMembershipsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFamilyMembershipsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFamilyMembershipsInput, Prisma.UserUncheckedCreateWithoutFamilyMembershipsInput>
+}
+
+export type UserUpsertWithoutFamilyMembershipsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFamilyMembershipsInput, Prisma.UserUncheckedUpdateWithoutFamilyMembershipsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFamilyMembershipsInput, Prisma.UserUncheckedCreateWithoutFamilyMembershipsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFamilyMembershipsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFamilyMembershipsInput, Prisma.UserUncheckedUpdateWithoutFamilyMembershipsInput>
+}
+
+export type UserUpdateWithoutFamilyMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFamilyMembershipsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLocationSnapshotInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLocationSnapshotInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLocationSnapshotInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLocationSnapshotInput, Prisma.UserUncheckedCreateWithoutLocationSnapshotInput>
+}
+
+export type UserUpsertWithoutLocationSnapshotInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLocationSnapshotInput, Prisma.UserUncheckedUpdateWithoutLocationSnapshotInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLocationSnapshotInput, Prisma.UserUncheckedCreateWithoutLocationSnapshotInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLocationSnapshotInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLocationSnapshotInput, Prisma.UserUncheckedUpdateWithoutLocationSnapshotInput>
+}
+
+export type UserUpdateWithoutLocationSnapshotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLocationSnapshotInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutVolunteerApplicationsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVolunteerApplicationsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVolunteerApplicationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApplicationsInput, Prisma.UserUncheckedCreateWithoutVolunteerApplicationsInput>
+}
+
+export type UserCreateWithoutVolunteerReviewsGivenInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVolunteerReviewsGivenInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVolunteerReviewsGivenInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerReviewsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerReviewsGivenInput>
+}
+
+export type UserUpsertWithoutVolunteerApplicationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerApplicationsInput, Prisma.UserUncheckedUpdateWithoutVolunteerApplicationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApplicationsInput, Prisma.UserUncheckedCreateWithoutVolunteerApplicationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVolunteerApplicationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerApplicationsInput, Prisma.UserUncheckedUpdateWithoutVolunteerApplicationsInput>
+}
+
+export type UserUpdateWithoutVolunteerApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVolunteerApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutVolunteerReviewsGivenInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerReviewsGivenInput, Prisma.UserUncheckedUpdateWithoutVolunteerReviewsGivenInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerReviewsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerReviewsGivenInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVolunteerReviewsGivenInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerReviewsGivenInput, Prisma.UserUncheckedUpdateWithoutVolunteerReviewsGivenInput>
+}
+
+export type UserUpdateWithoutVolunteerReviewsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVolunteerReviewsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutVolunteerProfileInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVolunteerProfileInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVolunteerProfileInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerProfileInput, Prisma.UserUncheckedCreateWithoutVolunteerProfileInput>
+}
+
+export type UserCreateWithoutVolunteerApprovalsGivenInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVolunteerApprovalsGivenInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVolunteerApprovalsGivenInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApprovalsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerApprovalsGivenInput>
+}
+
+export type UserUpsertWithoutVolunteerProfileInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerProfileInput, Prisma.UserUncheckedUpdateWithoutVolunteerProfileInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerProfileInput, Prisma.UserUncheckedCreateWithoutVolunteerProfileInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVolunteerProfileInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerProfileInput, Prisma.UserUncheckedUpdateWithoutVolunteerProfileInput>
+}
+
+export type UserUpdateWithoutVolunteerProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVolunteerProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutVolunteerApprovalsGivenInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerApprovalsGivenInput, Prisma.UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerApprovalsGivenInput, Prisma.UserUncheckedCreateWithoutVolunteerApprovalsGivenInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVolunteerApprovalsGivenInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerApprovalsGivenInput, Prisma.UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput>
+}
+
+export type UserUpdateWithoutVolunteerApprovalsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWarningsCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWarningsCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWarningsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWarningsCreatedInput, Prisma.UserUncheckedCreateWithoutWarningsCreatedInput>
+}
+
+export type UserUpsertWithoutWarningsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWarningsCreatedInput, Prisma.UserUncheckedUpdateWithoutWarningsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWarningsCreatedInput, Prisma.UserUncheckedCreateWithoutWarningsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWarningsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWarningsCreatedInput, Prisma.UserUncheckedUpdateWithoutWarningsCreatedInput>
+}
+
+export type UserUpdateWithoutWarningsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWarningsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutEvacuationRouteSuggestionsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutEvacuationRouteSuggestionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEvacuationRouteSuggestionsInput, Prisma.UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput>
+}
+
+export type UserUpsertWithoutEvacuationRouteSuggestionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEvacuationRouteSuggestionsInput, Prisma.UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEvacuationRouteSuggestionsInput, Prisma.UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEvacuationRouteSuggestionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEvacuationRouteSuggestionsInput, Prisma.UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput>
+}
+
+export type UserUpdateWithoutEvacuationRouteSuggestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutHelpRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutHelpRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutHelpRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestsInput, Prisma.UserUncheckedCreateWithoutHelpRequestsInput>
+}
+
+export type UserUpsertWithoutHelpRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutHelpRequestsInput, Prisma.UserUncheckedUpdateWithoutHelpRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestsInput, Prisma.UserUncheckedCreateWithoutHelpRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutHelpRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutHelpRequestsInput, Prisma.UserUncheckedUpdateWithoutHelpRequestsInput>
+}
+
+export type UserUpdateWithoutHelpRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutHelpRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutHelpAssignmentsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutHelpAssignmentsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutHelpAssignmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutHelpAssignmentsInput, Prisma.UserUncheckedCreateWithoutHelpAssignmentsInput>
+}
+
+export type UserUpsertWithoutHelpAssignmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutHelpAssignmentsInput, Prisma.UserUncheckedUpdateWithoutHelpAssignmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutHelpAssignmentsInput, Prisma.UserUncheckedCreateWithoutHelpAssignmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutHelpAssignmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutHelpAssignmentsInput, Prisma.UserUncheckedUpdateWithoutHelpAssignmentsInput>
+}
+
+export type UserUpdateWithoutHelpAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutHelpAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWarningEventLogsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWarningEventLogsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWarningEventLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWarningEventLogsInput, Prisma.UserUncheckedCreateWithoutWarningEventLogsInput>
+}
+
+export type UserUpsertWithoutWarningEventLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWarningEventLogsInput, Prisma.UserUncheckedUpdateWithoutWarningEventLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWarningEventLogsInput, Prisma.UserUncheckedCreateWithoutWarningEventLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWarningEventLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWarningEventLogsInput, Prisma.UserUncheckedUpdateWithoutWarningEventLogsInput>
+}
+
+export type UserUpdateWithoutWarningEventLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWarningEventLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutVolunteerDecisionLogsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutVolunteerDecisionLogsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutVolunteerDecisionLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerDecisionLogsInput, Prisma.UserUncheckedCreateWithoutVolunteerDecisionLogsInput>
+}
+
+export type UserUpsertWithoutVolunteerDecisionLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerDecisionLogsInput, Prisma.UserUncheckedUpdateWithoutVolunteerDecisionLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutVolunteerDecisionLogsInput, Prisma.UserUncheckedCreateWithoutVolunteerDecisionLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutVolunteerDecisionLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutVolunteerDecisionLogsInput, Prisma.UserUncheckedUpdateWithoutVolunteerDecisionLogsInput>
+}
+
+export type UserUpdateWithoutVolunteerDecisionLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutVolunteerDecisionLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutHelpRequestEventsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutHelpRequestEventsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutHelpRequestEventsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestEventsInput, Prisma.UserUncheckedCreateWithoutHelpRequestEventsInput>
+}
+
+export type UserUpsertWithoutHelpRequestEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutHelpRequestEventsInput, Prisma.UserUncheckedUpdateWithoutHelpRequestEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutHelpRequestEventsInput, Prisma.UserUncheckedCreateWithoutHelpRequestEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutHelpRequestEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutHelpRequestEventsInput, Prisma.UserUncheckedUpdateWithoutHelpRequestEventsInput>
+}
+
+export type UserUpdateWithoutHelpRequestEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutHelpRequestEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMapPinsReportedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMapPinsReportedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMapPinsReportedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReportedInput, Prisma.UserUncheckedCreateWithoutMapPinsReportedInput>
+}
+
+export type UserUpsertWithoutMapPinsReportedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMapPinsReportedInput, Prisma.UserUncheckedUpdateWithoutMapPinsReportedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReportedInput, Prisma.UserUncheckedCreateWithoutMapPinsReportedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMapPinsReportedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMapPinsReportedInput, Prisma.UserUncheckedUpdateWithoutMapPinsReportedInput>
+}
+
+export type UserUpdateWithoutMapPinsReportedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMapPinsReportedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -540,11 +2792,37 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
 export type UserCountOutputType = {
   sessions: number
   accounts: number
+  familiesCreated: number
+  familyMemberships: number
+  volunteerApplications: number
+  volunteerReviewsGiven: number
+  volunteerApprovalsGiven: number
+  helpRequests: number
+  helpAssignments: number
+  warningsCreated: number
+  warningEventLogs: number
+  volunteerDecisionLogs: number
+  helpRequestEvents: number
+  mapPinsReported: number
+  evacuationRouteSuggestions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+  familiesCreated?: boolean | UserCountOutputTypeCountFamiliesCreatedArgs
+  familyMemberships?: boolean | UserCountOutputTypeCountFamilyMembershipsArgs
+  volunteerApplications?: boolean | UserCountOutputTypeCountVolunteerApplicationsArgs
+  volunteerReviewsGiven?: boolean | UserCountOutputTypeCountVolunteerReviewsGivenArgs
+  volunteerApprovalsGiven?: boolean | UserCountOutputTypeCountVolunteerApprovalsGivenArgs
+  helpRequests?: boolean | UserCountOutputTypeCountHelpRequestsArgs
+  helpAssignments?: boolean | UserCountOutputTypeCountHelpAssignmentsArgs
+  warningsCreated?: boolean | UserCountOutputTypeCountWarningsCreatedArgs
+  warningEventLogs?: boolean | UserCountOutputTypeCountWarningEventLogsArgs
+  volunteerDecisionLogs?: boolean | UserCountOutputTypeCountVolunteerDecisionLogsArgs
+  helpRequestEvents?: boolean | UserCountOutputTypeCountHelpRequestEventsArgs
+  mapPinsReported?: boolean | UserCountOutputTypeCountMapPinsReportedArgs
+  evacuationRouteSuggestions?: boolean | UserCountOutputTypeCountEvacuationRouteSuggestionsArgs
 }
 
 /**
@@ -571,6 +2849,97 @@ export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.AccountWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFamiliesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FamilyWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFamilyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FamilyMemberWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVolunteerApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VolunteerApplicationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVolunteerReviewsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VolunteerApplicationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVolunteerApprovalsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VolunteerProfileWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHelpRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHelpAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpAssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWarningsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WarningEventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWarningEventLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WarningEventLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVolunteerDecisionLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VolunteerDecisionLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountHelpRequestEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HelpRequestEventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMapPinsReportedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MapPinStatusWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEvacuationRouteSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EvacuationRouteSuggestionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -582,6 +2951,21 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+  familiesCreated?: boolean | Prisma.User$familiesCreatedArgs<ExtArgs>
+  familyMemberships?: boolean | Prisma.User$familyMembershipsArgs<ExtArgs>
+  volunteerProfile?: boolean | Prisma.User$volunteerProfileArgs<ExtArgs>
+  volunteerApplications?: boolean | Prisma.User$volunteerApplicationsArgs<ExtArgs>
+  volunteerReviewsGiven?: boolean | Prisma.User$volunteerReviewsGivenArgs<ExtArgs>
+  volunteerApprovalsGiven?: boolean | Prisma.User$volunteerApprovalsGivenArgs<ExtArgs>
+  helpRequests?: boolean | Prisma.User$helpRequestsArgs<ExtArgs>
+  helpAssignments?: boolean | Prisma.User$helpAssignmentsArgs<ExtArgs>
+  warningsCreated?: boolean | Prisma.User$warningsCreatedArgs<ExtArgs>
+  warningEventLogs?: boolean | Prisma.User$warningEventLogsArgs<ExtArgs>
+  volunteerDecisionLogs?: boolean | Prisma.User$volunteerDecisionLogsArgs<ExtArgs>
+  helpRequestEvents?: boolean | Prisma.User$helpRequestEventsArgs<ExtArgs>
+  mapPinsReported?: boolean | Prisma.User$mapPinsReportedArgs<ExtArgs>
+  locationSnapshot?: boolean | Prisma.User$locationSnapshotArgs<ExtArgs>
+  evacuationRouteSuggestions?: boolean | Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -619,6 +3003,21 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+  familiesCreated?: boolean | Prisma.User$familiesCreatedArgs<ExtArgs>
+  familyMemberships?: boolean | Prisma.User$familyMembershipsArgs<ExtArgs>
+  volunteerProfile?: boolean | Prisma.User$volunteerProfileArgs<ExtArgs>
+  volunteerApplications?: boolean | Prisma.User$volunteerApplicationsArgs<ExtArgs>
+  volunteerReviewsGiven?: boolean | Prisma.User$volunteerReviewsGivenArgs<ExtArgs>
+  volunteerApprovalsGiven?: boolean | Prisma.User$volunteerApprovalsGivenArgs<ExtArgs>
+  helpRequests?: boolean | Prisma.User$helpRequestsArgs<ExtArgs>
+  helpAssignments?: boolean | Prisma.User$helpAssignmentsArgs<ExtArgs>
+  warningsCreated?: boolean | Prisma.User$warningsCreatedArgs<ExtArgs>
+  warningEventLogs?: boolean | Prisma.User$warningEventLogsArgs<ExtArgs>
+  volunteerDecisionLogs?: boolean | Prisma.User$volunteerDecisionLogsArgs<ExtArgs>
+  helpRequestEvents?: boolean | Prisma.User$helpRequestEventsArgs<ExtArgs>
+  mapPinsReported?: boolean | Prisma.User$mapPinsReportedArgs<ExtArgs>
+  locationSnapshot?: boolean | Prisma.User$locationSnapshotArgs<ExtArgs>
+  evacuationRouteSuggestions?: boolean | Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -629,6 +3028,21 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
+    familiesCreated: Prisma.$FamilyPayload<ExtArgs>[]
+    familyMemberships: Prisma.$FamilyMemberPayload<ExtArgs>[]
+    volunteerProfile: Prisma.$VolunteerProfilePayload<ExtArgs> | null
+    volunteerApplications: Prisma.$VolunteerApplicationPayload<ExtArgs>[]
+    volunteerReviewsGiven: Prisma.$VolunteerApplicationPayload<ExtArgs>[]
+    volunteerApprovalsGiven: Prisma.$VolunteerProfilePayload<ExtArgs>[]
+    helpRequests: Prisma.$HelpRequestPayload<ExtArgs>[]
+    helpAssignments: Prisma.$HelpAssignmentPayload<ExtArgs>[]
+    warningsCreated: Prisma.$WarningEventPayload<ExtArgs>[]
+    warningEventLogs: Prisma.$WarningEventLogPayload<ExtArgs>[]
+    volunteerDecisionLogs: Prisma.$VolunteerDecisionLogPayload<ExtArgs>[]
+    helpRequestEvents: Prisma.$HelpRequestEventPayload<ExtArgs>[]
+    mapPinsReported: Prisma.$MapPinStatusPayload<ExtArgs>[]
+    locationSnapshot: Prisma.$UserLocationSnapshotPayload<ExtArgs> | null
+    evacuationRouteSuggestions: Prisma.$EvacuationRouteSuggestionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1034,6 +3448,21 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  familiesCreated<T extends Prisma.User$familiesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$familiesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FamilyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  familyMemberships<T extends Prisma.User$familyMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$familyMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  volunteerProfile<T extends Prisma.User$volunteerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$volunteerProfileArgs<ExtArgs>>): Prisma.Prisma__VolunteerProfileClient<runtime.Types.Result.GetResult<Prisma.$VolunteerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  volunteerApplications<T extends Prisma.User$volunteerApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$volunteerApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VolunteerApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  volunteerReviewsGiven<T extends Prisma.User$volunteerReviewsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$volunteerReviewsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VolunteerApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  volunteerApprovalsGiven<T extends Prisma.User$volunteerApprovalsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$volunteerApprovalsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VolunteerProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  helpRequests<T extends Prisma.User$helpRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$helpRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  helpAssignments<T extends Prisma.User$helpAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$helpAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  warningsCreated<T extends Prisma.User$warningsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$warningsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WarningEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  warningEventLogs<T extends Prisma.User$warningEventLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$warningEventLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WarningEventLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  volunteerDecisionLogs<T extends Prisma.User$volunteerDecisionLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$volunteerDecisionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VolunteerDecisionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  helpRequestEvents<T extends Prisma.User$helpRequestEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$helpRequestEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mapPinsReported<T extends Prisma.User$mapPinsReportedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mapPinsReportedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MapPinStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  locationSnapshot<T extends Prisma.User$locationSnapshotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$locationSnapshotArgs<ExtArgs>>): Prisma.Prisma__UserLocationSnapshotClient<runtime.Types.Result.GetResult<Prisma.$UserLocationSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  evacuationRouteSuggestions<T extends Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EvacuationRouteSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1503,6 +3932,356 @@ export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
+}
+
+/**
+ * User.familiesCreated
+ */
+export type User$familiesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Family
+   */
+  select?: Prisma.FamilySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Family
+   */
+  omit?: Prisma.FamilyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FamilyInclude<ExtArgs> | null
+  where?: Prisma.FamilyWhereInput
+  orderBy?: Prisma.FamilyOrderByWithRelationInput | Prisma.FamilyOrderByWithRelationInput[]
+  cursor?: Prisma.FamilyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FamilyScalarFieldEnum | Prisma.FamilyScalarFieldEnum[]
+}
+
+/**
+ * User.familyMemberships
+ */
+export type User$familyMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FamilyMember
+   */
+  select?: Prisma.FamilyMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FamilyMember
+   */
+  omit?: Prisma.FamilyMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FamilyMemberInclude<ExtArgs> | null
+  where?: Prisma.FamilyMemberWhereInput
+  orderBy?: Prisma.FamilyMemberOrderByWithRelationInput | Prisma.FamilyMemberOrderByWithRelationInput[]
+  cursor?: Prisma.FamilyMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FamilyMemberScalarFieldEnum | Prisma.FamilyMemberScalarFieldEnum[]
+}
+
+/**
+ * User.volunteerProfile
+ */
+export type User$volunteerProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VolunteerProfile
+   */
+  select?: Prisma.VolunteerProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VolunteerProfile
+   */
+  omit?: Prisma.VolunteerProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VolunteerProfileInclude<ExtArgs> | null
+  where?: Prisma.VolunteerProfileWhereInput
+}
+
+/**
+ * User.volunteerApplications
+ */
+export type User$volunteerApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VolunteerApplication
+   */
+  select?: Prisma.VolunteerApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VolunteerApplication
+   */
+  omit?: Prisma.VolunteerApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VolunteerApplicationInclude<ExtArgs> | null
+  where?: Prisma.VolunteerApplicationWhereInput
+  orderBy?: Prisma.VolunteerApplicationOrderByWithRelationInput | Prisma.VolunteerApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.VolunteerApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VolunteerApplicationScalarFieldEnum | Prisma.VolunteerApplicationScalarFieldEnum[]
+}
+
+/**
+ * User.volunteerReviewsGiven
+ */
+export type User$volunteerReviewsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VolunteerApplication
+   */
+  select?: Prisma.VolunteerApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VolunteerApplication
+   */
+  omit?: Prisma.VolunteerApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VolunteerApplicationInclude<ExtArgs> | null
+  where?: Prisma.VolunteerApplicationWhereInput
+  orderBy?: Prisma.VolunteerApplicationOrderByWithRelationInput | Prisma.VolunteerApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.VolunteerApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VolunteerApplicationScalarFieldEnum | Prisma.VolunteerApplicationScalarFieldEnum[]
+}
+
+/**
+ * User.volunteerApprovalsGiven
+ */
+export type User$volunteerApprovalsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VolunteerProfile
+   */
+  select?: Prisma.VolunteerProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VolunteerProfile
+   */
+  omit?: Prisma.VolunteerProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VolunteerProfileInclude<ExtArgs> | null
+  where?: Prisma.VolunteerProfileWhereInput
+  orderBy?: Prisma.VolunteerProfileOrderByWithRelationInput | Prisma.VolunteerProfileOrderByWithRelationInput[]
+  cursor?: Prisma.VolunteerProfileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VolunteerProfileScalarFieldEnum | Prisma.VolunteerProfileScalarFieldEnum[]
+}
+
+/**
+ * User.helpRequests
+ */
+export type User$helpRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpRequest
+   */
+  select?: Prisma.HelpRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpRequest
+   */
+  omit?: Prisma.HelpRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpRequestInclude<ExtArgs> | null
+  where?: Prisma.HelpRequestWhereInput
+  orderBy?: Prisma.HelpRequestOrderByWithRelationInput | Prisma.HelpRequestOrderByWithRelationInput[]
+  cursor?: Prisma.HelpRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpRequestScalarFieldEnum | Prisma.HelpRequestScalarFieldEnum[]
+}
+
+/**
+ * User.helpAssignments
+ */
+export type User$helpAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpAssignment
+   */
+  select?: Prisma.HelpAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpAssignment
+   */
+  omit?: Prisma.HelpAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpAssignmentInclude<ExtArgs> | null
+  where?: Prisma.HelpAssignmentWhereInput
+  orderBy?: Prisma.HelpAssignmentOrderByWithRelationInput | Prisma.HelpAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.HelpAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpAssignmentScalarFieldEnum | Prisma.HelpAssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.warningsCreated
+ */
+export type User$warningsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WarningEvent
+   */
+  select?: Prisma.WarningEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WarningEvent
+   */
+  omit?: Prisma.WarningEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WarningEventInclude<ExtArgs> | null
+  where?: Prisma.WarningEventWhereInput
+  orderBy?: Prisma.WarningEventOrderByWithRelationInput | Prisma.WarningEventOrderByWithRelationInput[]
+  cursor?: Prisma.WarningEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WarningEventScalarFieldEnum | Prisma.WarningEventScalarFieldEnum[]
+}
+
+/**
+ * User.warningEventLogs
+ */
+export type User$warningEventLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WarningEventLog
+   */
+  select?: Prisma.WarningEventLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WarningEventLog
+   */
+  omit?: Prisma.WarningEventLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WarningEventLogInclude<ExtArgs> | null
+  where?: Prisma.WarningEventLogWhereInput
+  orderBy?: Prisma.WarningEventLogOrderByWithRelationInput | Prisma.WarningEventLogOrderByWithRelationInput[]
+  cursor?: Prisma.WarningEventLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WarningEventLogScalarFieldEnum | Prisma.WarningEventLogScalarFieldEnum[]
+}
+
+/**
+ * User.volunteerDecisionLogs
+ */
+export type User$volunteerDecisionLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the VolunteerDecisionLog
+   */
+  select?: Prisma.VolunteerDecisionLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the VolunteerDecisionLog
+   */
+  omit?: Prisma.VolunteerDecisionLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VolunteerDecisionLogInclude<ExtArgs> | null
+  where?: Prisma.VolunteerDecisionLogWhereInput
+  orderBy?: Prisma.VolunteerDecisionLogOrderByWithRelationInput | Prisma.VolunteerDecisionLogOrderByWithRelationInput[]
+  cursor?: Prisma.VolunteerDecisionLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VolunteerDecisionLogScalarFieldEnum | Prisma.VolunteerDecisionLogScalarFieldEnum[]
+}
+
+/**
+ * User.helpRequestEvents
+ */
+export type User$helpRequestEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HelpRequestEvent
+   */
+  select?: Prisma.HelpRequestEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HelpRequestEvent
+   */
+  omit?: Prisma.HelpRequestEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HelpRequestEventInclude<ExtArgs> | null
+  where?: Prisma.HelpRequestEventWhereInput
+  orderBy?: Prisma.HelpRequestEventOrderByWithRelationInput | Prisma.HelpRequestEventOrderByWithRelationInput[]
+  cursor?: Prisma.HelpRequestEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HelpRequestEventScalarFieldEnum | Prisma.HelpRequestEventScalarFieldEnum[]
+}
+
+/**
+ * User.mapPinsReported
+ */
+export type User$mapPinsReportedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MapPinStatus
+   */
+  select?: Prisma.MapPinStatusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MapPinStatus
+   */
+  omit?: Prisma.MapPinStatusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MapPinStatusInclude<ExtArgs> | null
+  where?: Prisma.MapPinStatusWhereInput
+  orderBy?: Prisma.MapPinStatusOrderByWithRelationInput | Prisma.MapPinStatusOrderByWithRelationInput[]
+  cursor?: Prisma.MapPinStatusWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MapPinStatusScalarFieldEnum | Prisma.MapPinStatusScalarFieldEnum[]
+}
+
+/**
+ * User.locationSnapshot
+ */
+export type User$locationSnapshotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserLocationSnapshot
+   */
+  select?: Prisma.UserLocationSnapshotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserLocationSnapshot
+   */
+  omit?: Prisma.UserLocationSnapshotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserLocationSnapshotInclude<ExtArgs> | null
+  where?: Prisma.UserLocationSnapshotWhereInput
+}
+
+/**
+ * User.evacuationRouteSuggestions
+ */
+export type User$evacuationRouteSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EvacuationRouteSuggestion
+   */
+  select?: Prisma.EvacuationRouteSuggestionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EvacuationRouteSuggestion
+   */
+  omit?: Prisma.EvacuationRouteSuggestionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EvacuationRouteSuggestionInclude<ExtArgs> | null
+  where?: Prisma.EvacuationRouteSuggestionWhereInput
+  orderBy?: Prisma.EvacuationRouteSuggestionOrderByWithRelationInput | Prisma.EvacuationRouteSuggestionOrderByWithRelationInput[]
+  cursor?: Prisma.EvacuationRouteSuggestionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EvacuationRouteSuggestionScalarFieldEnum | Prisma.EvacuationRouteSuggestionScalarFieldEnum[]
 }
 
 /**

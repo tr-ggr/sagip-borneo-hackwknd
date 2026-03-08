@@ -9,7 +9,82 @@
 * 🟢 You can import this file directly.
 */
 
+export const HazardType = {
+  FLOOD: 'FLOOD',
+  TYPHOON: 'TYPHOON',
+  EARTHQUAKE: 'EARTHQUAKE',
+  AFTERSHOCK: 'AFTERSHOCK'
+} as const
+
+export type HazardType = (typeof HazardType)[keyof typeof HazardType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const SeverityLevel = {
+  LOW: 'LOW',
+  MODERATE: 'MODERATE',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type SeverityLevel = (typeof SeverityLevel)[keyof typeof SeverityLevel]
+
+
+export const VolunteerStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type VolunteerStatus = (typeof VolunteerStatus)[keyof typeof VolunteerStatus]
+
+
+export const WarningStatus = {
+  DRAFT: 'DRAFT',
+  SENT: 'SENT',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type WarningStatus = (typeof WarningStatus)[keyof typeof WarningStatus]
+
+
+export const HelpRequestStatus = {
+  OPEN: 'OPEN',
+  CLAIMED: 'CLAIMED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type HelpRequestStatus = (typeof HelpRequestStatus)[keyof typeof HelpRequestStatus]
+
+
+export const HelpUrgency = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+} as const
+
+export type HelpUrgency = (typeof HelpUrgency)[keyof typeof HelpUrgency]
+
+
+export const AssignmentStatus = {
+  CLAIMED: 'CLAIMED',
+  EN_ROUTE: 'EN_ROUTE',
+  ON_SITE: 'ON_SITE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type AssignmentStatus = (typeof AssignmentStatus)[keyof typeof AssignmentStatus]
+
+
+export const PinStatus = {
+  OPEN: 'OPEN',
+  ACKNOWLEDGED: 'ACKNOWLEDGED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED'
+} as const
+
+export type PinStatus = (typeof PinStatus)[keyof typeof PinStatus]

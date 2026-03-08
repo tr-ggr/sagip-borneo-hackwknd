@@ -61,3 +61,88 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Family
+ * 
+ */
+export type Family = Prisma.FamilyModel
+/**
+ * Model FamilyMember
+ * 
+ */
+export type FamilyMember = Prisma.FamilyMemberModel
+/**
+ * Model UserLocationSnapshot
+ * 
+ */
+export type UserLocationSnapshot = Prisma.UserLocationSnapshotModel
+/**
+ * Model RiskRegionSnapshot
+ * 
+ */
+export type RiskRegionSnapshot = Prisma.RiskRegionSnapshotModel
+/**
+ * Model VolunteerApplication
+ * 
+ */
+export type VolunteerApplication = Prisma.VolunteerApplicationModel
+/**
+ * Model VolunteerProfile
+ * 
+ */
+export type VolunteerProfile = Prisma.VolunteerProfileModel
+/**
+ * Model WarningEvent
+ * 
+ */
+export type WarningEvent = Prisma.WarningEventModel
+/**
+ * Model WarningTargetArea
+ * 
+ */
+export type WarningTargetArea = Prisma.WarningTargetAreaModel
+/**
+ * Model EvacuationArea
+ * 
+ */
+export type EvacuationArea = Prisma.EvacuationAreaModel
+/**
+ * Model WarningEventEvacuationArea
+ * 
+ */
+export type WarningEventEvacuationArea = Prisma.WarningEventEvacuationAreaModel
+/**
+ * Model EvacuationRouteSuggestion
+ * 
+ */
+export type EvacuationRouteSuggestion = Prisma.EvacuationRouteSuggestionModel
+/**
+ * Model HelpRequest
+ * 
+ */
+export type HelpRequest = Prisma.HelpRequestModel
+/**
+ * Model HelpAssignment
+ * 
+ */
+export type HelpAssignment = Prisma.HelpAssignmentModel
+/**
+ * Model WarningEventLog
+ * 
+ */
+export type WarningEventLog = Prisma.WarningEventLogModel
+/**
+ * Model VolunteerDecisionLog
+ * 
+ */
+export type VolunteerDecisionLog = Prisma.VolunteerDecisionLogModel
+/**
+ * Model HelpRequestEvent
+ * 
+ */
+export type HelpRequestEvent = Prisma.HelpRequestEventModel
+/**
+ * Model MapPinStatus
+ * 
+ */
+export type MapPinStatus = Prisma.MapPinStatusModel

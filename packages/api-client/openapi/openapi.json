@@ -1,50 +1,6 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/api": {
-      "get": {
-        "operationId": "AppController_getData",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Get a greeting message",
-        "tags": [
-          "app"
-        ]
-      }
-    },
-    "/api/protected": {
-      "get": {
-        "operationId": "AppController_getProtectedData",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProtectedDataResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Get protected data for the authenticated user",
-        "tags": [
-          "app"
-        ]
-      }
-    },
     "/api/auth/sign-up": {
       "post": {
         "operationId": "AuthController_signUp",
@@ -100,6 +56,583 @@
           "Auth"
         ]
       }
+    },
+    "/api/risk/forecast": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getForecast",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "forecastDays",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get weather-driven risk forecast for a location",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/risk/user-impact": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getUserImpact",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get impact summary for current user and family",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/families": {
+      "post": {
+        "operationId": "FamiliesController_createFamily",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFamilyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a family with permanent join code",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/families/join": {
+      "post": {
+        "operationId": "FamiliesController_joinFamily",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinFamilyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Join an existing family using code",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/families/me": {
+      "get": {
+        "operationId": "FamiliesController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get authenticated user family memberships",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/families/me/map": {
+      "get": {
+        "operationId": "FamiliesController_getMyFamilyMap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get map-focused family member visibility",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/volunteers/applications": {
+      "post": {
+        "operationId": "VolunteersController_apply",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolunteerApplicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit volunteer application",
+        "tags": [
+          "volunteers"
+        ]
+      }
+    },
+    "/api/volunteers/me/status": {
+      "get": {
+        "operationId": "VolunteersController_getStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get volunteer profile/application status",
+        "tags": [
+          "volunteers"
+        ]
+      }
+    },
+    "/api/help-requests": {
+      "post": {
+        "operationId": "HelpRequestsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHelpRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create emergency help request",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/me": {
+      "get": {
+        "operationId": "HelpRequestsController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List my help requests and status history",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/{id}/claim": {
+      "post": {
+        "operationId": "HelpRequestsController_claim",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Claim help request as approved volunteer",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/{id}/status": {
+      "patch": {
+        "operationId": "HelpRequestsController_updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHelpRequestStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update claimed help request status",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/warnings/me": {
+      "get": {
+        "operationId": "WarningsController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get active warnings affecting current user",
+        "tags": [
+          "warnings"
+        ]
+      }
+    },
+    "/api/warnings/family": {
+      "get": {
+        "operationId": "WarningsController_family",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get active warnings affecting current family group",
+        "tags": [
+          "warnings"
+        ]
+      }
+    },
+    "/api/evacuation/areas": {
+      "get": {
+        "operationId": "EvacuationController_areas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List active evacuation areas",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/routes/suggested": {
+      "get": {
+        "operationId": "EvacuationController_suggested",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get warning-context route suggestions to shelters",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/assistant/inquiries": {
+      "post": {
+        "operationId": "AssistantController_inquire",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantInquiryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ask disaster preparedness assistant",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewVolunteer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject volunteer application",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings": {
+      "post": {
+        "operationId": "AdminOperationsController_createWarning",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWarningDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Manually create and dispatch warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/vulnerable-regions": {
+      "get": {
+        "operationId": "AdminOperationsController_vulnerableRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get vulnerable region dashboard data",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/pins/statuses": {
+      "get": {
+        "operationId": "AdminOperationsController_pinStatuses",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get operational pin statuses",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings/prompt-suggestion": {
+      "post": {
+        "operationId": "AdminOperationsController_getPromptSuggestion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarningPromptSuggestionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get suggested warning prompt template",
+        "tags": [
+          "admin-operations"
+        ]
+      }
     }
   },
   "info": {
@@ -112,39 +645,41 @@
   "servers": [],
   "components": {
     "schemas": {
-      "MessageResponseDto": {
+      "CreateFamilyDto": {
         "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Hello API"
-          }
-        },
-        "required": [
-          "message"
-        ]
+        "properties": {}
       },
-      "ProtectedDataResponseDto": {
+      "JoinFamilyDto": {
         "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "example": "Hello Jane Doe"
-          },
-          "userId": {
-            "type": "string",
-            "example": "usr_123"
-          },
-          "authenticated": {
-            "type": "boolean",
-            "example": true
-          }
-        },
-        "required": [
-          "message",
-          "userId",
-          "authenticated"
-        ]
+        "properties": {}
+      },
+      "VolunteerApplicationDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateHelpRequestDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateHelpRequestStatusDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AssistantInquiryDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateWarningDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "WarningPromptSuggestionDto": {
+        "type": "object",
+        "properties": {}
       }
     }
   }

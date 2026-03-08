@@ -54,7 +54,24 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Family: 'Family',
+  FamilyMember: 'FamilyMember',
+  UserLocationSnapshot: 'UserLocationSnapshot',
+  RiskRegionSnapshot: 'RiskRegionSnapshot',
+  VolunteerApplication: 'VolunteerApplication',
+  VolunteerProfile: 'VolunteerProfile',
+  WarningEvent: 'WarningEvent',
+  WarningTargetArea: 'WarningTargetArea',
+  EvacuationArea: 'EvacuationArea',
+  WarningEventEvacuationArea: 'WarningEventEvacuationArea',
+  EvacuationRouteSuggestion: 'EvacuationRouteSuggestion',
+  HelpRequest: 'HelpRequest',
+  HelpAssignment: 'HelpAssignment',
+  WarningEventLog: 'WarningEventLog',
+  VolunteerDecisionLog: 'VolunteerDecisionLog',
+  HelpRequestEvent: 'HelpRequestEvent',
+  MapPinStatus: 'MapPinStatus'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -129,6 +146,245 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const FamilyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FamilyScalarFieldEnum = (typeof FamilyScalarFieldEnum)[keyof typeof FamilyScalarFieldEnum]
+
+
+export const FamilyMemberScalarFieldEnum = {
+  id: 'id',
+  familyId: 'familyId',
+  userId: 'userId',
+  role: 'role',
+  joinedAt: 'joinedAt'
+} as const
+
+export type FamilyMemberScalarFieldEnum = (typeof FamilyMemberScalarFieldEnum)[keyof typeof FamilyMemberScalarFieldEnum]
+
+
+export const UserLocationSnapshotScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  region: 'region',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserLocationSnapshotScalarFieldEnum = (typeof UserLocationSnapshotScalarFieldEnum)[keyof typeof UserLocationSnapshotScalarFieldEnum]
+
+
+export const RiskRegionSnapshotScalarFieldEnum = {
+  id: 'id',
+  hazardType: 'hazardType',
+  severity: 'severity',
+  name: 'name',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  radiusKm: 'radiusKm',
+  polygonGeoJson: 'polygonGeoJson',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type RiskRegionSnapshotScalarFieldEnum = (typeof RiskRegionSnapshotScalarFieldEnum)[keyof typeof RiskRegionSnapshotScalarFieldEnum]
+
+
+export const VolunteerApplicationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  notes: 'notes',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VolunteerApplicationScalarFieldEnum = (typeof VolunteerApplicationScalarFieldEnum)[keyof typeof VolunteerApplicationScalarFieldEnum]
+
+
+export const VolunteerProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VolunteerProfileScalarFieldEnum = (typeof VolunteerProfileScalarFieldEnum)[keyof typeof VolunteerProfileScalarFieldEnum]
+
+
+export const WarningEventScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  message: 'message',
+  hazardType: 'hazardType',
+  severity: 'severity',
+  status: 'status',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  suggestedPrompt: 'suggestedPrompt',
+  isManualDispatch: 'isManualDispatch',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WarningEventScalarFieldEnum = (typeof WarningEventScalarFieldEnum)[keyof typeof WarningEventScalarFieldEnum]
+
+
+export const WarningTargetAreaScalarFieldEnum = {
+  id: 'id',
+  warningEventId: 'warningEventId',
+  areaName: 'areaName',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  radiusKm: 'radiusKm',
+  polygonGeoJson: 'polygonGeoJson'
+} as const
+
+export type WarningTargetAreaScalarFieldEnum = (typeof WarningTargetAreaScalarFieldEnum)[keyof typeof WarningTargetAreaScalarFieldEnum]
+
+
+export const EvacuationAreaScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  address: 'address',
+  region: 'region',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EvacuationAreaScalarFieldEnum = (typeof EvacuationAreaScalarFieldEnum)[keyof typeof EvacuationAreaScalarFieldEnum]
+
+
+export const WarningEventEvacuationAreaScalarFieldEnum = {
+  id: 'id',
+  warningEventId: 'warningEventId',
+  evacuationAreaId: 'evacuationAreaId'
+} as const
+
+export type WarningEventEvacuationAreaScalarFieldEnum = (typeof WarningEventEvacuationAreaScalarFieldEnum)[keyof typeof WarningEventEvacuationAreaScalarFieldEnum]
+
+
+export const EvacuationRouteSuggestionScalarFieldEnum = {
+  id: 'id',
+  warningEventId: 'warningEventId',
+  userId: 'userId',
+  familyId: 'familyId',
+  evacuationAreaId: 'evacuationAreaId',
+  originLatitude: 'originLatitude',
+  originLongitude: 'originLongitude',
+  etaMinutes: 'etaMinutes',
+  distanceMeters: 'distanceMeters',
+  polylineGeoJson: 'polylineGeoJson',
+  provider: 'provider',
+  createdAt: 'createdAt'
+} as const
+
+export type EvacuationRouteSuggestionScalarFieldEnum = (typeof EvacuationRouteSuggestionScalarFieldEnum)[keyof typeof EvacuationRouteSuggestionScalarFieldEnum]
+
+
+export const HelpRequestScalarFieldEnum = {
+  id: 'id',
+  requesterId: 'requesterId',
+  familyId: 'familyId',
+  hazardType: 'hazardType',
+  urgency: 'urgency',
+  status: 'status',
+  description: 'description',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HelpRequestScalarFieldEnum = (typeof HelpRequestScalarFieldEnum)[keyof typeof HelpRequestScalarFieldEnum]
+
+
+export const HelpAssignmentScalarFieldEnum = {
+  id: 'id',
+  helpRequestId: 'helpRequestId',
+  volunteerId: 'volunteerId',
+  status: 'status',
+  assignedAt: 'assignedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HelpAssignmentScalarFieldEnum = (typeof HelpAssignmentScalarFieldEnum)[keyof typeof HelpAssignmentScalarFieldEnum]
+
+
+export const WarningEventLogScalarFieldEnum = {
+  id: 'id',
+  warningEventId: 'warningEventId',
+  actorId: 'actorId',
+  status: 'status',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type WarningEventLogScalarFieldEnum = (typeof WarningEventLogScalarFieldEnum)[keyof typeof WarningEventLogScalarFieldEnum]
+
+
+export const VolunteerDecisionLogScalarFieldEnum = {
+  id: 'id',
+  volunteerApplicationId: 'volunteerApplicationId',
+  actorId: 'actorId',
+  previousStatus: 'previousStatus',
+  nextStatus: 'nextStatus',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type VolunteerDecisionLogScalarFieldEnum = (typeof VolunteerDecisionLogScalarFieldEnum)[keyof typeof VolunteerDecisionLogScalarFieldEnum]
+
+
+export const HelpRequestEventScalarFieldEnum = {
+  id: 'id',
+  helpRequestId: 'helpRequestId',
+  actorId: 'actorId',
+  previousStatus: 'previousStatus',
+  nextStatus: 'nextStatus',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type HelpRequestEventScalarFieldEnum = (typeof HelpRequestEventScalarFieldEnum)[keyof typeof HelpRequestEventScalarFieldEnum]
+
+
+export const MapPinStatusScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  hazardType: 'hazardType',
+  status: 'status',
+  priority: 'priority',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  region: 'region',
+  note: 'note',
+  reporterId: 'reporterId',
+  reportedAt: 'reportedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MapPinStatusScalarFieldEnum = (typeof MapPinStatusScalarFieldEnum)[keyof typeof MapPinStatusScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -26,3 +26,9 @@ npm run prisma:migrate:deploy
 ```
 
 These scripts use `prisma.config.ts`, which points to `prisma/schema` and `prisma/migrations`.
+
+## Disaster Response Migration Notes
+
+- Migration: `prisma/migrations/20260308082841_add_disaster_response_workflows/`
+- Rollback strategy: prefer forward-fix migrations in shared environments. For local-only rollback, reset and re-apply migrations against disposable databases.
+- Baseline reference seed SQL: `prisma/seeds/disaster-response.sql`
