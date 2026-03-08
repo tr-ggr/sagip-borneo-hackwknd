@@ -1,9 +1,9 @@
-import Link from 'next/link';
 import { IBM_Plex_Mono, IBM_Plex_Sans, Playfair_Display } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './global.css';
 import { Providers } from './providers';
+import { Shell } from './shell';
 
 const display = Playfair_Display({
   subsets: ['latin'],
@@ -28,12 +28,6 @@ export const metadata: Metadata = {
   description: 'WIRA administrative operations console',
 };
 
-const navItems = [
-  { href: '/', label: 'Dashboard' },
-  { href: '/volunteers', label: 'Volunteers' },
-  { href: '/warnings/new', label: 'Warnings' },
-  { href: '/map', label: 'Map' },
-];
 
 export default function RootLayout({
   children,
@@ -44,25 +38,7 @@ export default function RootLayout({
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
         <Providers>
-          <div className="status-banner" role="status" aria-live="polite">
-            <span className="status-dot" />
-            <span>Manual Warning Mode / Mod Amaran Manual</span>
-          </div>
-
-          <div className="app-shell">
-            <aside className="side-nav">
-              <h1 className="brand-title">WIRA Admin</h1>
-              <p className="brand-subtitle">Woven Intelligence for Regional Alertness</p>
-              <nav>
-                {navItems.map((item) => (
-                  <Link key={item.href} href={item.href} className="nav-link">
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </aside>
-            <main className="main-content">{children}</main>
-          </div>
+          <Shell>{children}</Shell>
         </Providers>
       </body>
     </html>

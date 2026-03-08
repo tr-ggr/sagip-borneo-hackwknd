@@ -20,7 +20,9 @@ export class AdminRoleGuard implements CanActivate {
       throw new UnauthorizedException('Authentication is required.');
     }
 
-    if (!this.policy.isAdmin(userId)) {
+    const role = request.authSession?.user.role;
+
+    if (!this.policy.isAdmin(userId, role)) {
       throw new ForbiddenException('Admin access is required for this action.');
     }
 
