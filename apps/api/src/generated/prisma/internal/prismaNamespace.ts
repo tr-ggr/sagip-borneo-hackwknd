@@ -387,8 +387,7 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification',
-  Greeting: 'Greeting'
+  Verification: 'Verification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "greeting"
+    modelProps: "user" | "session" | "account" | "verification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -704,80 +703,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Greeting: {
-      payload: Prisma.$GreetingPayload<ExtArgs>
-      fields: Prisma.GreetingFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.GreetingFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.GreetingFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>
-        }
-        findFirst: {
-          args: Prisma.GreetingFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.GreetingFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>
-        }
-        findMany: {
-          args: Prisma.GreetingFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>[]
-        }
-        create: {
-          args: Prisma.GreetingCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>
-        }
-        createMany: {
-          args: Prisma.GreetingCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.GreetingCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>[]
-        }
-        delete: {
-          args: Prisma.GreetingDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>
-        }
-        update: {
-          args: Prisma.GreetingUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>
-        }
-        deleteMany: {
-          args: Prisma.GreetingDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.GreetingUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.GreetingUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>[]
-        }
-        upsert: {
-          args: Prisma.GreetingUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$GreetingPayload>
-        }
-        aggregate: {
-          args: Prisma.GreetingAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateGreeting>
-        }
-        groupBy: {
-          args: Prisma.GreetingGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.GreetingGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.GreetingCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.GreetingCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -875,17 +800,6 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
-export const GreetingScalarFieldEnum = {
-  id: 'id',
-  key: 'key',
-  message: 'message',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type GreetingScalarFieldEnum = (typeof GreetingScalarFieldEnum)[keyof typeof GreetingScalarFieldEnum]
-
-
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -962,20 +876,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1077,7 +977,6 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
-  greeting?: Prisma.GreetingOmit
 }
 
 /* Types for Logging */
