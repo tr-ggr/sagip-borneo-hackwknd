@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 export const AXIOS_INSTANCE = axios.create({
   baseURL: 'http://localhost:3333', // Default base URL
+  withCredentials: true,
 });
 
 // Add a second `options` argument to pass extra options to each query

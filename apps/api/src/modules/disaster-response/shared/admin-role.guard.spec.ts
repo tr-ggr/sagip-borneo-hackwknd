@@ -27,11 +27,12 @@ describe('AdminRoleGuard', () => {
 
     const context = {
       switchToHttp: () => ({
-        getRequest: () => ({ authSession: { user: { id: 'user-1' } } }),
+        getRequest: () => ({ authSession: { user: { id: 'user-1', role: 'user' } } }),
       }),
     } as never;
 
     expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
+    expect(policyMock.isAdmin).toHaveBeenCalledWith('user-1', 'user');
   });
 
   it('allows admins', async () => {
@@ -39,10 +40,11 @@ describe('AdminRoleGuard', () => {
 
     const context = {
       switchToHttp: () => ({
-        getRequest: () => ({ authSession: { user: { id: 'admin-1' } } }),
+        getRequest: () => ({ authSession: { user: { id: 'admin-1', role: 'admin' } } }),
       }),
     } as never;
 
     expect(guard.canActivate(context)).toBe(true);
+    expect(policyMock.isAdmin).toHaveBeenCalledWith('admin-1', 'admin');
   });
 });

@@ -1,13 +1,28 @@
-export interface AuthenticatedUser {
-  id: string;
-  email: string;
-  name: string;
-  emailVerified: boolean;
+import { ApiProperty } from '@nestjs/swagger';
+
+export class AuthenticatedUser {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  email!: string;
+
+  @ApiProperty()
+  name!: string;
+
+  @ApiProperty()
+  emailVerified!: boolean;
+
+  @ApiProperty({ required: false, nullable: true })
   image?: string | null;
+
+  @ApiProperty({ required: false, nullable: true })
+  role?: string | null;
 }
 
-export interface AuthSession {
-  session: {
+export class AuthSession {
+  @ApiProperty()
+  session!: {
     id: string;
     userId: string;
     expiresAt: Date;
@@ -15,26 +30,42 @@ export interface AuthSession {
     ipAddress?: string | null;
     userAgent?: string | null;
   };
-  user: AuthenticatedUser;
+
+  @ApiProperty({ type: AuthenticatedUser })
+  user!: AuthenticatedUser;
 }
 
-export interface SignUpPayload {
-  name: string;
-  email: string;
-  password: string;
+export class SignUpPayload {
+  @ApiProperty()
+  name!: string;
+
+  @ApiProperty()
+  email!: string;
+
+  @ApiProperty()
+  password!: string;
 }
 
-export interface SignInPayload {
-  email: string;
-  password: string;
+export class SignInPayload {
+  @ApiProperty()
+  email!: string;
+
+  @ApiProperty()
+  password!: string;
 }
 
-export interface SignUpResult {
-  token: string | null;
-  user: AuthenticatedUser;
+export class SignUpResult {
+  @ApiProperty({ required: false, nullable: true })
+  token!: string | null;
+
+  @ApiProperty({ type: AuthenticatedUser })
+  user!: AuthenticatedUser;
 }
 
-export interface SignInResult {
-  token: string;
-  user: AuthenticatedUser;
+export class SignInResult {
+  @ApiProperty()
+  token!: string;
+
+  @ApiProperty({ type: AuthenticatedUser })
+  user!: AuthenticatedUser;
 }

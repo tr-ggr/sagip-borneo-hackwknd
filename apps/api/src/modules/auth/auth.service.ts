@@ -1,7 +1,3 @@
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import type { IncomingHttpHeaders } from 'node:http';
 import { getAuthRuntimeConfig } from '../../config/auth.config';
@@ -14,46 +10,13 @@ import {
   type SignUpResult,
   type SignUpPayload,
 } from './auth.types';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 
 interface BetterAuthApi {
-  signUpEmail: (input: { body: SignUpPayload; headers: Headers }) => Promise<{
-    token: string | null;
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      emailVerified: boolean;
-      image?: string | null;
-    };
-  }>;
-  signInEmail: (input: { body: SignInPayload; headers: Headers }) => Promise<{
-    token: string;
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      emailVerified: boolean;
-      image?: string | null;
-    };
-  }>;
-  signOut: (input: { headers: Headers }) => Promise<{ success: boolean }>;
-  getSession: (input: { headers: Headers }) => Promise<{
-    session: {
-      id: string;
-      userId: string;
-      expiresAt: Date;
-      token: string;
-      ipAddress?: string | null;
-      userAgent?: string | null;
-    };
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      emailVerified: boolean;
-      image?: string | null;
-    };
-  } | null>;
+  signUpEmail: (input: { body: SignUpPayload; headers: Headers; asResponse?: boolean }) => Promise<any>;
+  signInEmail: (input: { body: SignInPayload; headers: Headers; asResponse?: boolean }) => Promise<any>;
+  signOut: (input: { headers: Headers; asResponse?: boolean }) => Promise<any>;
+  getSession: (input: { headers: Headers }) => Promise<any>;
   admin: {
     listUsers: (input: { query: any; headers: Headers }) => Promise<any>;
     removeUser: (input: { body: { userId: string }; headers: Headers }) => Promise<any>;
@@ -69,7 +32,7 @@ interface BetterAuthRuntime {
 export class AuthService {
   private authPromise: Promise<BetterAuthRuntime> | null = null;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   private async getAuth(): Promise<BetterAuthRuntime> {
     if (this.authPromise) {
@@ -120,21 +83,27 @@ export class AuthService {
   async signUpEmail(
     payload: SignUpPayload,
     headers: IncomingHttpHeaders,
-  ): Promise<SignUpResult> {
+  ): Promise<{ response: Response; data: SignUpResult }> {
     try {
       const auth = await this.getAuth();
-      const result = await auth.api.signUpEmail({
+      const response = await auth.api.signUpEmail({
         body: {
           name: payload.name,
           email: payload.email,
           password: payload.password,
         },
         headers: await this.toHeaders(headers),
+        asResponse: true,
       });
 
+      const data = await response.json();
+
       return {
-        token: result.token,
-        user: this.toAuthenticatedUser(result.user),
+        response,
+        data: {
+          token: data.token,
+          user: this.toAuthenticatedUser(data.user),
+        },
       };
     } catch (error) {
       this.handleApiError(error, {
@@ -146,20 +115,26 @@ export class AuthService {
   async signInEmail(
     payload: SignInPayload,
     headers: IncomingHttpHeaders,
-  ): Promise<SignInResult> {
+  ): Promise<{ response: Response; data: SignInResult }> {
     try {
       const auth = await this.getAuth();
-      const result = await auth.api.signInEmail({
+      const response = await auth.api.signInEmail({
         body: {
           email: payload.email,
           password: payload.password,
         },
         headers: await this.toHeaders(headers),
+        asResponse: true,
       });
 
+      const data = await response.json();
+
       return {
-        token: result.token,
-        user: this.toAuthenticatedUser(result.user),
+        response,
+        data: {
+          token: data.token,
+          user: this.toAuthenticatedUser(data.user),
+        },
       };
     } catch (error) {
       this.handleApiError(error, {
@@ -168,10 +143,14 @@ export class AuthService {
     }
   }
 
-  async signOut(headers: IncomingHttpHeaders): Promise<{ success: boolean }> {
+  async signOut(headers: IncomingHttpHeaders): Promise<{ response: Response }> {
     try {
       const auth = await this.getAuth();
-      return await auth.api.signOut({ headers: await this.toHeaders(headers) });
+      const response = await auth.api.signOut({
+        headers: await this.toHeaders(headers),
+        asResponse: true,
+      });
+      return { response };
     } catch (error) {
       this.handleApiError(error, {
         defaultUnauthorizedMessage: 'You are not signed in.',
@@ -214,6 +193,7 @@ export class AuthService {
     name: string;
     emailVerified: boolean;
     image?: string | null;
+    role?: string | null;
   }): AuthenticatedUser {
     return {
       id: user.id,
@@ -221,6 +201,7 @@ export class AuthService {
       name: user.name,
       emailVerified: user.emailVerified,
       image: user.image,
+      role: user.role,
     };
   }
 
