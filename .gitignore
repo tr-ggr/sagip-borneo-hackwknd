@@ -45,3 +45,6 @@ Thumbs.db
 .next
 out
 test-output
+
+.agents
+skills-lock.json
