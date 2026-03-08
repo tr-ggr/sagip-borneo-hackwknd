@@ -7,6 +7,7 @@
     "dev:tracker": "nx run tracker:dev",
     "dev:admin": "nx run admin:dev",
     "dev:api": "nx serve api",
+    "android": "nx run-android mobile",
     "migrate:dev": "nx run api:migrate-dev",
     "api:openapi:sync": "npm run openapi:sync -w @wira-borneo/api-client",
     "api:client:generate": "npm run generate -w @wira-borneo/api-client",
