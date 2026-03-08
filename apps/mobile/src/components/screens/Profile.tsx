@@ -2,16 +2,19 @@
 
 import React from 'react';
 import { User, Settings, LogOut, Bell, Shield, Heart, ChevronRight } from 'lucide-react';
-import { useAuthControllerGetSession, useAuthControllerSignOut } from '@wira-borneo/api-client';
+import { useAuthControllerGetSession, useAuthControllerSignOut, getAuthControllerGetSessionQueryKey } from '@wira-borneo/api-client';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Profile() {
   const { data: session } = useAuthControllerGetSession();
+  const queryClient = useQueryClient();
   const router = useRouter();
   
   const signOut = useAuthControllerSignOut({
     mutation: {
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getAuthControllerGetSessionQueryKey() });
         router.push('/');
         router.refresh();
       }
@@ -50,7 +53,7 @@ export default function Profile() {
                 <div className={`p-2.5 rounded-xl bg-gray-50 transition-colors group-hover:bg-white`}>
                     <item.icon size={20} className={item.color} />
                 </div>
-                <span className="text-sm font-body font-bold text-wira-night">{item.label}</span>
+                <span className="text-sm font-body font-bold wira-card-title">{item.label}</span>
             </div>
             <ChevronRight size={18} className="text-wira-ivory-dark" />
           </button>

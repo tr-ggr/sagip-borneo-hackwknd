@@ -47,4 +47,10 @@ export class RiskIntelligenceController {
   async getUserImpact(@AuthSessionParam() authSession: AuthSession) {
     return this.riskService.getUserImpact(authSession.user.id);
   }
+
+  @Get('regions')
+  @ApiOperation({ summary: 'Get all active risk regions' })
+  async getVulnerableRegions() {
+    return this.riskService.getVulnerableRegions();
+  }
 }

@@ -158,6 +158,21 @@
         ]
       }
     },
+    "/api/risk/regions": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getVulnerableRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all active risk regions",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
     "/api/families": {
       "post": {
         "operationId": "FamiliesController_createFamily",
@@ -750,6 +765,10 @@
             "type": "boolean"
           },
           "image": {
+            "type": "object",
+            "nullable": true
+          },
+          "role": {
             "type": "object",
             "nullable": true
           }

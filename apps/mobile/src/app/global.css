@@ -49,6 +49,14 @@
     @apply bg-white dark:bg-dm-surface rounded-2xl border border-wira-ivory-dark dark:border-dm-border p-4 shadow-sm;
   }
 
+  .wira-card-title {
+    @apply text-wira-night dark:text-dm-text-primary;
+  }
+
+  .wira-card-body {
+    @apply text-wira-earth/70 dark:text-dm-text-muted;
+  }
+
   .wira-btn-primary {
     @apply w-full bg-wira-gold hover:bg-wira-gold-dark active:scale-95 text-white font-body font-semibold text-base px-6 py-3.5 rounded-xl transition-all duration-150 min-h-[52px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wira-gold focus-visible:ring-offset-2;
   }

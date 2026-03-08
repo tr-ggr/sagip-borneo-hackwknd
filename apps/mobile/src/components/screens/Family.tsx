@@ -1,22 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Users, UserPlus, Copy, Map as MapIcon, ShieldCheck } from 'lucide-react';
+import { Users, UserPlus, Copy, Map as MapIcon } from 'lucide-react';
 import { useFamiliesControllerGetMyFamilyMap } from '@wira-borneo/api-client';
 
 export default function Family() {
-  const [familyCode] = useState('WIRA-7788-XY');
+  const [familyCode] = useState('');
   
-  const members = [
-    { id: 1, name: 'Siti Aminah', role: 'Head of Family', status: 'Safe', lastSeen: '2 mins ago', lat: 1.5540, lng: 110.3595 },
-    { id: 2, name: 'Ahmad Faiz', role: 'Member', status: 'Warning Zone', lastSeen: 'Just now', lat: 1.5520, lng: 110.3580 },
-    { id: 3, name: 'Nurul Izzah', role: 'Member', status: 'Safe', lastSeen: '5 mins ago', lat: 1.5530, lng: 110.3590 },
-  ];
+  const members: any[] = [];
 
   return (
     <div className="space-y-6 animate-fade-in">
       <header className="space-y-1">
-        <h1 className="text-2xl font-display font-bold text-wira-night leading-tight">Family Party</h1>
+        <h1 className="text-2xl font-display font-bold wira-card-title leading-tight">Family Party</h1>
         <p className="text-xs font-body text-wira-earth/70">WIRA ensures the safety of your loved ones.</p>
       </header>
 
@@ -37,7 +33,7 @@ export default function Family() {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-1">
-            <h3 className="text-sm font-display font-bold text-wira-night">Family on Map</h3>
+            <h3 className="text-sm font-display font-bold wira-card-title">Family on Map</h3>
             <button className="text-xs font-body font-bold text-wira-teal uppercase tracking-widest flex items-center gap-1">
                 <MapIcon size={14} /> View All
             </button>
@@ -54,8 +50,8 @@ export default function Family() {
                </div>
                
                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-display font-bold text-wira-night truncate">{member.name}</h4>
-                  <p className="text-[10px] font-body text-wira-earth/60 uppercase font-bold tracking-tighter">{member.role} — <span className="opacity-70">{member.lastSeen}</span></p>
+                  <h4 className="text-sm font-display font-bold wira-card-title truncate">{member.name}</h4>
+                  <p className="text-[10px] font-body wira-card-body uppercase font-bold tracking-tighter">{member.role} — <span className="opacity-70">{member.lastSeen}</span></p>
                </div>
 
                <div className="text-right space-y-1">
