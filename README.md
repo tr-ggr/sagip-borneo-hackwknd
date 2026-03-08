@@ -203,3 +203,37 @@ All routes are under the global prefix `/api`:
 Protected route example:
 
 - `GET /api/protected` (requires active authenticated session)
+
+## API OpenAPI and Orval Client
+
+Swagger is available from the API during local development:
+
+- UI: `http://localhost:3333/api/docs`
+- OpenAPI JSON: `http://localhost:3333/api/openapi.json`
+
+The generated typed client lives in `packages/api-client`.
+
+### Generate client from local API
+
+1. Start API:
+
+```sh
+npm run dev:api
+```
+
+2. In another terminal, generate client:
+
+```sh
+npm run api:client:generate
+```
+
+3. Optional deterministic check (no diffs on rerun with unchanged input):
+
+```sh
+npm run api:client:generate:check
+```
+
+Ownership notes:
+
+- Edit API behavior and Swagger metadata in `apps/api`.
+- Do not hand-edit `packages/api-client/src/generated/api-client.ts`; regenerate instead.

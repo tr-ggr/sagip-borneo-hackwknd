@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api": {
+      "get": {
+        "operationId": "AppController_getData",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get a greeting message",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/protected": {
+      "get": {
+        "operationId": "AppController_getProtectedData",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtectedDataResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get protected data for the authenticated user",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/auth/sign-up": {
+      "post": {
+        "operationId": "AuthController_signUp",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/sign-in": {
+      "post": {
+        "operationId": "AuthController_signIn",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/sign-out": {
+      "post": {
+        "operationId": "AuthController_signOut",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/session": {
+      "get": {
+        "operationId": "AuthController_getSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Wira Borneo API",
+    "description": "API documentation for local development and client generation",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "MessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Hello API"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "ProtectedDataResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Hello Jane Doe"
+          },
+          "userId": {
+            "type": "string",
+            "example": "usr_123"
+          },
+          "authenticated": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "message",
+          "userId",
+          "authenticated"
+        ]
+      }
+    }
+  }
+}
