@@ -121,3 +121,5 @@ yarn-error.log
 # testing
 /coverage
 vite.config.*.timestamp*
+
+generated

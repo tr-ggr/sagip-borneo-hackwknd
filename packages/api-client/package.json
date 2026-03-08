@@ -1,0 +1,17 @@
+{
+  "name": "@wira-borneo/api-client",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "openapi:sync": "node ./scripts/sync-openapi.mjs",
+    "generate": "npm run openapi:sync && orval --config ./orval.config.cjs",
+    "generate:check": "npm run generate && git diff --exit-code -- src/generated"
+  },
+  "dependencies": {
+    "axios": "^1.12.2"
+  },
+  "devDependencies": {
+    "orval": "^7.14.0"
+  }
+}
