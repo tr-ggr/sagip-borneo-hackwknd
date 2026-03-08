@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LifeBuoy, HandHeart, AlertCircle, CheckCircle2, ChevronRight, HelpCircle } from 'lucide-react';
+import { LifeBuoy, HandHeart, AlertCircle, HelpCircle } from 'lucide-react';
 import { useVolunteersControllerApply, useVolunteersControllerGetStatus } from '@wira-borneo/api-client';
 
 export default function HelpDashboard() {
@@ -12,7 +12,7 @@ export default function HelpDashboard() {
     <div className="space-y-6 animate-fade-in">
       <header className="space-y-2">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-display font-bold text-wira-night">Help Center</h1>
+            <h1 className="text-2xl font-display font-bold wira-card-title">Help Center</h1>
             <HelpCircle size={20} className="text-wira-gold" />
           </div>
           
@@ -39,8 +39,8 @@ export default function HelpDashboard() {
                 <AlertCircle className="text-status-critical w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-display font-bold text-wira-night">Send Emergency Signal</h3>
-                <p className="text-xs font-body text-wira-earth/70">
+                <h3 className="text-lg font-display font-bold wira-card-title">Send Emergency Signal</h3>
+                <p className="text-xs font-body wira-card-body">
                     Use this only if you require immediate assistance. Your location will be sent to authorities and nearby volunteers.
                 </p>
               </div>
@@ -49,21 +49,7 @@ export default function HelpDashboard() {
               </button>
            </div>
 
-           <div className="space-y-3">
-              <h3 className="text-sm font-display font-bold text-wira-night px-1">Active Requests</h3>
-              <div className="wira-card flex items-center justify-between p-4">
-                 <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-full bg-status-safe/10 flex items-center justify-center">
-                        <CheckCircle2 className="text-status-safe w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-xs font-display font-bold text-wira-night line-clamp-1">Water Supply Emergency</p>
-                        <p className="text-[10px] font-body text-wira-earth/50">Completed — 2 hours ago</p>
-                    </div>
-                 </div>
-                 <ChevronRight size={16} className="text-wira-ivory-dark" />
-              </div>
-           </div>
+
         </div>
       ) : (
         <div className="space-y-6 animate-slide-up">
@@ -72,8 +58,8 @@ export default function HelpDashboard() {
                 <HandHeart className="text-wira-teal w-6 h-6" />
               </div>
               <div className="space-y-1">
-                <h3 className="text-lg font-display font-bold text-wira-night">Become a WIRA Volunteer</h3>
-                <p className="text-xs font-body text-wira-earth/70">
+                <h3 className="text-lg font-display font-bold wira-card-title">Become a WIRA Volunteer</h3>
+                <p className="text-xs font-body wira-card-body">
                     Only registered volunteers can respond to emergency signals. Help your community build resilience.
                 </p>
               </div>
