@@ -16,6 +16,11 @@ export default function MainApp() {
   const { data: session, isLoading } = useAuthControllerGetSession();
   const [authView, setAuthView] = useState<'login' | 'register'>('login');
   const [currentScreen, setCurrentScreen] = useState<string>('/');
+  
+  // Map and Routing State
+  const [focusedHelpRequestId, setFocusedHelpRequestId] = useState<string | null>(null);
+  const [mapFocus, setMapFocus] = useState<{ latitude: number, longitude: number } | null>(null);
+  const [showAllPins, setShowAllPins] = useState(true); // Default to true as per request "Multiple help pins can also be enabled"
 
   if (isLoading) {
     return (
@@ -42,13 +47,43 @@ export default function MainApp() {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case '/': return <MapForecast />;
+      case '/': return (
+        <MapForecast 
+          focusedHelpRequestId={focusedHelpRequestId}
+          mapFocus={mapFocus}
+          showAllPins={showAllPins}
+          onCancelRouting={() => {
+            setFocusedHelpRequestId(null);
+            setMapFocus(null);
+          }}
+        />
+      );
       case '/warnings': return <Warnings />;
       case '/family': return <Family />;
       case '/assistant': return <LLMAssistant />;
-      case '/help': return <HelpDashboard />;
+      case '/help': return (
+        <HelpDashboard 
+          onNavigateToRequest={(id, loc) => {
+            setFocusedHelpRequestId(id);
+            setMapFocus(loc);
+            setCurrentScreen('/');
+          }}
+          showAllPins={showAllPins}
+          onToggleShowAllPins={setShowAllPins}
+        />
+      );
       case '/profile': return <Profile />;
-      default: return <MapForecast />;
+      default: return (
+        <MapForecast 
+          focusedHelpRequestId={focusedHelpRequestId}
+          mapFocus={mapFocus}
+          showAllPins={showAllPins}
+          onCancelRouting={() => {
+            setFocusedHelpRequestId(null);
+            setMapFocus(null);
+          }}
+        />
+      );
     }
   };
 
