@@ -42,6 +42,39 @@ export class HelpRequestsService {
     });
   }
 
+  async findAllOpen() {
+    return this.prisma.helpRequest.findMany({
+      where: { status: 'OPEN' },
+      include: {
+        requester: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async listAssignments(volunteerId: string) {
+    return this.prisma.helpAssignment.findMany({
+      where: { volunteerId },
+      include: {
+        helpRequest: {
+          include: {
+            requester: {
+              select: {
+                name: true,
+              },
+            },
+            events: true,
+          },
+        },
+      },
+      orderBy: { assignedAt: 'desc' },
+    });
+  }
+
   async claim(helpRequestId: string, volunteerId: string) {
     const request = await this.prisma.helpRequest.findUnique({
       where: { id: helpRequestId },

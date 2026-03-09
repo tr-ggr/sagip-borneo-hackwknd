@@ -47,3 +47,18 @@ export function filterUserLocations<T extends UserLocationLike>(
     return stale ? Boolean(enabledRecency.STALE) : Boolean(enabledRecency.RECENT);
   });
 }
+
+export interface HelpRequestLike {
+  hazardType: string;
+  urgency: string;
+}
+
+export function filterHelpRequests<T extends HelpRequestLike>(
+  items: T[],
+  enabledHazards: Record<string, boolean>,
+  enabledUrgency: Record<string, boolean>,
+): T[] {
+  return items.filter(
+    (item) => Boolean(enabledHazards[item.hazardType]) && Boolean(enabledUrgency[item.urgency]),
+  );
+}

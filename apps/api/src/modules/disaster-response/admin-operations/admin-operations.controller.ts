@@ -118,6 +118,91 @@ class AdminWeatherGeocodingDto {
   format?: 'json' | 'protobuf';
 }
 
+class AdminHelpRequestDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  requesterId!: string;
+  @ApiProperty()
+  hazardType!: 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+  @ApiProperty()
+  urgency!: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  @ApiProperty()
+  status!: 'OPEN' | 'CLAIMED' | 'IN_PROGRESS' | 'RESOLVED' | 'CANCELLED';
+  @ApiProperty()
+  description!: string;
+  @ApiProperty()
+  latitude!: number;
+  @ApiProperty()
+  longitude!: number;
+  @ApiProperty()
+  createdAt!: Date;
+  @ApiProperty({ type: 'object', properties: { name: { type: 'string' } } })
+  requester!: { name: string };
+}
+
+class AdminRiskRegionDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  hazardType!: 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+  @ApiProperty()
+  severity!: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+  @ApiProperty()
+  name!: string;
+  @ApiPropertyOptional()
+  latitude?: number;
+  @ApiPropertyOptional()
+  longitude?: number;
+  @ApiPropertyOptional()
+  radiusKm?: number;
+}
+
+class AdminPinStatusDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  title!: string;
+  @ApiProperty()
+  hazardType!: 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+  @ApiProperty()
+  status!: 'OPEN' | 'ACKNOWLEDGED' | 'IN_PROGRESS' | 'RESOLVED';
+  @ApiProperty()
+  latitude!: number;
+  @ApiProperty()
+  longitude!: number;
+  @ApiPropertyOptional()
+  region?: string;
+  @ApiPropertyOptional()
+  note?: string;
+}
+
+class AdminUserLocationDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  userId!: string;
+  @ApiProperty()
+  latitude!: number;
+  @ApiProperty()
+  longitude!: number;
+  @ApiPropertyOptional()
+  region?: string;
+  @ApiProperty()
+  updatedAt!: Date;
+}
+
+class MapOverviewResponseDto {
+  @ApiProperty({ type: AdminRiskRegionDto, isArray: true })
+  vulnerableRegions!: AdminRiskRegionDto[];
+  @ApiProperty({ type: AdminPinStatusDto, isArray: true })
+  pinStatuses!: AdminPinStatusDto[];
+  @ApiProperty({ type: AdminUserLocationDto, isArray: true })
+  userLocations!: AdminUserLocationDto[];
+  @ApiProperty({ type: AdminHelpRequestDto, isArray: true })
+  helpRequests!: AdminHelpRequestDto[];
+}
+
 const VOLUNTEER_STATUSES = ['PENDING', 'APPROVED', 'REJECTED'] as const;
 const HAZARD_TYPES = ['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] as const;
 const SEVERITY_LEVELS = ['LOW', 'MODERATE', 'HIGH', 'CRITICAL'] as const;
@@ -382,8 +467,8 @@ export class AdminOperationsController {
 
   @Get('map/overview')
   @ApiOperation({ summary: 'Get complete admin map datasets in one response' })
-  async mapOverview() {
-    return this.adminService.getMapOverview();
+  async mapOverview(): Promise<MapOverviewResponseDto> {
+    return this.adminService.getMapOverview() as any;
   }
 
   @Get('weather/forecast')

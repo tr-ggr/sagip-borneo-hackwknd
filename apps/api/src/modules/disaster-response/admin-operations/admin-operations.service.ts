@@ -183,17 +183,35 @@ export class AdminOperationsService {
     });
   }
 
+  async getHelpRequests() {
+    return this.prisma.helpRequest.findMany({
+      where: {
+        status: { in: ['OPEN', 'CLAIMED', 'IN_PROGRESS'] },
+      },
+      include: {
+        requester: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async getMapOverview() {
-    const [vulnerableRegions, pinStatuses, userLocations] = await Promise.all([
+    const [vulnerableRegions, pinStatuses, userLocations, helpRequests] = await Promise.all([
       this.getVulnerableRegions(),
       this.getPinStatuses(),
       this.getUserLocations(),
+      this.getHelpRequests(),
     ]);
 
     return {
       vulnerableRegions,
       pinStatuses,
       userLocations,
+      helpRequests,
     };
   }
 

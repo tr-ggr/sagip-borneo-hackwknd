@@ -22,6 +22,7 @@ import {
   filterPinStatuses,
   filterRiskLayers,
   filterUserLocations,
+  filterHelpRequests,
   isLocationStale,
 } from './map-filters.utils';
 
@@ -55,10 +56,24 @@ interface UserLocation {
   updatedAt?: string;
 }
 
+interface UserHelpRequest {
+  id: string;
+  requesterId: string;
+  hazardType: 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+  urgency: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  status: 'OPEN' | 'CLAIMED' | 'IN_PROGRESS' | 'RESOLVED' | 'CANCELLED';
+  description: string;
+  latitude: number;
+  longitude: number;
+  createdAt: string;
+  requester: { name: string };
+}
+
 interface MapOverviewPayload {
   vulnerableRegions: RegionRisk[];
   pinStatuses: PinStatus[];
   userLocations: UserLocation[];
+  helpRequests: UserHelpRequest[];
 }
 
 interface GeocodingResult {
@@ -89,9 +104,18 @@ function toUsers(raw: unknown): UserLocation[] {
   return Array.isArray(raw) ? (raw as UserLocation[]) : [];
 }
 
+function toHelpRequests(raw: unknown): UserHelpRequest[] {
+  return Array.isArray(raw) ? (raw as UserHelpRequest[]) : [];
+}
+
 function toMapOverview(raw: unknown): MapOverviewPayload {
   if (!raw || typeof raw !== 'object') {
-    return { vulnerableRegions: [], pinStatuses: [], userLocations: [] };
+    return {
+      vulnerableRegions: [],
+      pinStatuses: [],
+      userLocations: [],
+      helpRequests: [],
+    };
   }
 
   const input = raw as Record<string, unknown>;
@@ -99,6 +123,7 @@ function toMapOverview(raw: unknown): MapOverviewPayload {
     vulnerableRegions: toRisks(input.vulnerableRegions),
     pinStatuses: toPins(input.pinStatuses),
     userLocations: toUsers(input.userLocations),
+    helpRequests: toHelpRequests(input.helpRequests),
   };
 }
 
@@ -164,10 +189,12 @@ export function OperationsMapPage() {
   const hazardSourceRef = useRef(new VectorSource());
   const pinSourceRef = useRef(new VectorSource());
   const userSourceRef = useRef(new VectorSource());
+  const helpSourceRef = useRef(new VectorSource());
   const aseanExtentRef = useRef(toAseanExtentProjection());
   const firstFitDoneRef = useRef(false);
   const filteredPinsRef = useRef<PinStatus[]>([]);
   const filteredUsersRef = useRef<UserLocation[]>([]);
+  const filteredHelpRequestsRef = useRef<UserHelpRequest[]>([]);
 
   const [hazardFilter, setHazardFilter] = useState<Record<string, boolean>>({
     TYPHOON: true,
@@ -185,8 +212,15 @@ export function OperationsMapPage() {
     RECENT: true,
     STALE: true,
   });
+  const [urgencyFilter, setUrgencyFilter] = useState<Record<string, boolean>>({
+    LOW: true,
+    MEDIUM: true,
+    HIGH: true,
+    CRITICAL: true,
+  });
   const [selectedPin, setSelectedPin] = useState<PinStatus | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserLocation | null>(null);
+  const [selectedHelpRequest, setSelectedHelpRequest] = useState<UserHelpRequest | null>(null);
   const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(null);
   const [searchInput, setSearchInput] = useState('');
   const [geocodeQuery, setGeocodeQuery] = useState<string | null>(null);
@@ -233,6 +267,7 @@ export function OperationsMapPage() {
   const risks = overviewQuery.data?.vulnerableRegions ?? [];
   const pins = overviewQuery.data?.pinStatuses ?? [];
   const users = overviewQuery.data?.userLocations ?? [];
+  const helpRequests = overviewQuery.data?.helpRequests ?? [];
 
   const filteredRisks = useMemo(
     () => filterRiskLayers(risks, hazardFilter),
@@ -249,6 +284,11 @@ export function OperationsMapPage() {
     [users, userFilter],
   );
 
+  const filteredHelpRequests = useMemo(
+    () => filterHelpRequests(helpRequests, hazardFilter, urgencyFilter),
+    [helpRequests, hazardFilter, urgencyFilter],
+  );
+
   const geocodingResults = geocodingQuery.data ?? [];
 
   useEffect(() => {
@@ -258,6 +298,10 @@ export function OperationsMapPage() {
   useEffect(() => {
     filteredUsersRef.current = filteredUsers;
   }, [filteredUsers]);
+
+  useEffect(() => {
+    filteredHelpRequestsRef.current = filteredHelpRequests;
+  }, [filteredHelpRequests]);
 
   const weatherSummary = useMemo(() => {
     const payload = weatherQuery.data;
@@ -317,6 +361,10 @@ export function OperationsMapPage() {
       points.push([user.longitude, user.latitude]);
     });
 
+    filteredHelpRequests.forEach((req) => {
+      points.push([req.longitude, req.latitude]);
+    });
+
     if (points.length === 0) {
       refocusAsean();
       return;
@@ -373,6 +421,7 @@ export function OperationsMapPage() {
     const hazardLayer = new VectorLayer({ source: hazardSourceRef.current });
     const pinLayer = new VectorLayer({ source: pinSourceRef.current });
     const userLayer = new VectorLayer({ source: userSourceRef.current });
+    const helpLayer = new VectorLayer({ source: helpSourceRef.current });
 
     const view = new View({
       center: fromLonLat(ASEAN_CENTER_LON_LAT),
@@ -384,7 +433,13 @@ export function OperationsMapPage() {
     mapViewRef.current = view;
     mapRef.current = new Map({
       target: targetElement,
-      layers: [new TileLayer({ source: new OSM() }), hazardLayer, pinLayer, userLayer],
+      layers: [
+        new TileLayer({ source: new OSM() }),
+        hazardLayer,
+        pinLayer,
+        userLayer,
+        helpLayer,
+      ],
       view,
     });
 
@@ -405,7 +460,7 @@ export function OperationsMapPage() {
         ?.getFeaturesAtPixel(event.pixel)
         .find((feature) => {
           const featureType = String(feature.get('featureType'));
-          return featureType === 'pin' || featureType === 'user';
+          return featureType === 'pin' || featureType === 'user' || featureType === 'help';
         });
 
       if (!clickedFeature) {
@@ -419,18 +474,36 @@ export function OperationsMapPage() {
         const pin = filteredPinsRef.current.find((item) => item.id === pinId) ?? null;
         setSelectedPin(pin);
         setSelectedUser(null);
+        setSelectedHelpRequest(null);
         if (pin) {
           setSelectedCoords([pin.longitude, pin.latitude]);
         }
         return;
       }
 
-      const userLocationId = String(clickedFeature.get('userLocationId'));
-      const user = filteredUsersRef.current.find((item) => item.id === userLocationId) ?? null;
-      setSelectedUser(user);
-      setSelectedPin(null);
-      if (user) {
-        setSelectedCoords([user.longitude, user.latitude]);
+      if (featureType === 'user') {
+        const userLocationId = String(clickedFeature.get('userLocationId'));
+        const user = filteredUsersRef.current.find((item) => item.id === userLocationId) ?? null;
+        setSelectedUser(user);
+        setSelectedPin(null);
+        setSelectedHelpRequest(null);
+        if (user) {
+          setSelectedCoords([user.longitude, user.latitude]);
+        }
+        return;
+      }
+
+      if (featureType === 'help') {
+        const helpRequestId = String(clickedFeature.get('helpRequestId'));
+        const helpRequest =
+          filteredHelpRequestsRef.current.find((item) => item.id === helpRequestId) ?? null;
+        setSelectedHelpRequest(helpRequest);
+        setSelectedPin(null);
+        setSelectedUser(null);
+        if (helpRequest) {
+          setSelectedCoords([helpRequest.longitude, helpRequest.latitude]);
+        }
+        return;
       }
     });
 
@@ -555,6 +628,38 @@ export function OperationsMapPage() {
       source.addFeature(feature);
     });
   }, [filteredUsers]);
+
+  useEffect(() => {
+    const source = helpSourceRef.current;
+    source.clear();
+
+    filteredHelpRequests.forEach((req) => {
+      const feature = new Feature({
+        geometry: new Point(fromLonLat([req.longitude, req.latitude])),
+        featureType: 'help',
+        helpRequestId: req.id,
+      });
+
+      const urgencyColors: Record<string, string> = {
+        CRITICAL: '#D32F2F',
+        HIGH: '#F57C00',
+        MEDIUM: '#FBC02D',
+        LOW: '#1976D2',
+      };
+
+      feature.setStyle(
+        new Style({
+          image: new CircleStyle({
+            radius: 9,
+            fill: new Fill({ color: urgencyColors[req.urgency] ?? '#757575' }),
+            stroke: new Stroke({ color: '#F5F0E8', width: 2 }),
+          }),
+        }),
+      );
+
+      source.addFeature(feature);
+    });
+  }, [filteredHelpRequests]);
 
   return (
     <section className="page-shell">
@@ -681,11 +786,15 @@ export function OperationsMapPage() {
             <span className="legend-item">
               <span className="legend-dot legend-user" /> User Locations
             </span>
+            <span className="legend-item">
+              <span className="legend-dot legend-help" /> Help Requests
+            </span>
           </div>
           <div className="map-status-row">
             <span className="chip">Hazards: {filteredRisks.length}</span>
             <span className="chip">Pins: {filteredPins.length}</span>
             <span className="chip">Users: {filteredUsers.length}</span>
+            <span className="chip">Help: {filteredHelpRequests.length}</span>
           </div>
           {overviewQuery.isLoading ? <p className="muted small">Loading map datasets...</p> : null}
           {overviewQuery.isError ? <p className="error-text">Failed to load map datasets.</p> : null}
@@ -736,13 +845,38 @@ export function OperationsMapPage() {
                   {selectedUser.latitude.toFixed(4)}, {selectedUser.longitude.toFixed(4)}
                 </dd>
                 <dt>Recency</dt>
-                <dd>{isLocationStale(selectedUser.updatedAt) ? 'STALE' : 'RECENT'}</dd>
               </dl>
             </>
           ) : null}
 
-          {!selectedPin && !selectedUser ? (
-            <p className="muted">Select an operations pin or user location to inspect details.</p>
+          {selectedHelpRequest ? (
+            <>
+              <p className="small muted">Emergency Help Request</p>
+              <dl className="summary-grid">
+                <dt>Requester</dt>
+                <dd>{selectedHelpRequest.requester.name}</dd>
+                <dt>Hazard</dt>
+                <dd>{selectedHelpRequest.hazardType}</dd>
+                <dt>Urgency</dt>
+                <dd>
+                  <span className={`chip chip-${selectedHelpRequest.urgency.toLowerCase()}`}>
+                    {selectedHelpRequest.urgency}
+                  </span>
+                </dd>
+                <dt>Status</dt>
+                <dd>{selectedHelpRequest.status}</dd>
+                <dt>Description</dt>
+                <dd className="small">{selectedHelpRequest.description}</dd>
+                <dt>Created</dt>
+                <dd>{new Date(selectedHelpRequest.createdAt).toLocaleString()}</dd>
+              </dl>
+            </>
+          ) : null}
+
+          {!selectedPin && !selectedUser && !selectedHelpRequest ? (
+            <p className="muted">
+              Select an operations pin, user, or help request to inspect details.
+            </p>
           ) : null}
 
           <h2 className="card-title">Open-Meteo Weather</h2>
