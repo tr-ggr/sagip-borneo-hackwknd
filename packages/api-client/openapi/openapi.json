@@ -558,12 +558,47 @@
             "description": ""
           }
         },
-        "security": [
+        "summary": "List active evacuation areas (public)",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/nearest": {
+      "get": {
+        "operationId": "EvacuationController_nearest",
+        "parameters": [
           {
-            "bearer": []
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string", "enum": ["driving", "walking", "cycling"] }
           }
         ],
-        "summary": "List active evacuation areas",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Nearest evacuation sites",
         "tags": [
           "evacuation"
         ]
