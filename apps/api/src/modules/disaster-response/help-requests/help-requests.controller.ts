@@ -64,6 +64,20 @@ export class HelpRequestsController {
     return this.helpRequestsService.listMine(session.user.id);
   }
 
+  @Get()
+  @UseGuards(ApprovedVolunteerGuard)
+  @ApiOperation({ summary: 'List all open help requests for volunteers' })
+  async listOpen() {
+    return this.helpRequestsService.findAllOpen();
+  }
+
+  @Get('assignments')
+  @UseGuards(ApprovedVolunteerGuard)
+  @ApiOperation({ summary: 'List help requests assigned to the current volunteer' })
+  async assignments(@AuthSessionParam() session: AuthSession) {
+    return this.helpRequestsService.listAssignments(session.user.id);
+  }
+
   @Post(':id/claim')
   @UseGuards(ApprovedVolunteerGuard)
   @ApiOperation({ summary: 'Claim help request as approved volunteer' })

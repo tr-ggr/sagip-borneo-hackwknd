@@ -351,6 +351,24 @@
         "tags": [
           "help-requests"
         ]
+      },
+      "get": {
+        "operationId": "HelpRequestsController_listOpen",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all open help requests for volunteers",
+        "tags": [
+          "help-requests"
+        ]
       }
     },
     "/api/help-requests/me": {
@@ -368,6 +386,26 @@
           }
         ],
         "summary": "List my help requests and status history",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/assignments": {
+      "get": {
+        "operationId": "HelpRequestsController_assignments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List help requests assigned to the current volunteer",
         "tags": [
           "help-requests"
         ]
