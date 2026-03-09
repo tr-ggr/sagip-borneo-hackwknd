@@ -600,6 +600,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -652,6 +668,143 @@
           }
         ],
         "summary": "Approve or reject volunteer application",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/bulk-review": {
+      "post": {
+        "operationId": "AdminOperationsController_bulkReviewVolunteers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkReviewVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bulk approve or reject volunteer applications",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/{userId}/suspend": {
+      "post": {
+        "operationId": "AdminOperationsController_suspendVolunteer",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendReactivateVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Suspend volunteer profile",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/{userId}/reactivate": {
+      "post": {
+        "operationId": "AdminOperationsController_reactivateVolunteer",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendReactivateVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reactivate volunteer profile",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/{id}/history": {
+      "get": {
+        "operationId": "AdminOperationsController_getApplicationHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get decision history for an application",
         "tags": [
           "admin-operations"
         ]
@@ -1121,6 +1274,14 @@
         "properties": {}
       },
       "ReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "BulkReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SuspendReactivateVolunteerDto": {
         "type": "object",
         "properties": {}
       },

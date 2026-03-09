@@ -12,8 +12,12 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Fill, Stroke, Style } from 'ol/style';
 import Geolocation from 'ol/Geolocation';
+import LineString from 'ol/geom/LineString';
+import Point from 'ol/geom/Point';
+import Icon from 'ol/style/Icon';
 import Polygon, { circular } from 'ol/geom/Polygon';
 import Overlay from 'ol/Overlay';
+import { boundingExtent } from 'ol/extent';
 
 interface RiskRegion {
   id: string;
@@ -23,17 +27,37 @@ interface RiskRegion {
   severity: number;
 }
 
+interface HelpRequest {
+  id: string;
+  latitude: number;
+  longitude: number;
+  urgency: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  hazardType: string;
+}
+
 interface MapComponentProps {
   weatherLocation?: { latitude: number; longitude: number };
   vulnerableRegions?: RiskRegion[];
+  helpRequests?: HelpRequest[];
+  focusedHelpRequestId?: string | null;
+  mapFocus?: { latitude: number; longitude: number } | null;
 }
 
-export default function MapComponent({ weatherLocation, vulnerableRegions = [] }: MapComponentProps) {
+export default function MapComponent({ 
+  weatherLocation, 
+  vulnerableRegions = [],
+  helpRequests = [],
+  focusedHelpRequestId,
+  mapFocus
+}: MapComponentProps) {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const regionsLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const helpLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const routeLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const userLocationRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [userCoords, setUserCoords] = useState<number[] | null>(null);
 
   useEffect(() => {
     if (!mapElement.current || mapRef.current) return;
@@ -78,11 +102,12 @@ export default function MapComponent({ weatherLocation, vulnerableRegions = [] }
     geolocation.on('change:position', () => {
       const coordinates = geolocation.getPosition();
       if (coordinates) {
+        setUserCoords(coordinates);
         locationOverlay.setPosition(coordinates);
-        if (userLocationRef.current) {
-          userLocationRef.current.classList.remove('hidden');
+        // Only auto-animate if NOT focused on something specific
+        if (!mapFocus) {
+          view.animate({ center: coordinates, zoom: 14 });
         }
-        view.animate({ center: coordinates, zoom: 14 });
       }
     });
 
@@ -97,10 +122,8 @@ export default function MapComponent({ weatherLocation, vulnerableRegions = [] }
         (pos) => {
           // Once permission is granted and position found, enable tracking on the map
           const coords = fromLonLat([pos.coords.longitude, pos.coords.latitude]);
+          setUserCoords(coords);
           locationOverlay.setPosition(coords);
-          if (userLocationRef.current) {
-            userLocationRef.current.classList.remove('hidden');
-          }
           view.animate({ center: coords, zoom: 14 });
           geolocation.setTracking(true);
         },
@@ -122,6 +145,39 @@ export default function MapComponent({ weatherLocation, vulnerableRegions = [] }
     });
     map.addLayer(regionsLayer);
     regionsLayerRef.current = regionsLayer;
+
+    // 5. Setup Help Requests Layer
+    const helpSource = new VectorSource();
+    const helpLayer = new VectorLayer({
+      source: helpSource,
+      zIndex: 10,
+    });
+    map.addLayer(helpLayer);
+    helpLayerRef.current = helpLayer;
+
+    // 6. Setup Route Layer
+    const routeSource = new VectorSource();
+    const routeLayer = new VectorLayer({
+      source: routeSource,
+      zIndex: 8,
+      style: [
+        new Style({
+          stroke: new Stroke({
+            color: 'rgba(250, 204, 21, 0.4)', // bright yellow glow
+            width: 12,
+          }),
+        }),
+        new Style({
+          stroke: new Stroke({
+            color: '#FDE047', // bright solid yellow
+            width: 4,
+            lineDash: [6, 6],
+          }),
+        })
+      ],
+    });
+    map.addLayer(routeLayer);
+    routeLayerRef.current = routeLayer;
 
     return () => {
       geolocation.setTracking(false);
@@ -173,12 +229,91 @@ export default function MapComponent({ weatherLocation, vulnerableRegions = [] }
     source.addFeatures(features);
   }, [vulnerableRegions]);
 
+  // Update Help Requests Layer
+  useEffect(() => {
+    if (!helpLayerRef.current) return;
+    const source = helpLayerRef.current.getSource();
+    if (!source) return;
+
+    source.clear();
+
+    const features = helpRequests.map(req => {
+      const isFocused = req.id === focusedHelpRequestId;
+      const point = new Point(fromLonLat([req.longitude, req.latitude]));
+      const feature = new Feature({
+        geometry: point,
+      });
+
+      const color = req.urgency === 'CRITICAL' ? '#DC2626' : '#EAB308';
+      
+      feature.setStyle(new Style({
+        image: new Icon({
+          src: `data:image/svg+xml;utf8,${encodeURIComponent(`
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 30L16 30C12 26 6 18 6 12C6 6.47715 10.4772 2 16 2C21.5228 2 26 6.47715 26 12C26 18 20 26 16 30Z" fill="${color}" stroke="white" stroke-width="2"/>
+              <circle cx="16" cy="12" r="4" fill="white"/>
+              ${isFocused ? '<circle cx="16" cy="12" r="8" stroke="white" stroke-width="2" opacity="0.5"><animate attributeName="r" from="8" to="16" dur="1.5s" repeatCount="indefinite" /><animate attributeName="opacity" from="0.5" to="0" dur="1.5s" repeatCount="indefinite" /></circle>' : ''}
+            </svg>
+          `)}`,
+          scale: isFocused ? 1.2 : 1,
+          anchor: [0.5, 1],
+        })
+      }));
+
+      return feature;
+    });
+
+    source.addFeatures(features);
+  }, [helpRequests, focusedHelpRequestId]);
+
+  // Update Route / Navigation Path
+  useEffect(() => {
+    if (!routeLayerRef.current || !mapRef.current) return;
+    const source = routeLayerRef.current.getSource();
+    if (!source) return;
+
+    source.clear();
+
+    if (mapFocus && userCoords) {
+      const targetCoords = fromLonLat([mapFocus.longitude, mapFocus.latitude]);
+      const line = new Feature({
+        geometry: new LineString([userCoords, targetCoords]),
+      });
+      source.addFeature(line);
+
+      // Draw destination pin overlaying the line
+      const pin = new Feature({
+        geometry: new Point(targetCoords),
+      });
+      pin.setStyle(new Style({
+        image: new Icon({
+          src: `data:image/svg+xml;utf8,${encodeURIComponent(`
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 30L16 30C12 26 6 18 6 12C6 6.47715 10.4772 2 16 2C21.5228 2 26 6.47715 26 12C26 18 20 26 16 30Z" fill="#FACC15" stroke="white" stroke-width="2"/>
+              <circle cx="16" cy="12" r="4" fill="white"/>
+            </svg>
+          `)}`,
+          anchor: [0.5, 1],
+        })
+      }));
+      source.addFeature(pin);
+
+      // Center view to fit both user location and target destination
+      const extent = boundingExtent([userCoords, targetCoords]);
+      mapRef.current?.getView().fit(extent, {
+        padding: [120, 80, 250, 80], // Top, right, bottom (extra for overlay), left
+        duration: 1000,
+        maxZoom: 16
+      });
+    }
+  }, [mapFocus, userCoords]);
+
   return (
     <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-wira border border-wira-teal/30">
         <div ref={mapElement} className="w-full h-full" />
         
         {/* 3D Person Pin Overlay */}
-        <div ref={userLocationRef} className="absolute hidden pointer-events-none">
+        <div ref={userLocationRef} className={`absolute pointer-events-none ${!userCoords ? 'hidden' : ''}`}>
           <div className="relative flex items-center justify-center -translate-y-4">
             {/* Ping effect */}
             <div className="absolute w-12 h-12 bg-wira-gold/40 rounded-full animate-ping"></div>
