@@ -146,3 +146,8 @@ export type HelpRequestEvent = Prisma.HelpRequestEventModel
  * 
  */
 export type MapPinStatus = Prisma.MapPinStatusModel
+/**
+ * Model BuildingProfile
+ * 
+ */
+export type BuildingProfile = Prisma.BuildingProfileModel

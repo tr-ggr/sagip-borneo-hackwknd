@@ -71,7 +71,8 @@ export const ModelName = {
   WarningEventLog: 'WarningEventLog',
   VolunteerDecisionLog: 'VolunteerDecisionLog',
   HelpRequestEvent: 'HelpRequestEvent',
-  MapPinStatus: 'MapPinStatus'
+  MapPinStatus: 'MapPinStatus',
+  BuildingProfile: 'BuildingProfile'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -392,12 +393,30 @@ export const MapPinStatusScalarFieldEnum = {
 export type MapPinStatusScalarFieldEnum = (typeof MapPinStatusScalarFieldEnum)[keyof typeof MapPinStatusScalarFieldEnum]
 
 
+export const BuildingProfileScalarFieldEnum = {
+  id: 'id',
+  osmId: 'osmId',
+  countryIso3: 'countryIso3',
+  properties: 'properties',
+  createdAt: 'createdAt'
+} as const
+
+export type BuildingProfileScalarFieldEnum = (typeof BuildingProfileScalarFieldEnum)[keyof typeof BuildingProfileScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -414,4 +433,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

@@ -404,7 +404,8 @@ export const ModelName = {
   WarningEventLog: 'WarningEventLog',
   VolunteerDecisionLog: 'VolunteerDecisionLog',
   HelpRequestEvent: 'HelpRequestEvent',
-  MapPinStatus: 'MapPinStatus'
+  MapPinStatus: 'MapPinStatus',
+  BuildingProfile: 'BuildingProfile'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +421,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus"
+    modelProps: "user" | "session" | "account" | "verification" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus" | "buildingProfile"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1978,6 +1979,64 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BuildingProfile: {
+      payload: Prisma.$BuildingProfilePayload<ExtArgs>
+      fields: Prisma.BuildingProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BuildingProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BuildingProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.BuildingProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BuildingProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload>
+        }
+        findMany: {
+          args: Prisma.BuildingProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload>[]
+        }
+        delete: {
+          args: Prisma.BuildingProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload>
+        }
+        update: {
+          args: Prisma.BuildingProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.BuildingProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BuildingProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BuildingProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BuildingProfilePayload>[]
+        }
+        aggregate: {
+          args: Prisma.BuildingProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBuildingProfile>
+        }
+        groupBy: {
+          args: Prisma.BuildingProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BuildingProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BuildingProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BuildingProfileCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2319,12 +2378,30 @@ export const MapPinStatusScalarFieldEnum = {
 export type MapPinStatusScalarFieldEnum = (typeof MapPinStatusScalarFieldEnum)[keyof typeof MapPinStatusScalarFieldEnum]
 
 
+export const BuildingProfileScalarFieldEnum = {
+  id: 'id',
+  osmId: 'osmId',
+  countryIso3: 'countryIso3',
+  properties: 'properties',
+  createdAt: 'createdAt'
+} as const
+
+export type BuildingProfileScalarFieldEnum = (typeof BuildingProfileScalarFieldEnum)[keyof typeof BuildingProfileScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -2341,6 +2418,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -2523,6 +2609,20 @@ export type EnumPinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 export type ListEnumPinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PinStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2639,6 +2739,7 @@ export type GlobalOmitConfig = {
   volunteerDecisionLog?: Prisma.VolunteerDecisionLogOmit
   helpRequestEvent?: Prisma.HelpRequestEventOmit
   mapPinStatus?: Prisma.MapPinStatusOmit
+  buildingProfile?: Prisma.BuildingProfileOmit
 }
 
 /* Types for Logging */
