@@ -1,9 +1,21 @@
 'use client';
 
-import { useValidators } from '../lib/api/hooks';
+import { useTrackerControllerGetValidators } from '@wira-borneo/api-client';
+
+interface TrackerValidator {
+  id: string;
+  nodeId: string;
+  latencyMs: number;
+  uptimePercentage: number;
+  status: string;
+}
 
 export function NodeValidators() {
-  const { data: validators = [], isLoading } = useValidators();
+  const { data, isLoading } = useTrackerControllerGetValidators(
+    {},
+    { query: { refetchInterval: 30000 } },
+  );
+  const validators = (data ?? []) as TrackerValidator[];
 
   const getStatusColor = (status: string) => {
     switch (status) {

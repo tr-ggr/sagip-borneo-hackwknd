@@ -1,17 +1,31 @@
 'use client';
 
-import { useShipments } from '../../lib/api/hooks';
+import { useTrackerControllerGetShipments } from '@wira-borneo/api-client';
+
+interface TrackerShipment {
+  id: string;
+  shipmentId: string;
+  class: string;
+  destination: string;
+  verificationStatus: string;
+}
 
 export function RecentImpactLogs() {
-  const { data: shipments = [], isLoading } = useShipments();
+  const { data, isLoading } = useTrackerControllerGetShipments(
+    { status: 'DISPATCHED' },
+    {
+      query: { refetchInterval: 30000 },
+    },
+  );
 
-  // Take only the 3 most recent
-  const recentLogs = shipments.slice(0, 3).map((s) => ({
-    id: s.id,
-    destination: `${s.destination}`,
-    supplyType: s.class,
-    quantity: s.shipmentId,
-    status: s.verificationStatus.toLowerCase(),
+  const allShipments = (data ?? []) as TrackerShipment[];
+
+  const recentLogs = allShipments.slice(0, 3).map((shipment) => ({
+    id: shipment.id,
+    destination: shipment.destination,
+    supplyType: shipment.class,
+    quantity: shipment.shipmentId,
+    status: shipment.verificationStatus.toLowerCase(),
   }));
 
   if (isLoading) {
@@ -21,6 +35,7 @@ export function RecentImpactLogs() {
       </div>
     );
   }
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
       <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
