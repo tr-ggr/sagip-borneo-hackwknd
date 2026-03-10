@@ -187,5 +187,8 @@
   "devDependencies": {
     "@nestjs/testing": "^11.0.0",
     "@types/bcrypt": "^6.0.0"
+  },
+  "prisma": {
+    "seed": "node scripts/run-prisma-seed.mjs"
   }
 }

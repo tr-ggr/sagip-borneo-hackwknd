@@ -974,6 +974,108 @@
           "admin-operations"
         ]
       }
+    },
+    "/api/tracker/shipments": {
+      "get": {
+        "operationId": "TrackerController_getShipments",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracker"
+        ]
+      }
+    },
+    "/api/tracker/shipments/{id}": {
+      "get": {
+        "operationId": "TrackerController_getShipmentById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracker"
+        ]
+      }
+    },
+    "/api/tracker/stats": {
+      "get": {
+        "operationId": "TrackerController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracker"
+        ]
+      }
+    },
+    "/api/tracker/relief-zones": {
+      "get": {
+        "operationId": "TrackerController_getReliefZones",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracker"
+        ]
+      }
+    },
+    "/api/tracker/validators": {
+      "get": {
+        "operationId": "TrackerController_getValidators",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracker"
+        ]
+      }
+    },
+    "/api/tracker/donation-distribution": {
+      "get": {
+        "operationId": "TrackerController_getDonationDistribution",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracker"
+        ]
+      }
     }
   },
   "info": {
