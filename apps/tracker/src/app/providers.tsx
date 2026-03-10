@@ -9,30 +9,22 @@ import {
 } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { wagmiConfig } from '../lib/blockchain/config';
-import { useState, useEffect } from 'react';
-import { setApiClientBaseUrl } from '@wira-borneo/api-client';
+import * as React from 'react';
+
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  // Configure API client base URL
-  useEffect(() => {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3333';
-    setApiClientBaseUrl(baseUrl);
-  }, []);
-
-  // Create QueryClient instance once
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60 * 1000, // 1 minute
-            refetchOnWindowFocus: false,
-          },
-        },
-      }),
-  );
-
+  
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
