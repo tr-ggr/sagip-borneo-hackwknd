@@ -43,12 +43,12 @@ export default function LayoutWrapper({
             <button 
               key={item.path} 
               onClick={() => onNavigate(item.path)}
-              className={`flex flex-col items-center justify-center gap-1 transition-all duration-200 flex-1 h-full ${isActive ? 'text-wira-gold' : 'text-wira-teal-light/60 hover:text-wira-teal-light'}`}
+              className={`flex flex-col items-center justify-center gap-1 transition-all duration-200 flex-1 h-full ${isActive ? 'text-wira-gold' : 'nav-inactive'}`}
             >
               <div className={`p-1 rounded-xl transition-all ${isActive ? 'bg-wira-gold/10' : ''}`}>
                 <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
               </div>
-              <span className={`text-[9px] font-body font-bold uppercase tracking-tighter ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
+              <span className={`text-[9px] uppercase tracking-tighter ${isActive ? 'opacity-100' : ''}`}>{item.label}</span>
             </button>
           );
         })}
