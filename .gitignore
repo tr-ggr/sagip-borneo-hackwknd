@@ -192,3 +192,5 @@ apps/api/geojson/evacuation/
 apps/api/geojson/evacuation/*.geojson
 
 .geojson
+
+packages/api-client/openapi/openapi.json
