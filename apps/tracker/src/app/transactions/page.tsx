@@ -11,18 +11,18 @@ type TabType = 'dispatched' | 'in_transit' | 'delivered';
 export default function TransactionsPage() {
   const [activeTab, setActiveTab] = useState<TabType>('dispatched');
 
-  const { data: dispatched = [] } = useTrackerControllerGetShipments({
-    params: { status: 'DISPATCHED' },
-    query: { refetchInterval: 30000 },
-  });
-  const { data: inTransit = [] } = useTrackerControllerGetShipments({
-    params: { status: 'IN_TRANSIT' },
-    query: { refetchInterval: 30000 },
-  });
-  const { data: delivered = [] } = useTrackerControllerGetShipments({
-    params: { status: 'DELIVERED' },
-    query: { refetchInterval: 30000 },
-  });
+  const { data: dispatched = [] } = useTrackerControllerGetShipments(
+    { status: 'DISPATCHED' },
+    { query: { refetchInterval: 30000 } },
+  );
+  const { data: inTransit = [] } = useTrackerControllerGetShipments(
+    { status: 'IN_TRANSIT' },
+    { query: { refetchInterval: 30000 } },
+  );
+  const { data: delivered = [] } = useTrackerControllerGetShipments(
+    { status: 'DELIVERED' },
+    { query: { refetchInterval: 30000 } },
+  );
 
   const tabs: { key: TabType; label: string; icon: string; count: number }[] = [
     {
