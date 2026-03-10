@@ -117,7 +117,6 @@ export default function Warnings({ onViewSafeRoute }: { onViewSafeRoute?: (evac:
                 </div>
                 <h2 className="text-base font-display font-bold wira-card-title">{warning.title}</h2>
                 <p className="text-xs font-body wira-card-body line-clamp-2">{warning.description}</p>
-
                 <div className="pt-3 flex items-center justify-between border-t border-wira-ivory-dark/50 mt-2">
                   <div className="flex items-center gap-1.5 text-wira-teal">
                     <Map size={12} />
