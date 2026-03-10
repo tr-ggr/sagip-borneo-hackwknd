@@ -41,7 +41,7 @@ export default function MainApp() {
   }
 
   const renderScreen = () => {
-    if (!session?.user && !['/', '/warnings', '/family'].includes(currentScreen)) {
+    if (!session?.user) {
        return (
         <div className="flex flex-1 flex-col items-center justify-center bg-wira-ivory px-6 wira-batik-bg overflow-hidden py-10">
           {authView === 'login' ? (
@@ -136,7 +136,11 @@ export default function MainApp() {
   };
 
   return (
-    <LayoutWrapper currentPath={currentScreen} onNavigate={setCurrentScreen}>
+    <LayoutWrapper 
+      currentPath={currentScreen} 
+      onNavigate={setCurrentScreen}
+      showNav={!!session?.user}
+    >
       {renderScreen()}
     </LayoutWrapper>
   );
