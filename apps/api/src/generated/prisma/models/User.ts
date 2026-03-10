@@ -245,6 +245,7 @@ export type UserWhereInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogListRelationFilter
   helpRequestEvents?: Prisma.HelpRequestEventListRelationFilter
   mapPinsReported?: Prisma.MapPinStatusListRelationFilter
+  mapPinsReviewed?: Prisma.MapPinStatusListRelationFilter
   locationSnapshot?: Prisma.XOR<Prisma.UserLocationSnapshotNullableScalarRelationFilter, Prisma.UserLocationSnapshotWhereInput> | null
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionListRelationFilter
 }
@@ -276,6 +277,7 @@ export type UserOrderByWithRelationInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogOrderByRelationAggregateInput
   helpRequestEvents?: Prisma.HelpRequestEventOrderByRelationAggregateInput
   mapPinsReported?: Prisma.MapPinStatusOrderByRelationAggregateInput
+  mapPinsReviewed?: Prisma.MapPinStatusOrderByRelationAggregateInput
   locationSnapshot?: Prisma.UserLocationSnapshotOrderByWithRelationInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionOrderByRelationAggregateInput
 }
@@ -310,6 +312,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogListRelationFilter
   helpRequestEvents?: Prisma.HelpRequestEventListRelationFilter
   mapPinsReported?: Prisma.MapPinStatusListRelationFilter
+  mapPinsReviewed?: Prisma.MapPinStatusListRelationFilter
   locationSnapshot?: Prisma.XOR<Prisma.UserLocationSnapshotNullableScalarRelationFilter, Prisma.UserLocationSnapshotWhereInput> | null
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionListRelationFilter
 }, "id" | "email">
@@ -375,6 +378,7 @@ export type UserCreateInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -406,6 +410,7 @@ export type UserUncheckedCreateInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -437,6 +442,7 @@ export type UserUpdateInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -468,6 +474,7 @@ export type UserUncheckedUpdateInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -830,6 +837,12 @@ export type UserCreateNestedOneWithoutMapPinsReportedInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutMapPinsReviewedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReviewedInput, Prisma.UserUncheckedCreateWithoutMapPinsReviewedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMapPinsReviewedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneWithoutMapPinsReportedNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReportedInput, Prisma.UserUncheckedCreateWithoutMapPinsReportedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutMapPinsReportedInput
@@ -838,6 +851,16 @@ export type UserUpdateOneWithoutMapPinsReportedNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMapPinsReportedInput, Prisma.UserUpdateWithoutMapPinsReportedInput>, Prisma.UserUncheckedUpdateWithoutMapPinsReportedInput>
+}
+
+export type UserUpdateOneWithoutMapPinsReviewedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReviewedInput, Prisma.UserUncheckedCreateWithoutMapPinsReviewedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMapPinsReviewedInput
+  upsert?: Prisma.UserUpsertWithoutMapPinsReviewedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMapPinsReviewedInput, Prisma.UserUpdateWithoutMapPinsReviewedInput>, Prisma.UserUncheckedUpdateWithoutMapPinsReviewedInput>
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -866,6 +889,7 @@ export type UserCreateWithoutSessionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -896,6 +920,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -942,6 +967,7 @@ export type UserUpdateWithoutSessionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -972,6 +998,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1002,6 +1029,7 @@ export type UserCreateWithoutAccountsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1032,6 +1060,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1078,6 +1107,7 @@ export type UserUpdateWithoutAccountsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -1108,6 +1138,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1138,6 +1169,7 @@ export type UserCreateWithoutFamiliesCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1168,6 +1200,7 @@ export type UserUncheckedCreateWithoutFamiliesCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1214,6 +1247,7 @@ export type UserUpdateWithoutFamiliesCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -1244,6 +1278,7 @@ export type UserUncheckedUpdateWithoutFamiliesCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1274,6 +1309,7 @@ export type UserCreateWithoutFamilyMembershipsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1304,6 +1340,7 @@ export type UserUncheckedCreateWithoutFamilyMembershipsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1350,6 +1387,7 @@ export type UserUpdateWithoutFamilyMembershipsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -1380,6 +1418,7 @@ export type UserUncheckedUpdateWithoutFamilyMembershipsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1411,6 +1450,7 @@ export type UserCreateWithoutLocationSnapshotInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
 
@@ -1441,6 +1481,7 @@ export type UserUncheckedCreateWithoutLocationSnapshotInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1487,6 +1528,7 @@ export type UserUpdateWithoutLocationSnapshotInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
 
@@ -1517,6 +1559,7 @@ export type UserUncheckedUpdateWithoutLocationSnapshotInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1546,6 +1589,7 @@ export type UserCreateWithoutVolunteerApplicationsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1576,6 +1620,7 @@ export type UserUncheckedCreateWithoutVolunteerApplicationsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1611,6 +1656,7 @@ export type UserCreateWithoutVolunteerReviewsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1641,6 +1687,7 @@ export type UserUncheckedCreateWithoutVolunteerReviewsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1687,6 +1734,7 @@ export type UserUpdateWithoutVolunteerApplicationsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -1717,6 +1765,7 @@ export type UserUncheckedUpdateWithoutVolunteerApplicationsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1758,6 +1807,7 @@ export type UserUpdateWithoutVolunteerReviewsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -1788,6 +1838,7 @@ export type UserUncheckedUpdateWithoutVolunteerReviewsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1818,6 +1869,7 @@ export type UserCreateWithoutVolunteerProfileInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1848,6 +1900,7 @@ export type UserUncheckedCreateWithoutVolunteerProfileInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1883,6 +1936,7 @@ export type UserCreateWithoutVolunteerApprovalsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -1913,6 +1967,7 @@ export type UserUncheckedCreateWithoutVolunteerApprovalsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1959,6 +2014,7 @@ export type UserUpdateWithoutVolunteerProfileInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -1989,6 +2045,7 @@ export type UserUncheckedUpdateWithoutVolunteerProfileInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2030,6 +2087,7 @@ export type UserUpdateWithoutVolunteerApprovalsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -2060,6 +2118,7 @@ export type UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2090,6 +2149,7 @@ export type UserCreateWithoutWarningsCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -2120,6 +2180,7 @@ export type UserUncheckedCreateWithoutWarningsCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2166,6 +2227,7 @@ export type UserUpdateWithoutWarningsCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -2196,6 +2258,7 @@ export type UserUncheckedUpdateWithoutWarningsCreatedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2227,6 +2290,7 @@ export type UserCreateWithoutEvacuationRouteSuggestionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
 }
 
@@ -2257,6 +2321,7 @@ export type UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
 }
 
@@ -2303,6 +2368,7 @@ export type UserUpdateWithoutEvacuationRouteSuggestionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
 }
 
@@ -2333,6 +2399,7 @@ export type UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
 }
 
@@ -2362,6 +2429,7 @@ export type UserCreateWithoutHelpRequestsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -2392,6 +2460,7 @@ export type UserUncheckedCreateWithoutHelpRequestsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2438,6 +2507,7 @@ export type UserUpdateWithoutHelpRequestsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -2468,6 +2538,7 @@ export type UserUncheckedUpdateWithoutHelpRequestsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2498,6 +2569,7 @@ export type UserCreateWithoutHelpAssignmentsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -2528,6 +2600,7 @@ export type UserUncheckedCreateWithoutHelpAssignmentsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2574,6 +2647,7 @@ export type UserUpdateWithoutHelpAssignmentsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -2604,6 +2678,7 @@ export type UserUncheckedUpdateWithoutHelpAssignmentsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2634,6 +2709,7 @@ export type UserCreateWithoutWarningEventLogsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -2664,6 +2740,7 @@ export type UserUncheckedCreateWithoutWarningEventLogsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2710,6 +2787,7 @@ export type UserUpdateWithoutWarningEventLogsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -2740,6 +2818,7 @@ export type UserUncheckedUpdateWithoutWarningEventLogsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2770,6 +2849,7 @@ export type UserCreateWithoutVolunteerDecisionLogsInput = {
   warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -2800,6 +2880,7 @@ export type UserUncheckedCreateWithoutVolunteerDecisionLogsInput = {
   warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2846,6 +2927,7 @@ export type UserUpdateWithoutVolunteerDecisionLogsInput = {
   warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -2876,6 +2958,7 @@ export type UserUncheckedUpdateWithoutVolunteerDecisionLogsInput = {
   warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2906,6 +2989,7 @@ export type UserCreateWithoutHelpRequestEventsInput = {
   warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -2936,6 +3020,7 @@ export type UserUncheckedCreateWithoutHelpRequestEventsInput = {
   warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2982,6 +3067,7 @@ export type UserUpdateWithoutHelpRequestEventsInput = {
   warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -3012,6 +3098,7 @@ export type UserUncheckedUpdateWithoutHelpRequestEventsInput = {
   warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -3042,6 +3129,7 @@ export type UserCreateWithoutMapPinsReportedInput = {
   warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
 }
@@ -3072,6 +3160,7 @@ export type UserUncheckedCreateWithoutMapPinsReportedInput = {
   warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -3079,6 +3168,73 @@ export type UserUncheckedCreateWithoutMapPinsReportedInput = {
 export type UserCreateOrConnectWithoutMapPinsReportedInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReportedInput, Prisma.UserUncheckedCreateWithoutMapPinsReportedInput>
+}
+
+export type UserCreateWithoutMapPinsReviewedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMapPinsReviewedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMapPinsReviewedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReviewedInput, Prisma.UserUncheckedCreateWithoutMapPinsReviewedInput>
 }
 
 export type UserUpsertWithoutMapPinsReportedInput = {
@@ -3118,6 +3274,7 @@ export type UserUpdateWithoutMapPinsReportedInput = {
   warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
 }
@@ -3148,6 +3305,80 @@ export type UserUncheckedUpdateWithoutMapPinsReportedInput = {
   warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutMapPinsReviewedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMapPinsReviewedInput, Prisma.UserUncheckedUpdateWithoutMapPinsReviewedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMapPinsReviewedInput, Prisma.UserUncheckedCreateWithoutMapPinsReviewedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMapPinsReviewedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMapPinsReviewedInput, Prisma.UserUncheckedUpdateWithoutMapPinsReviewedInput>
+}
+
+export type UserUpdateWithoutMapPinsReviewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMapPinsReviewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -3172,6 +3403,7 @@ export type UserCountOutputType = {
   volunteerDecisionLogs: number
   helpRequestEvents: number
   mapPinsReported: number
+  mapPinsReviewed: number
   evacuationRouteSuggestions: number
 }
 
@@ -3190,6 +3422,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   volunteerDecisionLogs?: boolean | UserCountOutputTypeCountVolunteerDecisionLogsArgs
   helpRequestEvents?: boolean | UserCountOutputTypeCountHelpRequestEventsArgs
   mapPinsReported?: boolean | UserCountOutputTypeCountMapPinsReportedArgs
+  mapPinsReviewed?: boolean | UserCountOutputTypeCountMapPinsReviewedArgs
   evacuationRouteSuggestions?: boolean | UserCountOutputTypeCountEvacuationRouteSuggestionsArgs
 }
 
@@ -3304,6 +3537,13 @@ export type UserCountOutputTypeCountMapPinsReportedArgs<ExtArgs extends runtime.
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountMapPinsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MapPinStatusWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountEvacuationRouteSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EvacuationRouteSuggestionWhereInput
 }
@@ -3336,6 +3576,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   volunteerDecisionLogs?: boolean | Prisma.User$volunteerDecisionLogsArgs<ExtArgs>
   helpRequestEvents?: boolean | Prisma.User$helpRequestEventsArgs<ExtArgs>
   mapPinsReported?: boolean | Prisma.User$mapPinsReportedArgs<ExtArgs>
+  mapPinsReviewed?: boolean | Prisma.User$mapPinsReviewedArgs<ExtArgs>
   locationSnapshot?: boolean | Prisma.User$locationSnapshotArgs<ExtArgs>
   evacuationRouteSuggestions?: boolean | Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3400,6 +3641,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   volunteerDecisionLogs?: boolean | Prisma.User$volunteerDecisionLogsArgs<ExtArgs>
   helpRequestEvents?: boolean | Prisma.User$helpRequestEventsArgs<ExtArgs>
   mapPinsReported?: boolean | Prisma.User$mapPinsReportedArgs<ExtArgs>
+  mapPinsReviewed?: boolean | Prisma.User$mapPinsReviewedArgs<ExtArgs>
   locationSnapshot?: boolean | Prisma.User$locationSnapshotArgs<ExtArgs>
   evacuationRouteSuggestions?: boolean | Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3425,6 +3667,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     volunteerDecisionLogs: Prisma.$VolunteerDecisionLogPayload<ExtArgs>[]
     helpRequestEvents: Prisma.$HelpRequestEventPayload<ExtArgs>[]
     mapPinsReported: Prisma.$MapPinStatusPayload<ExtArgs>[]
+    mapPinsReviewed: Prisma.$MapPinStatusPayload<ExtArgs>[]
     locationSnapshot: Prisma.$UserLocationSnapshotPayload<ExtArgs> | null
     evacuationRouteSuggestions: Prisma.$EvacuationRouteSuggestionPayload<ExtArgs>[]
   }
@@ -3849,6 +4092,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   volunteerDecisionLogs<T extends Prisma.User$volunteerDecisionLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$volunteerDecisionLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VolunteerDecisionLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   helpRequestEvents<T extends Prisma.User$helpRequestEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$helpRequestEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mapPinsReported<T extends Prisma.User$mapPinsReportedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mapPinsReportedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MapPinStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mapPinsReviewed<T extends Prisma.User$mapPinsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mapPinsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MapPinStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locationSnapshot<T extends Prisma.User$locationSnapshotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$locationSnapshotArgs<ExtArgs>>): Prisma.Prisma__UserLocationSnapshotClient<runtime.Types.Result.GetResult<Prisma.$UserLocationSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   evacuationRouteSuggestions<T extends Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EvacuationRouteSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -4613,6 +4857,30 @@ export type User$helpRequestEventsArgs<ExtArgs extends runtime.Types.Extensions.
  * User.mapPinsReported
  */
 export type User$mapPinsReportedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MapPinStatus
+   */
+  select?: Prisma.MapPinStatusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MapPinStatus
+   */
+  omit?: Prisma.MapPinStatusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MapPinStatusInclude<ExtArgs> | null
+  where?: Prisma.MapPinStatusWhereInput
+  orderBy?: Prisma.MapPinStatusOrderByWithRelationInput | Prisma.MapPinStatusOrderByWithRelationInput[]
+  cursor?: Prisma.MapPinStatusWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MapPinStatusScalarFieldEnum | Prisma.MapPinStatusScalarFieldEnum[]
+}
+
+/**
+ * User.mapPinsReviewed
+ */
+export type User$mapPinsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the MapPinStatus
    */

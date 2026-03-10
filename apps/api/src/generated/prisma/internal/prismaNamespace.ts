@@ -2220,6 +2220,8 @@ export const VolunteerProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   status: 'status',
+  baseLatitude: 'baseLatitude',
+  baseLongitude: 'baseLongitude',
   approvedById: 'approvedById',
   approvedAt: 'approvedAt',
   createdAt: 'createdAt',
@@ -2268,6 +2270,10 @@ export const EvacuationAreaScalarFieldEnum = {
   longitude: 'longitude',
   address: 'address',
   region: 'region',
+  type: 'type',
+  capacity: 'capacity',
+  population: 'population',
+  source: 'source',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2380,8 +2386,14 @@ export const MapPinStatusScalarFieldEnum = {
   longitude: 'longitude',
   region: 'region',
   note: 'note',
+  photoUrl: 'photoUrl',
+  photoKey: 'photoKey',
   reporterId: 'reporterId',
   reportedAt: 'reportedAt',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  reviewNote: 'reviewNote',
+  reviewStatus: 'reviewStatus',
   updatedAt: 'updatedAt'
 } as const
 
@@ -2621,6 +2633,20 @@ export type EnumPinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
  * Reference to a field of type 'PinStatus[]'
  */
 export type ListEnumPinStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PinStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PinReviewStatus'
+ */
+export type EnumPinReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PinReviewStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PinReviewStatus[]'
+ */
+export type ListEnumPinReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PinReviewStatus[]'>
     
 
 /**
