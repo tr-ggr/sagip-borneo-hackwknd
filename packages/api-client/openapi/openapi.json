@@ -173,6 +173,78 @@
         ]
       }
     },
+    "/api/risk/building-profiles": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getBuildingProfiles",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get building profiles (GeoJSON) for a location",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/risk/tiles/{z}/{x}/{y}.mvt": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getTiles",
+        "parameters": [
+          {
+            "name": "z",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "y",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get building profile vector tiles (MVT)",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
     "/api/families": {
       "post": {
         "operationId": "FamiliesController_createFamily",
