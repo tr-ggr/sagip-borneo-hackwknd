@@ -5,8 +5,8 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
 
-const EVAC_GEOJSON_PATH = join(process.cwd(), 'data', 'evacuation-center', 'src', 'data', 'ph_evacs_cleaned.geojson');
-const EVAC_RAW_GEOJSON_PATH = join(process.cwd(), 'data', 'evacuation-center', 'src', 'data', 'ph_evacs_raw.geojson');
+const EVAC_GEOJSON_PATH = join(process.cwd(), 'geojson', 'evacuation', 'ph_evacs_cleaned.geojson');
+const EVAC_RAW_GEOJSON_PATH = join(process.cwd(), 'geojson', 'evacuation', 'ph_evacs_raw.geojson');
 const EVAC_IMPORT_LIMIT = 500;
 
 function polygonCentroid(ring: number[][]): [number, number] | null {
