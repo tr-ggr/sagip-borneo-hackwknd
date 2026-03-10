@@ -173,6 +173,39 @@
         ]
       }
     },
+    "/api/risk/full-detail/{iso3}": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getFullDetail",
+        "parameters": [
+          {
+            "name": "iso3",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bbox",
+            "required": true,
+            "in": "query",
+            "description": "minLng,minLat,maxLng,maxLat",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns GeoJSON FeatureCollection"
+          }
+        },
+        "summary": "Get full detail building profiles for a country and bbox",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
     "/api/families": {
       "post": {
         "operationId": "FamiliesController_createFamily",
@@ -318,6 +351,36 @@
           }
         ],
         "summary": "Get volunteer profile/application status",
+        "tags": [
+          "volunteers"
+        ]
+      }
+    },
+    "/api/volunteers/me/home": {
+      "patch": {
+        "operationId": "VolunteersController_setHome",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolunteerHomeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Set volunteer home location",
         "tags": [
           "volunteers"
         ]
@@ -528,12 +591,60 @@
             "description": ""
           }
         },
-        "security": [
+        "summary": "List active evacuation areas (public)",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/nearest": {
+      "get": {
+        "operationId": "EvacuationController_nearest",
+        "parameters": [
           {
-            "bearer": []
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "type": "string"
+            }
           }
         ],
-        "summary": "List active evacuation areas",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Nearest evacuation sites by distance, top 5 re-sorted by OSRM duration",
         "tags": [
           "evacuation"
         ]
@@ -559,6 +670,67 @@
         ]
       }
     },
+    "/api/routing/route": {
+      "get": {
+        "operationId": "RoutingController_getRoute",
+        "parameters": [
+          {
+            "name": "fromLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fromLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get road route between two points (OSRM)",
+        "tags": [
+          "routing"
+        ]
+      }
+    },
     "/api/assistant/inquiries": {
       "post": {
         "operationId": "AssistantController_inquire",
@@ -574,8 +746,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantInquiryResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -589,12 +768,60 @@
         ]
       }
     },
+    "/api/assistant/internal/demographics/{userId}": {
+      "get": {
+        "operationId": "AssistantInternalController_getDemographics",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-llm-internal-secret",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Internal: fetch user demographics for tool calling",
+        "tags": [
+          "assistant-internal"
+        ]
+      }
+    },
     "/api/admin/volunteers/applications": {
       "get": {
         "operationId": "AdminOperationsController_listVolunteerApplications",
         "parameters": [
           {
             "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
             "required": true,
             "in": "query",
             "schema": {
@@ -652,6 +879,143 @@
           }
         ],
         "summary": "Approve or reject volunteer application",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/bulk-review": {
+      "post": {
+        "operationId": "AdminOperationsController_bulkReviewVolunteers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkReviewVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bulk approve or reject volunteer applications",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/{userId}/suspend": {
+      "post": {
+        "operationId": "AdminOperationsController_suspendVolunteer",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendReactivateVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Suspend volunteer profile",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/{userId}/reactivate": {
+      "post": {
+        "operationId": "AdminOperationsController_reactivateVolunteer",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendReactivateVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reactivate volunteer profile",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/{id}/history": {
+      "get": {
+        "operationId": "AdminOperationsController_getApplicationHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get decision history for an application",
         "tags": [
           "admin-operations"
         ]
@@ -722,6 +1086,45 @@
           }
         ],
         "summary": "Get operational pin statuses",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/pins/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewPin",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewPinDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject a hazard pin (admin only)",
         "tags": [
           "admin-operations"
         ]
@@ -975,105 +1378,33 @@
         ]
       }
     },
-    "/api/tracker/shipments": {
-      "get": {
-        "operationId": "TrackerController_getShipments",
-        "parameters": [
-          {
-            "name": "status",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
+    "/api/pins": {
+      "post": {
+        "operationId": "PinsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePinDto"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": ""
           }
         },
-        "tags": [
-          "Tracker"
-        ]
-      }
-    },
-    "/api/tracker/shipments/{id}": {
-      "get": {
-        "operationId": "TrackerController_getShipmentById",
-        "parameters": [
+        "security": [
           {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
+            "bearer": []
           }
         ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
+        "summary": "Submit a hazard pin with location and optional photo",
         "tags": [
-          "Tracker"
-        ]
-      }
-    },
-    "/api/tracker/stats": {
-      "get": {
-        "operationId": "TrackerController_getStats",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Tracker"
-        ]
-      }
-    },
-    "/api/tracker/relief-zones": {
-      "get": {
-        "operationId": "TrackerController_getReliefZones",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Tracker"
-        ]
-      }
-    },
-    "/api/tracker/validators": {
-      "get": {
-        "operationId": "TrackerController_getValidators",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Tracker"
-        ]
-      }
-    },
-    "/api/tracker/donation-distribution": {
-      "get": {
-        "operationId": "TrackerController_getDonationDistribution",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Tracker"
+          "pins"
         ]
       }
     }
@@ -1210,6 +1541,10 @@
         "type": "object",
         "properties": {}
       },
+      "VolunteerHomeDto": {
+        "type": "object",
+        "properties": {}
+      },
       "CreateHelpRequestDto": {
         "type": "object",
         "properties": {}
@@ -1220,15 +1555,124 @@
       },
       "AssistantInquiryDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "question": {
+            "type": "string",
+            "example": "What should I do during a flood?",
+            "description": "User question (max 500 chars)"
+          },
+          "location": {
+            "type": "string",
+            "example": "Kuching",
+            "description": "Current location of the user"
+          },
+          "hazardType": {
+            "type": "string",
+            "example": "FLOOD",
+            "description": "Type of hazard relevant to the inquiry"
+          }
+        },
+        "required": [
+          "question"
+        ]
+      },
+      "AssistantStructuredDataDto": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "example": "Move to higher ground immediately.",
+            "description": "Brief summary of advice"
+          },
+          "steps": {
+            "example": [
+              "Pack a go bag",
+              "Listen to radio"
+            ],
+            "description": "Actionable steps",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "safetyReminder": {
+            "type": "string",
+            "example": "Stay clear of power lines.",
+            "description": "Safety reminder"
+          }
+        },
+        "required": [
+          "summary",
+          "steps",
+          "safetyReminder"
+        ]
+      },
+      "AssistantInquiryResponseDto": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "example": "Move to higher ground immediately.",
+            "description": "AI-generated answer to the inquiry"
+          },
+          "disclaimer": {
+            "type": "string",
+            "example": "This is general guidance only. Always follow local authorities.",
+            "description": "Disclaimer regarding AI-generated content"
+          },
+          "provider": {
+            "type": "string",
+            "example": "sea-lion",
+            "description": "The LLM provider that generated the response"
+          },
+          "structuredData": {
+            "description": "Structured formulation of the advice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssistantStructuredDataDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "answer",
+          "disclaimer",
+          "provider"
+        ]
       },
       "ReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "BulkReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SuspendReactivateVolunteerDto": {
         "type": "object",
         "properties": {}
       },
       "CreateWarningDto": {
         "type": "object",
         "properties": {}
+      },
+      "ReviewPinDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
       },
       "WarningPromptSuggestionDto": {
         "type": "object",
@@ -1237,6 +1681,45 @@
       "Object": {
         "type": "object",
         "properties": {}
+      },
+      "CreatePinDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Short title for the hazard pin"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "photoKey": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "hazardType",
+          "latitude",
+          "longitude"
+        ]
       }
     }
   }
