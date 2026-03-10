@@ -11,10 +11,9 @@ interface TrackerValidator {
 }
 
 export function NodeValidators() {
-  const { data, isLoading } = useTrackerControllerGetValidators(
-    {},
-    { query: { refetchInterval: 30000 } },
-  );
+  const { data, isLoading } = useTrackerControllerGetValidators({
+    query: { refetchInterval: 30000 },
+  });
   const validators = (data ?? []) as TrackerValidator[];
 
   const getStatusColor = (status: string) => {

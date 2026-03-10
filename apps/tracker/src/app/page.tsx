@@ -56,7 +56,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
                   title="Total Aid Disbursed"
-                  value={`$${stats?.totalAidDisbursed.toLocaleString() || '0'}`}
+                  value={`$${stats?.totalAidDisbursed?.toLocaleString() || '0'}`}
                   icon="trending_up"
                   change="+12.4% from last month"
                   changeType="positive"
@@ -64,7 +64,7 @@ export default function DashboardPage() {
                 />
                 <StatCard
                   title="Verified Payouts"
-                  value={stats?.verifiedPayouts.toLocaleString() || '0'}
+                  value={stats?.verifiedPayouts?.toLocaleString() || '0'}
                   icon="verified"
                   change="100% On-chain Audit"
                   changeType="positive"

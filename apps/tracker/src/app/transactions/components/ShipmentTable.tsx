@@ -1,21 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useTrackerControllerGetShipments } from '@wira-borneo/api-client';
+import { useTrackerControllerGetShipments, TrackerShipmentDto } from '@wira-borneo/api-client';
 
 interface ShipmentTableProps {
   status: 'dispatched' | 'in_transit' | 'delivered';
-}
-
-interface TrackerShipment {
-  id: string;
-  shipmentId: string;
-  class: string;
-  origin: string;
-  destination: string;
-  blockchainHash: string | null;
-  timestamp: Date | string;
-  verificationStatus: string;
 }
 
 export function ShipmentTable({ status }: ShipmentTableProps) {
@@ -36,7 +25,7 @@ export function ShipmentTable({ status }: ShipmentTableProps) {
       query: { refetchInterval: 30000 },
     },
   );
-  const shipments = (data ?? []) as TrackerShipment[];
+  const shipments = (data ?? []) as TrackerShipmentDto[];
 
   const copyToClipboard = (hash: string) => {
     navigator.clipboard.writeText(hash);
