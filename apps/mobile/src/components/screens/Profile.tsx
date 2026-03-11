@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Settings, LogOut, Bell, Shield, Heart, ChevronRight, Home, MapPin } from 'lucide-react';
+import { User, LogOut, Shield, Home, MapPin } from 'lucide-react';
 import {
   useAuthControllerGetSession,
   useAuthControllerSignOut,
@@ -75,12 +75,6 @@ export default function Profile() {
     );
   };
 
-  const menuItems = [
-    { icon: Bell, label: 'Notification Settings', color: 'text-wira-gold' },
-    { icon: Shield, label: 'Security & Privacy', color: 'text-wira-teal' },
-    { icon: Heart, label: 'Your Contributions', color: 'text-status-critical' },
-    { icon: Settings, label: 'General Settings', color: 'text-wira-earth' },
-  ];
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -173,19 +167,7 @@ export default function Profile() {
         </div>
       )}
 
-      <div className="space-y-3">
-        {menuItems.map((item, i) => (
-          <button key={i} className="wira-card w-full flex items-center justify-between p-4 active:scale-[0.98] transition-all group">
-            <div className="flex items-center gap-4">
-                <div className={`p-2.5 rounded-xl bg-gray-50 transition-colors group-hover:bg-white`}>
-                    <item.icon size={20} className={item.color} />
-                </div>
-                <span className="text-sm font-body font-bold wira-card-title">{item.label}</span>
-            </div>
-            <ChevronRight size={18} className="text-wira-ivory-dark" />
-          </button>
-        ))}
-      </div>
+      {/* Menu items removed as they are currently inactive */}
 
       <div className="pt-4">
         <button 
