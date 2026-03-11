@@ -82,210 +82,314 @@ export function ManualWarningPage() {
   });
 
   return (
-    <section className="page-shell">
-      <header className="section-header">
-        <p className="eyebrow">Manual Warning Dispatch</p>
-        <h1 className="title">Send Warning / Hantar Amaran</h1>
-        <p className="subtitle">
-          Dispatch is manual only. Review all details before final confirmation.
-        </p>
-      </header>
-
+    <section className="page-shell warning-page">
       {step === 'compose' ? (
-        <div className="grid-list">
-          <article className="card">
-            <h2 className="card-title">1) Compose Message & Target Area / Karang Mesej & Kawasan Sasaran</h2>
-            <label className="field-label">
-              Title
-              <input className="field" value={title} onChange={(event) => setTitle(event.target.value)} />
-            </label>
-            <label className="field-label">
-              Message
-              <textarea
-                className="field"
-                rows={5}
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-              />
-            </label>
-            <div className="row-2">
-              <label className="field-label">
-                Hazard
-                <select
-                  className="field"
-                  value={hazardType}
-                  onChange={(event) => setHazardType(event.target.value as HazardType)}
-                >
-                  <option value="FLOOD">Flood</option>
-                  <option value="TYPHOON">Typhoon</option>
-                  <option value="EARTHQUAKE">Earthquake</option>
-                  <option value="AFTERSHOCK">Aftershock</option>
-                </select>
-              </label>
-              <label className="field-label">
-                Severity
-                <select
-                  className="field"
-                  value={severity}
-                  onChange={(event) => setSeverity(event.target.value as SeverityLevel)}
-                >
-                  <option value="LOW">Low</option>
-                  <option value="MODERATE">Moderate</option>
-                  <option value="HIGH">High</option>
-                  <option value="CRITICAL">Critical</option>
-                </select>
-              </label>
-            </div>
-            <div className="row-2">
-              <label className="field-label">
-                Start (MYT)
-                <input
-                  type="datetime-local"
-                  className="field"
-                  value={startsAt}
-                  onChange={(event) => setStartsAt(event.target.value)}
-                />
-              </label>
-              <label className="field-label">
-                End (optional)
-                <input
-                  type="datetime-local"
-                  className="field"
-                  value={endsAt}
-                  onChange={(event) => setEndsAt(event.target.value)}
-                />
-              </label>
-            </div>
-
-
-            <hr style={{ margin: '2rem 0', borderColor: 'var(--border-color, #eee)', borderStyle: 'solid', borderWidth: '1px 0 0 0' }} />
-
-            <label className="field-label">
-              Area or Region Name
-              <input
-                className="field"
-                value={target.areaName}
-                onChange={(event) =>
-                  setTarget((prev) => ({ ...prev, areaName: event.target.value }))
-                }
-              />
-            </label>
-            <div className="row-3">
-              <label className="field-label">
-                Latitude
-                <input
-                  className="field"
-                  value={target.latitude}
-                  onChange={(event) =>
-                    setTarget((prev) => ({ ...prev, latitude: event.target.value }))
-                  }
-                />
-              </label>
-              <label className="field-label">
-                Longitude
-                <input
-                  className="field"
-                  value={target.longitude}
-                  onChange={(event) =>
-                    setTarget((prev) => ({ ...prev, longitude: event.target.value }))
-                  }
-                />
-              </label>
-              <label className="field-label">
-                Radius (km)
-                <input
-                  type="number"
-                  min={1}
-                  className="field"
-                  value={target.radiusKm}
-                  onChange={(event) =>
-                    setTarget((prev) => ({ ...prev, radiusKm: event.target.value }))
-                  }
-                />
-              </label>
-            </div>
-
-            <div style={{ marginBottom: '1rem' }}>
-              <label className="field-label">Draw Target Area on Map</label>
-              <WarningMapSupport
-                onTargetChange={(data: {
-                  latitude?: number | string;
-                  longitude?: number | string;
-                  radiusKm?: number | string;
-                  polygonGeoJson?: string;
-                }) => {
-                  setTarget((prev) => ({
-                    ...prev,
-                    latitude: data.latitude?.toString() ?? prev.latitude,
-                    longitude: data.longitude?.toString() ?? prev.longitude,
-                    radiusKm: data.radiusKm?.toString() ?? prev.radiusKm,
-                    polygonGeoJson: data.polygonGeoJson ?? '',
-                  }));
-                }}
-              />
-              {target.polygonGeoJson && (
-                <p className="small success-text" style={{ marginTop: '0.5rem' }}>
-                  ✓ Custom shape captured.
+        <div className="warning-modal-shell">
+          <div className="warning-modal-header">
+            <div className="warning-modal-header-left">
+              <div className="warning-modal-ribbon" aria-hidden="true">
+                <span className="ribbon-block ribbon-blue" />
+                <span className="ribbon-block ribbon-gold" />
+                <span className="ribbon-block ribbon-red" />
+              </div>
+              <div>
+                <h2 className="warning-modal-title">
+                  ALERT DISPATCH WORKFLOW / ALIRAN KERJA PENGHANTARAN AMARAN
+                </h2>
+                <p className="warning-modal-step small mono">
+                  Step 1 &amp; 2 of 4: Configuration &amp; Geofencing
                 </p>
-              )}
+              </div>
             </div>
+          </div>
 
-            <button
-              type="button"
-              className="btn btn-neutral"
-              style={{ marginTop: '1rem', width: '100%' }}
-              onClick={() => {
-                promptMutation.mutate(
-                  {
-                    data: {
-                      hazardType,
-                      areaOrRegion: target.areaName || 'selected area',
-                      radiusKm: Number(target.radiusKm),
-                    },
-                  },
-                  {
-                    onSuccess: (response: unknown) => {
-                      const d = response as { prompt?: string } | undefined;
-                      const prompt = String(d?.prompt ?? '');
-                      if (prompt) {
-                        setMessage(prompt);
+          <div className="warning-modal-body">
+            <article className="warning-column card">
+              <header className="warning-section-header">
+                <div className="step-pill step-pill-primary">1</div>
+                <div>
+                  <h3 className="card-title">Compose Message / Karang Mesej</h3>
+                  <p className="small muted">
+                    Provide clear, bilingual messaging so residents understand the risk and
+                    recommended actions.
+                  </p>
+                </div>
+              </header>
+
+              <div className="warning-field-group">
+                <label className="field-label">
+                  Hazard Type / Jenis Bahaya
+                  <div className="hazard-toggle-row">
+                    {(['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] as HazardType[]).map(
+                      (type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          className={`hazard-chip ${
+                            hazardType === type ? 'hazard-chip-active' : ''
+                          }`}
+                          onClick={() => setHazardType(type)}
+                        >
+                          {type === 'FLOOD'
+                            ? 'Flood'
+                            : type === 'TYPHOON'
+                              ? 'Typhoon'
+                              : type === 'EARTHQUAKE'
+                                ? 'Earthquake'
+                                : 'Aftershock'}
+                        </button>
+                      ),
+                    )}
+                  </div>
+                </label>
+
+                <label className="field-label">
+                  Alert Title / Tajuk Amaran
+                  <input
+                    className="field"
+                    placeholder="e.g. SEVERE FLOOD WARNING - KOTA TINGGI"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                  />
+                </label>
+
+                <div className="warning-message-header">
+                  <div>
+                    <p className="field-label-heading">
+                      Message Content / Kandungan Mesej
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="suggest-prompt-chip"
+                    onClick={() => {
+                      promptMutation.mutate(
+                        {
+                          data: {
+                            hazardType,
+                            areaOrRegion: target.areaName || 'selected area',
+                            radiusKm: Number(target.radiusKm),
+                          },
+                        },
+                        {
+                          onSuccess: (response: unknown) => {
+                            const d = response as { prompt?: string } | undefined;
+                            const prompt = String(d?.prompt ?? '');
+                            if (prompt) {
+                              setMessage(prompt);
+                            }
+                          },
+                        },
+                      );
+                    }}
+                    disabled={promptMutation.isPending}
+                  >
+                    {promptMutation.isPending ? 'Generating Prompt…' : 'Suggest Prompt (AI)'}
+                  </button>
+                </div>
+                <textarea
+                  className="field warning-message-input"
+                  rows={6}
+                  placeholder="Write the alert details here..."
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                />
+                <p className="small muted character-helper">
+                  Characters: {message.length}/160 (1 SMS Segment)
+                </p>
+
+                <div className="warning-severity-group">
+                  <p className="field-label-heading">Severity Level / Tahap Amaran</p>
+                  <div className="severity-row">
+                    {([
+                      { value: 'LOW', label: 'Advisory' },
+                      { value: 'MODERATE', label: 'Warning' },
+                      { value: 'HIGH', label: 'Emergency (Danger)' },
+                      { value: 'CRITICAL', label: 'Critical' },
+                    ] as const).map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={`severity-chip ${
+                          severity === option.value ? 'severity-chip-active' : ''
+                        }`}
+                        onClick={() => setSeverity(option.value as SeverityLevel)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="row-2">
+                  <label className="field-label">
+                    Start (MYT)
+                    <input
+                      type="datetime-local"
+                      className="field"
+                      value={startsAt}
+                      onChange={(event) => setStartsAt(event.target.value)}
+                    />
+                  </label>
+                  <label className="field-label">
+                    End (optional)
+                    <input
+                      type="datetime-local"
+                      className="field"
+                      value={endsAt}
+                      onChange={(event) => setEndsAt(event.target.value)}
+                    />
+                  </label>
+                </div>
+              </div>
+            </article>
+
+            <aside className="warning-column card warning-target-column">
+              <header className="warning-section-header">
+                <div className="step-pill step-pill-secondary">2</div>
+                <div>
+                  <h3 className="card-title">Target Area / Kawasan Sasaran</h3>
+                  <p className="small muted">
+                    Confirm the search area, coordinates, radius, and drawn polygon for this alert.
+                  </p>
+                </div>
+              </header>
+
+              <div className="warning-field-group">
+                <label className="field-label small">
+                  Search Area / Cari Kawasan
+                  <input
+                    className="field"
+                    placeholder="e.g. Sungai Johor Basin, Kota Tinggi"
+                    value={target.areaName}
+                    onChange={(event) =>
+                      setTarget((prev) => ({ ...prev, areaName: event.target.value }))
+                    }
+                  />
+                </label>
+
+                <div className="row-3 warning-latlng-row">
+                  <label className="field-label small">
+                    Lat / Long
+                    <input
+                      className="field"
+                      placeholder="Latitude"
+                      value={target.latitude}
+                      onChange={(event) =>
+                        setTarget((prev) => ({ ...prev, latitude: event.target.value }))
                       }
-                    },
-                  },
-                );
-              }}
-              disabled={promptMutation.isPending}
-            >
-              {promptMutation.isPending ? 'Generating Prompt...' : 'Suggest Prompt / Cadang Teks'}
-            </button>
-          </article>
+                    />
+                  </label>
+                  <label className="field-label small">
+                    &nbsp;
+                    <input
+                      className="field"
+                      placeholder="Longitude"
+                      value={target.longitude}
+                      onChange={(event) =>
+                        setTarget((prev) => ({ ...prev, longitude: event.target.value }))
+                      }
+                    />
+                  </label>
+                  <label className="field-label small">
+                    Radius (km)
+                    <div className="radius-row">
+                      <input
+                        type="number"
+                        min={1}
+                        className="field"
+                        value={target.radiusKm}
+                        onChange={(event) =>
+                          setTarget((prev) => ({ ...prev, radiusKm: event.target.value }))
+                        }
+                      />
+                      <span className="radius-unit small muted">km</span>
+                    </div>
+                  </label>
+                </div>
 
-          <article className="card">
-            <h2 className="card-title">2) Final Checkpoint / Semakan Akhir</h2>
-            <p className="warning-note">
-              Dispatch is never automatic. Admin must manually confirm every warning send.
-            </p>
-            <button
-              type="button"
-              className="btn btn-warning"
-              disabled={
-                !canProceedToConfirmation({
-                  title,
-                  message,
-                  areaName: target.areaName,
-                })
-              }
-              onClick={() => setStep((current) => warningFlowReducer(current, { type: 'CONTINUE' }))}
-            >
-              Continue to Confirmation / Teruskan
-            </button>
-          </article>
+                <div className="warning-map-shell">
+                  <div className="warning-map-header">
+                    <p className="small muted mono">HPix Vector Tiles Active</p>
+                  </div>
+                  <div className="warning-map-body">
+                    <WarningMapSupport
+                      onTargetChange={(data: {
+                        latitude?: number | string;
+                        longitude?: number | string;
+                        radiusKm?: number | string;
+                        polygonGeoJson?: string;
+                      }) => {
+                        setTarget((prev) => ({
+                          ...prev,
+                          latitude: data.latitude?.toString() ?? prev.latitude,
+                          longitude: data.longitude?.toString() ?? prev.longitude,
+                          radiusKm: data.radiusKm?.toString() ?? prev.radiusKm,
+                          polygonGeoJson: data.polygonGeoJson ?? '',
+                        }));
+                      }}
+                    />
+                    {target.polygonGeoJson && (
+                      <p className="small success-text warning-map-success">
+                        ✓ Custom shape captured.
+                      </p>
+                    )}
+                  </div>
+                  <div className="warning-map-footer">
+                    <p className="small mono">
+                      Estimated Population Reach:{' '}
+                      <span className="warning-map-population">~12,450 Active Subscribers</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          <footer className="warning-modal-footer">
+            <div className="footer-stage-indicator small mono">
+              <span className="footer-stage-dot" aria-hidden="true" />
+              Stage 1: Prep
+            </div>
+            <div className="footer-actions">
+              <button
+                type="button"
+                className="btn btn-neutral"
+                onClick={() => {
+                  setTitle('');
+                  setMessage('');
+                  setEndsAt('');
+                  setTarget(defaultTarget);
+                }}
+              >
+                Cancel / Batal
+              </button>
+              <button
+                type="button"
+                className="btn btn-critical footer-primary"
+                disabled={
+                  !canProceedToConfirmation({
+                    title,
+                    message,
+                    areaName: target.areaName,
+                  })
+                }
+                onClick={() =>
+                  setStep((current) => warningFlowReducer(current, { type: 'CONTINUE' }))
+                }
+              >
+                Continue to Verification / Seterusnya →
+              </button>
+            </div>
+          </footer>
         </div>
       ) : (
-        <article className="card">
+        <article className="card warning-confirm-card">
           <h2 className="card-title">Confirm Warning Dispatch / Sahkan Amaran</h2>
-          <p className="muted">Review summary before sending.</p>
-          <dl className="summary-grid">
+          <p className="muted small">
+            Review the composed message, target area, and evacuation coverage before sending.
+          </p>
+          <dl className="summary-grid warning-summary">
             <dt>Title</dt>
             <dd>{summary.heading}</dd>
             <dt>Message</dt>
@@ -295,13 +399,13 @@ export function ManualWarningPage() {
             <dt>Evacuation Areas</dt>
             <dd>{summary.evacuationCount}</dd>
           </dl>
-          <div className="action-row">
+          <div className="action-row warning-confirm-actions">
             <button
               type="button"
               className="btn btn-neutral"
               onClick={() => setStep((current) => warningFlowReducer(current, { type: 'CANCEL' }))}
             >
-              Cancel / Batal
+              Back to Editing
             </button>
             <button
               type="button"
@@ -321,7 +425,7 @@ export function ManualWarningPage() {
               }}
               disabled={createWarningMutation.isPending}
             >
-              Confirm and Send / Sahkan & Hantar
+              Confirm and Send / Sahkan &amp; Hantar
             </button>
           </div>
           {createWarningMutation.error ? (
@@ -329,6 +433,347 @@ export function ManualWarningPage() {
           ) : null}
         </article>
       )}
+
+      <style jsx>{`
+        .warning-page {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .warning-modal-shell {
+          border-radius: 12px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+          overflow: hidden;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .warning-modal-header {
+          background: #0f172a;
+          border-bottom: 4px solid var(--status-critical);
+          padding: 16px;
+          color: #e5e7eb;
+        }
+
+        .warning-modal-header-left {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        }
+
+        .warning-modal-ribbon {
+          display: inline-flex;
+          align-items: stretch;
+          border-right: 1px solid #334155;
+          padding-right: 16px;
+        }
+
+        .ribbon-block {
+          width: 12px;
+          height: 32px;
+        }
+
+        .ribbon-blue {
+          background: #00368e;
+        }
+
+        .ribbon-gold {
+          background: #facc15;
+        }
+
+        .ribbon-red {
+          background: var(--status-critical);
+        }
+
+        .warning-modal-title {
+          margin: 0;
+          font-size: 18px;
+          letter-spacing: -0.02em;
+          color: #f9fafb;
+        }
+
+        .warning-modal-step {
+          margin: 4px 0 0;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: #94a3b8;
+        }
+
+        .warning-modal-body {
+          display: grid;
+          grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+          gap: 1.5rem;
+          padding: 24px 24px 20px;
+          background: #f8fafc;
+        }
+
+        .warning-column {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+
+        .warning-section-header {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .step-pill {
+          width: 32px;
+          height: 32px;
+          border-radius: 9999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 14px;
+        }
+
+        .step-pill-primary {
+          background: var(--status-critical);
+          color: #ffffff;
+        }
+
+        .step-pill-secondary {
+          background: #1e293b;
+          color: #ffffff;
+        }
+
+        .warning-field-group {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .hazard-toggle-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 4px;
+        }
+
+        .hazard-chip {
+          border-radius: 6px;
+          border: 2px solid #e2e8f0;
+          background: #ffffff;
+          padding: 8px 16px;
+          font-size: 12px;
+          text-transform: uppercase;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .hazard-chip-active {
+          background: #fef2f2;
+          border-color: var(--status-critical);
+          color: var(--status-critical);
+        }
+
+        .warning-message-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.75rem;
+          margin-top: 0.25rem;
+        }
+
+        .field-label-heading {
+          font-size: 14px;
+          font-weight: 600;
+          margin: 0 0 4px;
+        }
+
+        .suggest-prompt-chip {
+          border-radius: 9999px;
+          border: 1px solid #bfdbfe;
+          background: #eff6ff;
+          padding: 4px 10px;
+          font-size: 12px;
+          font-weight: 600;
+          color: #2563eb;
+          cursor: pointer;
+          min-height: 0;
+        }
+
+        .warning-message-input {
+          resize: vertical;
+        }
+
+        .character-helper {
+          text-align: right;
+        }
+
+        .warning-severity-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+        }
+
+        .severity-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .severity-chip {
+          border-radius: 9999px;
+          border: 1px solid #cbd5e1;
+          padding: 6px 14px;
+          font-size: 12px;
+          text-transform: uppercase;
+          background: #ffffff;
+          cursor: pointer;
+        }
+
+        .severity-chip-active {
+          background: #1d4ed8;
+          color: #ffffff;
+          border-color: #1d4ed8;
+        }
+
+        .warning-target-column {
+          background: #f8fafc;
+        }
+
+        .warning-latlng-row {
+          align-items: flex-end;
+        }
+
+        .radius-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 4px;
+          align-items: center;
+        }
+
+        .radius-unit {
+          padding-right: 4px;
+        }
+
+        .warning-map-shell {
+          border-radius: 8px;
+          border: 1px solid #e2e8f0;
+          overflow: hidden;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .warning-map-header {
+          padding: 8px 10px;
+          border-bottom: 1px solid #e2e8f0;
+          background: rgba(248, 250, 252, 0.9);
+        }
+
+        .warning-map-body {
+          padding: 10px;
+        }
+
+        .warning-map-success {
+          margin-top: 0.5rem;
+        }
+
+        .warning-map-footer {
+          padding: 8px 10px 10px;
+          border-top: 1px solid #e2e8f0;
+          background: #eff6ff;
+        }
+
+        .warning-map-population {
+          color: #1d4ed8;
+          font-weight: 700;
+        }
+
+        .warning-modal-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px;
+          border-top: 1px solid #e2e8f0;
+          background: #f8fafc;
+        }
+
+        .footer-stage-indicator {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: #94a3b8;
+        }
+
+        .footer-stage-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 9999px;
+          background: var(--status-critical);
+          box-shadow: 0 0 0 2px #ffffff;
+        }
+
+        .footer-actions {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+
+        .footer-primary {
+          min-width: 260px;
+          text-transform: none;
+        }
+
+        .warning-confirm-card {
+          max-width: 800px;
+        }
+
+        .warning-summary {
+          margin-top: 1rem;
+        }
+
+        .warning-confirm-actions {
+          margin-top: 1.25rem;
+          justify-content: flex-end;
+        }
+
+        @media (max-width: 1024px) {
+          .warning-modal-body {
+            grid-template-columns: minmax(0, 1fr);
+          }
+
+          .warning-target-column {
+            order: 2;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .warning-modal-shell {
+            border-radius: 10px;
+          }
+
+          .warning-modal-body {
+            padding: 16px 12px 12px;
+          }
+
+          .warning-modal-footer {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+
+          .footer-actions {
+            width: 100%;
+            flex-direction: column-reverse;
+          }
+
+          .footer-primary {
+            width: 100%;
+          }
+        }
+      `}</style>
     </section>
   );
 }

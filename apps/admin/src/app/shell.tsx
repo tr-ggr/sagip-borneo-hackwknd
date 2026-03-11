@@ -2,15 +2,94 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useAuth } from '../lib/auth';
 
 const navItems = [
-  { href: '/', label: 'Dashboard' },
-  { href: '/volunteers', label: 'Volunteers' },
-  { href: '/warnings/new', label: 'Warnings' },
-  { href: '/map', label: 'Map' },
-];
+  { href: '/', label: 'Dashboard', icon: 'home' as const },
+  { href: '/volunteers', label: 'Volunteers', icon: 'users' as const },
+  { href: '/warnings/new', label: 'Warnings', icon: 'alert' as const },
+  { href: '/map', label: 'Map', icon: 'map' as const },
+] as const;
+
+function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
+  switch (type) {
+    case 'home':
+      return (
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M3 11.5 12 4l9 7.5" />
+          <path d="M5 10.75V20h14v-9.25" />
+        </svg>
+      );
+    case 'users':
+      return (
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="3" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a3 3 0 0 1 0 5.75" />
+        </svg>
+      );
+    case 'alert':
+      return (
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M12 9v4" />
+          <path d="M12 17h.01" />
+          <path d="M10.29 3.86 2.82 18a1 1 0 0 0 .9 1.48h16.56a1 1 0 0 0 .9-1.48L13.71 3.86a1 1 0 0 0-1.72 0z" />
+        </svg>
+      );
+    case 'map':
+      return (
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M3 6.5 9 4l6 2.5 6-2.5v13l-6 2.5-6-2.5-6 2.5v-13Z" />
+          <path d="M9 4v13.5" />
+          <path d="M15 6.5v13.5" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
 
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -59,48 +138,58 @@ export function Shell({ children }: { children: ReactNode }) {
 
       <div className="app-shell">
         <aside className="side-nav">
-          <h1 className="brand-title">WIRA Admin</h1>
-          <p className="brand-subtitle">Woven Intelligence for Regional Alertness</p>
-          
-          <div className="user-profile mb-6 p-4 bg-teal-50 rounded-lg border border-teal-100">
-            <p className="text-sm font-bold text-teal-900">{user?.name}</p>
-            <p className="text-xs text-teal-700">{user?.email}</p>
+          <div>
+            <h1 className="brand-title">WIRA Admin</h1>
+            <p className="brand-subtitle">Woven Intelligence for Regional Alertness</p>
+
+            <nav>
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-link ${isActive ? 'nav-link-active' : ''}`}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    <NavIcon type={item.icon} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+
+              <button type="button" onClick={logout} className="side-nav-logout">
+                Logout / Log Keluar
+              </button>
+            </nav>
           </div>
 
-          <nav>
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className={`nav-link ${pathname === item.href ? 'nav-link-active' : ''}`}>
-                {item.label}
-              </Link>
-            ))}
-            
-            <button 
-              onClick={logout}
-              className="nav-link w-full text-left mt-8 text-neutral-500 hover:text-red-600 border-t border-neutral-100 pt-4 rounded-none"
-              style={{ background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left', width: '100%', padding: '12px' }}
-            >
-              Logout / Log Keluar
-            </button>
-          </nav>
+          <div className="side-nav-footer">
+            <div className="side-nav-user-card">
+              <div className="side-nav-avatar" aria-hidden="true">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="9" r="3.2" />
+                  <path d="M6 19.5c1.4-2 3.3-3 6-3s4.6 1 6 3" />
+                </svg>
+              </div>
+              <div className="side-nav-user-meta">
+                <p className="side-nav-user-role">{user?.name ?? 'System Administrator'}</p>
+                <p className="side-nav-user-email">{user?.email ?? 'HQ-Region VII'}</p>
+              </div>
+            </div>
+          </div>
         </aside>
         <main className="main-content">{children}</main>
       </div>
-
-      <style jsx>{`
-        .user-profile {
-          margin-bottom: 1.5rem;
-          padding: 1rem;
-          background: rgba(13, 79, 79, 0.05);
-          border-radius: 8px;
-        }
-        .nav-link-active {
-          background: rgba(13, 79, 92, 0.1);
-          color: var(--wira-teal);
-        }
-        .mb-6 {
-          margin-bottom: 1.5rem;
-        }
-      `}</style>
     </>
   );
 }
