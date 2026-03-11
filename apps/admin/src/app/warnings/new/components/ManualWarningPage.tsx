@@ -3,7 +3,6 @@
 import {
   useAdminOperationsControllerCreateWarning,
   useAdminOperationsControllerGetPromptSuggestion,
-  useEvacuationControllerAreas,
 } from '@wira-borneo/api-client';
 import { useMemo, useState } from 'react';
 import {
@@ -16,12 +15,6 @@ import WarningMapSupport from './WarningMapSupport';
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
 
-interface EvacuationArea {
-  id: string;
-  name: string;
-  region?: string | null;
-}
-
 const defaultTarget = {
   areaName: '',
   latitude: '',
@@ -29,13 +22,6 @@ const defaultTarget = {
   radiusKm: '5',
   polygonGeoJson: '',
 };
-
-function toAreas(raw: unknown): EvacuationArea[] {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-  return raw as EvacuationArea[];
-}
 
 export function ManualWarningPage() {
   const [step, setStep] = useState<'compose' | 'confirm'>('compose');
@@ -46,11 +32,7 @@ export function ManualWarningPage() {
   const [startsAt, setStartsAt] = useState(new Date().toISOString().slice(0, 16));
   const [endsAt, setEndsAt] = useState('');
   const [target, setTarget] = useState(defaultTarget);
-  const [selectedEvacuationAreas, setSelectedEvacuationAreas] = useState<string[]>([]);
 
-  const areasQuery = useEvacuationControllerAreas({
-    query: { select: (response: unknown) => toAreas(response) },
-  });
   const promptMutation = useAdminOperationsControllerGetPromptSuggestion();
   const createWarningMutation = useAdminOperationsControllerCreateWarning();
 
@@ -74,7 +56,7 @@ export function ManualWarningPage() {
           radiusKm: target.radiusKm ? Number(target.radiusKm) : undefined,
         },
       ],
-      evacuationAreaIds: selectedEvacuationAreas,
+      evacuationAreaIds: [] as string[],
     }),
     [
       title,
@@ -88,7 +70,6 @@ export function ManualWarningPage() {
       target.latitude,
       target.longitude,
       target.radiusKm,
-      selectedEvacuationAreas,
     ],
   );
 
@@ -224,31 +205,6 @@ export function ManualWarningPage() {
               </label>
             </div>
 
-            <h3 className="small-title">Recommended Evacuation Areas</h3>
-            <div className="selection-list">
-              {(areasQuery.data ?? []).map((area) => {
-                const checked = selectedEvacuationAreas.includes(area.id);
-                return (
-                  <label key={area.id} className="checkbox-row">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={(event) => {
-                        setSelectedEvacuationAreas((current) => {
-                          if (event.target.checked) {
-                            return [...current, area.id];
-                          }
-                          return current.filter((value) => value !== area.id);
-                        });
-                      }}
-                    />
-                    <span>{area.name}</span>
-                    <span className="muted">{area.region ?? 'Unknown region'}</span>
-                  </label>
-                );
-              })}
-            </div>
-
             <div style={{ marginBottom: '1rem' }}>
               <label className="field-label">Draw Target Area on Map</label>
               <WarningMapSupport
@@ -359,7 +315,6 @@ export function ManualWarningPage() {
                       setTitle('');
                       setMessage('');
                       setTarget(defaultTarget);
-                      setSelectedEvacuationAreas([]);
                     },
                   },
                 );
