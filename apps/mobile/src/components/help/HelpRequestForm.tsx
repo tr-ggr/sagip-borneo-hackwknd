@@ -95,23 +95,23 @@ export default function HelpRequestForm({ initialLocation, onSuccess, onChangeLo
           />
         </label>
 
-        <div className="wira-card p-4 bg-wira-ivory-dark/20 border-dashed border-wira-earth/10 flex items-center justify-between">
-           <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-wira-teal/10 flex items-center justify-center">
-                 <MapPin size={18} className="text-wira-teal" />
-              </div>
-              <div className="space-y-0.5">
-                 <p className="form-label text-[11px] tracking-wider">Location Context</p>
-                 <p className="form-hint">
-                    {initialLocation ? `${initialLocation.latitude.toFixed(4)}, ${initialLocation.longitude.toFixed(4)}` : 'Detecting...'}
-                 </p>
-              </div>
-           </div>
-           {onChangeLocation && (
-             <button type="button" onClick={onChangeLocation} className="text-[10px] font-bold text-wira-teal underline shrink-0 hover:text-wira-teal-dark">
-               Change location
-             </button>
-           )}
+        <div className="form-location-block wira-card p-4 bg-wira-ivory-dark/20 border-dashed border-wira-earth/10 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-wira-teal/10 flex items-center justify-center">
+              <MapPin size={18} className="text-wira-teal" />
+            </div>
+            <div className="space-y-0.5">
+              <p className="form-label text-[11px] tracking-wider">Location Context</p>
+              <p className="form-hint">
+                {initialLocation ? `${initialLocation.latitude.toFixed(4)}, ${initialLocation.longitude.toFixed(4)}` : 'Detecting...'}
+              </p>
+            </div>
+          </div>
+          {onChangeLocation && (
+            <button type="button" onClick={onChangeLocation} className="form-change-location-link text-[10px] shrink-0">
+              Change location
+            </button>
+          )}
         </div>
       </div>
 

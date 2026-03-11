@@ -87,7 +87,28 @@
 
   .form-input-placeholder::placeholder {
     color: var(--color-wira-earth-brown);
-    opacity: 0.7;
+    opacity: 0.9;
+  }
+
+  /* Location block: high-contrast text on any card background */
+  .form-location-block {
+    color: var(--color-wira-night-black);
+  }
+  .form-location-block .form-label,
+  .form-location-block .form-hint {
+    color: var(--color-wira-night-black);
+    opacity: 0.9;
+  }
+
+  /* Change location link: high-contrast, meets WCAG */
+  .form-change-location-link {
+    color: var(--color-wira-deep-teal);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .form-change-location-link:hover {
+    color: var(--color-wira-night-black);
   }
 
   .nav-inactive {

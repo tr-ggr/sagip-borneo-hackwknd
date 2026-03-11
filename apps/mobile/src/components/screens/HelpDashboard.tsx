@@ -29,33 +29,30 @@ import {
 import HelpRequestForm from '../help/HelpRequestForm';
 import HelpRequestTimeline from '../help/HelpRequestTimeline';
 import HazardPinForm from '../pin/HazardPinForm';
+import LocationPickerModal from '../LocationPickerModal';
 
 const FALLBACK_LOCATION = { latitude: 1.5533, longitude: 110.3592 };
 
-export default function HelpDashboard({ 
+export default function HelpDashboard({
   onNavigateToRequest,
   showAllPins,
   onToggleShowAllPins,
   formLocation,
   setFormLocation,
-  pickLocationFor,
-  setPickLocationFor,
-  onNavigateToMap,
-}: { 
-  onNavigateToRequest: (id: string, loc: { latitude: number, longitude: number }) => void;
+}: {
+  onNavigateToRequest: (id: string, loc: { latitude: number; longitude: number }) => void;
   showAllPins: boolean;
   onToggleShowAllPins: (show: boolean) => void;
   formLocation: { latitude: number; longitude: number } | null;
   setFormLocation: (loc: { latitude: number; longitude: number } | null) => void;
-  pickLocationFor: 'hazard' | 'help' | null;
-  setPickLocationFor: (v: 'hazard' | 'help' | null) => void;
-  onNavigateToMap: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<'request' | 'volunteer'>('request');
   const [volunteerSubTab, setVolunteerSubTab] = useState<'available' | 'assigned'>('available');
   const [showForm, setShowForm] = useState(false);
   const [showHazardPinForm, setShowHazardPinForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [locationPickerFor, setLocationPickerFor] = useState<'hazard' | 'help' | null>(null);
 
   const { data: volunteerStatus, refetch: refetchVolunteerStatus } = useVolunteersControllerGetStatus();
   const { data: myRequests, refetch: refetchRequests } = useHelpRequestsControllerMe();
@@ -173,8 +170,8 @@ export default function HelpDashboard({
                      initialLocation={formLocationOrFallback}
                      onSuccess={handleHazardPinSuccess}
                      onChangeLocation={() => {
-                       setPickLocationFor('hazard');
-                       onNavigateToMap();
+                       setLocationPickerFor('hazard');
+                       setShowLocationPicker(true);
                      }}
                    />
                 </div>
@@ -194,8 +191,8 @@ export default function HelpDashboard({
                      initialLocation={formLocationOrFallback}
                      onSuccess={handleFormSuccess}
                      onChangeLocation={() => {
-                       setPickLocationFor('help');
-                       onNavigateToMap();
+                       setLocationPickerFor('help');
+                       setShowLocationPicker(true);
                      }}
                    />
                 </div>
@@ -524,6 +521,17 @@ export default function HelpDashboard({
              </div>
            )}
         </div>
+      )}
+      {showLocationPicker && (
+        <LocationPickerModal
+          initialCenter={formLocation ?? FALLBACK_LOCATION}
+          onSelect={(lat, lon) => {
+            setFormLocation({ latitude: lat, longitude: lon });
+            setShowLocationPicker(false);
+          }}
+          onClose={() => setShowLocationPicker(false)}
+          title={locationPickerFor === 'hazard' ? 'Where is the hazard?' : 'Where do you need help?'}
+        />
       )}
     </div>
   );

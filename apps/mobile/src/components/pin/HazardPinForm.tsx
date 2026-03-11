@@ -106,7 +106,7 @@ export default function HazardPinForm({
           />
         </label>
 
-        <div className="wira-card p-4 bg-wira-ivory-dark/20 border-dashed border-wira-earth/10 flex items-center justify-between">
+        <div className="form-location-block wira-card p-4 bg-wira-ivory-dark/20 border-dashed border-wira-earth/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-wira-teal/10 flex items-center justify-center">
               <MapPin size={18} className="text-wira-teal" />
@@ -124,7 +124,7 @@ export default function HazardPinForm({
             <button
               type="button"
               onClick={onChangeLocation}
-              className="text-[10px] font-bold text-wira-teal underline shrink-0 hover:text-wira-teal-dark"
+              className="form-change-location-link text-[10px] shrink-0"
             >
               Change location
             </button>
