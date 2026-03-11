@@ -119,8 +119,6 @@ export const PinReviewStatus = {
 } as const
 
 export type PinReviewStatus = (typeof PinReviewStatus)[keyof typeof PinReviewStatus]
-<<<<<<< HEAD
-=======
 
 
 export const ShipmentStatus = {
@@ -156,4 +154,3 @@ export const ValidatorStatus = {
 } as const
 
 export type ValidatorStatus = (typeof ValidatorStatus)[keyof typeof ValidatorStatus]
->>>>>>> origin/dev

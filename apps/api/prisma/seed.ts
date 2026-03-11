@@ -247,6 +247,32 @@ async function main() {
     });
   }
 
+  // Profile page: add demographics to seed users so profile screen shows data
+  await prisma.user.update({
+    where: { id: 'seed-user-1' },
+    data: {
+      ageGroup: 'AGE_18_59',
+      pregnantStatus: false,
+      isPWD: false,
+    },
+  });
+  await prisma.user.update({
+    where: { id: 'seed-user-2' },
+    data: {
+      ageGroup: 'AGE_18_59',
+      pregnantStatus: false,
+      isPWD: false,
+    },
+  });
+  await prisma.user.update({
+    where: { id: 'seed-user-3' },
+    data: {
+      ageGroup: 'AGE_60_PLUS',
+      pregnantStatus: false,
+      isPWD: true,
+    },
+  });
+
   // Specific test user for demographics
   console.log('Seeding demographic test user...');
   await prisma.user.upsert({
@@ -347,13 +373,18 @@ async function main() {
   console.log('Seeding volunteers...');
   await prisma.volunteerProfile.upsert({
     where: { userId: 'seed-user-2' },
-    update: {},
+    update: {
+      baseLatitude: 3.1390,
+      baseLongitude: 113.0420,
+    },
     create: {
       id: 'seed-vol-2',
       userId: 'seed-user-2',
       status: 'APPROVED',
       approvedById: 'seed-user-admin',
       approvedAt: new Date(),
+      baseLatitude: 3.1390,
+      baseLongitude: 113.0420,
     },
   });
 

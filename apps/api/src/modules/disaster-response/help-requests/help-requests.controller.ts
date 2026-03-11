@@ -29,6 +29,11 @@ class CreateHelpRequestDto {
   longitude!: number;
 }
 
+class CreateSosDto {
+  latitude!: number;
+  longitude!: number;
+}
+
 class UpdateHelpRequestStatusDto {
   nextStatus!: 'IN_PROGRESS' | 'RESOLVED' | 'CANCELLED';
 }
@@ -55,6 +60,25 @@ export class HelpRequestsController {
       description: body.description,
       latitude: body.latitude,
       longitude: body.longitude,
+    });
+  }
+
+  @Post('sos')
+  @ApiOperation({ summary: 'One-tap SOS: create help request with current location only (time-limited)' })
+  @ApiBody({ type: CreateSosDto })
+  async createSos(
+    @AuthSessionParam() session: AuthSession,
+    @Body() body: CreateSosDto,
+  ) {
+    const sosExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    return this.helpRequestsService.create({
+      requesterId: session.user.id,
+      hazardType: 'FLOOD',
+      urgency: 'CRITICAL',
+      description: 'SOS',
+      latitude: body.latitude,
+      longitude: body.longitude,
+      sosExpiresAt,
     });
   }
 

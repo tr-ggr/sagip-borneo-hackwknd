@@ -29,9 +29,6 @@ import {
 import HelpRequestForm from '../help/HelpRequestForm';
 import HelpRequestTimeline from '../help/HelpRequestTimeline';
 import HazardPinForm from '../pin/HazardPinForm';
-import LocationPickerModal from '../LocationPickerModal';
-
-const FALLBACK_LOCATION = { latitude: 1.5533, longitude: 110.3592 };
 
 export default function HelpDashboard({
   onNavigateToRequest,
@@ -51,8 +48,6 @@ export default function HelpDashboard({
   const [showForm, setShowForm] = useState(false);
   const [showHazardPinForm, setShowHazardPinForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
-  const [showLocationPicker, setShowLocationPicker] = useState(false);
-  const [locationPickerFor, setLocationPickerFor] = useState<'hazard' | 'help' | null>(null);
 
   const { data: volunteerStatus, refetch: refetchVolunteerStatus } = useVolunteersControllerGetStatus();
   const { data: myRequests, refetch: refetchRequests } = useHelpRequestsControllerMe();
@@ -72,8 +67,6 @@ export default function HelpDashboard({
       { enableHighAccuracy: true }
     );
   }, [setFormLocation]);
-
-  const formLocationOrFallback = formLocation ?? FALLBACK_LOCATION;
 
   const handleFormSuccess = () => {
     setShowForm(false);
@@ -167,12 +160,9 @@ export default function HelpDashboard({
                 <div className="wira-card p-6 border-wira-teal/10">
                    <h3 className="text-xl font-display font-bold wira-card-title mb-6">Report hazard pin</h3>
                    <HazardPinForm
-                     initialLocation={formLocationOrFallback}
+                     location={formLocation}
+                     onLocationChange={(loc) => setFormLocation(loc)}
                      onSuccess={handleHazardPinSuccess}
-                     onChangeLocation={() => {
-                       setLocationPickerFor('hazard');
-                       setShowLocationPicker(true);
-                     }}
                    />
                 </div>
              </div>
@@ -188,12 +178,9 @@ export default function HelpDashboard({
                 <div className="wira-card p-6 border-wira-teal/10">
                    <h3 className="text-xl font-display font-bold wira-card-title mb-6">New Help Request</h3>
                    <HelpRequestForm
-                     initialLocation={formLocationOrFallback}
+                     location={formLocation}
+                     onLocationChange={(loc) => setFormLocation(loc)}
                      onSuccess={handleFormSuccess}
-                     onChangeLocation={() => {
-                       setLocationPickerFor('help');
-                       setShowLocationPicker(true);
-                     }}
                    />
                 </div>
              </div>
@@ -521,17 +508,6 @@ export default function HelpDashboard({
              </div>
            )}
         </div>
-      )}
-      {showLocationPicker && (
-        <LocationPickerModal
-          initialCenter={formLocation ?? FALLBACK_LOCATION}
-          onSelect={(lat, lon) => {
-            setFormLocation({ latitude: lat, longitude: lon });
-            setShowLocationPicker(false);
-          }}
-          onClose={() => setShowLocationPicker(false)}
-          title={locationPickerFor === 'hazard' ? 'Where is the hazard?' : 'Where do you need help?'}
-        />
       )}
     </div>
   );

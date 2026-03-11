@@ -1,7 +1,8 @@
-import { BadRequestException, Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiOkResponse,
   ApiOperation,
   ApiProperty,
   ApiPropertyOptional,
@@ -13,6 +14,30 @@ import type { AuthSession } from '../../auth/auth.types';
 import { PinsService } from './pins.service';
 
 const HAZARD_TYPES = ['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] as const;
+
+/** Single hazard pin for map display (visible to user: approved and/or own). */
+class VisiblePinDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  latitude!: number;
+
+  @ApiProperty()
+  longitude!: number;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty({ enum: HAZARD_TYPES })
+  hazardType!: string;
+
+  @ApiPropertyOptional({ enum: ['PENDING', 'APPROVED', 'REJECTED'] })
+  reviewStatus!: 'PENDING' | 'APPROVED' | 'REJECTED' | null;
+
+  @ApiPropertyOptional({ description: 'Set when the pin was reported by the current user' })
+  reporterId!: string | null;
+}
 
 class CreatePinDto {
   @ApiProperty({ description: 'Short title for the hazard pin' })
@@ -95,6 +120,13 @@ function assertCreatePinDto(input: CreatePinDto): void {
 @Controller('pins')
 export class PinsController {
   constructor(private readonly pinsService: PinsService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'List hazard pins visible to the current user (approved + own)' })
+  @ApiOkResponse({ description: 'List of pins', type: [VisiblePinDto] })
+  async findVisible(@AuthSessionParam() session: AuthSession) {
+    return this.pinsService.getVisiblePins(session.user.id);
+  }
 
   @Post()
   @ApiOperation({ summary: 'Submit a hazard pin with location and optional photo' })

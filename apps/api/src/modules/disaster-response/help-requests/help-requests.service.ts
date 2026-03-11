@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database/database.service';
 
+const SOS_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
 @Injectable()
 export class HelpRequestsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -17,6 +19,7 @@ export class HelpRequestsService {
     description: string;
     latitude: number;
     longitude: number;
+    sosExpiresAt?: Date;
   }) {
     return this.prisma.helpRequest.create({
       data: {
@@ -27,6 +30,7 @@ export class HelpRequestsService {
         description: input.description,
         latitude: input.latitude,
         longitude: input.longitude,
+        ...(input.sosExpiresAt != null && { sosExpiresAt: input.sosExpiresAt }),
       },
     });
   }
@@ -43,10 +47,15 @@ export class HelpRequestsService {
   }
 
   async findAllOpen(excludeUserId?: string) {
+    const now = new Date();
     return this.prisma.helpRequest.findMany({
       where: {
         status: 'OPEN',
         ...(excludeUserId ? { requesterId: { not: excludeUserId } } : {}),
+        OR: [
+          { sosExpiresAt: null },
+          { sosExpiresAt: { gt: now } },
+        ],
       },
       include: {
         requester: {

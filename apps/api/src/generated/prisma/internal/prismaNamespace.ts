@@ -425,11 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-<<<<<<< HEAD
-    modelProps: "user" | "session" | "account" | "verification" | "buildingProfile" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus"
-=======
     modelProps: "user" | "session" | "account" | "verification" | "buildingProfile" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus" | "trackerShipment" | "trackerStats" | "trackerReliefZone" | "trackerValidator"
->>>>>>> origin/dev
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2633,6 +2629,7 @@ export const HelpRequestScalarFieldEnum = {
   description: 'description',
   latitude: 'latitude',
   longitude: 'longitude',
+  sosExpiresAt: 'sosExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2811,15 +2808,6 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
 
 /**
  * Field references
@@ -2862,8 +2850,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
-<<<<<<< HEAD
-=======
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -2906,7 +2892,6 @@ export type ListEnumHousingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
->>>>>>> origin/dev
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -3059,8 +3044,6 @@ export type EnumPinReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 export type ListEnumPinReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PinReviewStatus[]'>
     
 
-<<<<<<< HEAD
-=======
 
 /**
  * Reference to a field of type 'ShipmentStatus'
@@ -3117,7 +3100,6 @@ export type EnumValidatorStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 export type ListEnumValidatorStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ValidatorStatus[]'>
     
 
->>>>>>> origin/dev
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
