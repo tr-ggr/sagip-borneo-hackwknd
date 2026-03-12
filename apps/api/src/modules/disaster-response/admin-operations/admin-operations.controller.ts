@@ -232,6 +232,65 @@ class ReviewPinDto {
   reason?: string;
 }
 
+class AdminDamageReportDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiPropertyOptional()
+  description?: string;
+
+  @ApiProperty({ enum: ['FLOODED_ROAD', 'COLLAPSED_STRUCTURE', 'DAMAGED_INFRASTRUCTURE'], isArray: true })
+  damageCategories!: Array<'FLOODED_ROAD' | 'COLLAPSED_STRUCTURE' | 'DAMAGED_INFRASTRUCTURE'>;
+
+  @ApiProperty()
+  latitude!: number;
+
+  @ApiProperty()
+  longitude!: number;
+
+  @ApiProperty()
+  photoUrl!: string;
+
+  @ApiProperty()
+  confidenceScore!: number;
+
+  @ApiProperty()
+  confidenceThreshold!: number;
+
+  @ApiProperty({ enum: ['PENDING', 'APPROVED', 'REJECTED'] })
+  reviewStatus!: 'PENDING' | 'APPROVED' | 'REJECTED';
+
+  @ApiPropertyOptional()
+  reviewNote?: string;
+
+  @ApiPropertyOptional()
+  reviewedAt?: Date;
+
+  @ApiProperty()
+  createdAt!: Date;
+
+  @ApiProperty({ type: 'object', properties: { id: { type: 'string' }, name: { type: 'string' }, email: { type: 'string' } } })
+  reporter!: { id: string; name: string; email: string };
+
+  @ApiPropertyOptional({
+    type: 'object',
+    nullable: true,
+    properties: { id: { type: 'string' }, name: { type: 'string' }, email: { type: 'string' } },
+  })
+  reviewedBy?: { id: string; name: string; email: string } | null;
+}
+
+class ReviewDamageReportDto {
+  @ApiProperty({ enum: ['APPROVE', 'REJECT'] })
+  action!: 'APPROVE' | 'REJECT';
+
+  @ApiPropertyOptional()
+  reason?: string;
+}
+
 class AdminUserLocationDto {
   @ApiProperty()
   id!: string;
@@ -340,6 +399,8 @@ class MapOverviewResponseDto {
   vulnerableRegions!: AdminRiskRegionDto[];
   @ApiProperty({ type: AdminPinStatusDto, isArray: true })
   pinStatuses!: AdminPinStatusDto[];
+  @ApiProperty({ type: AdminDamageReportDto, isArray: true })
+  damageReports!: AdminDamageReportDto[];
   @ApiProperty({ type: AdminUserLocationDto, isArray: true })
   userLocations!: AdminUserLocationDto[];
   @ApiProperty({ type: AdminHelpRequestDto, isArray: true })
@@ -541,6 +602,7 @@ function assertWarningPromptSuggestionDto(
 }
 
 const PIN_REVIEW_ACTIONS = ['APPROVE', 'REJECT'] as const;
+const DAMAGE_REPORT_REVIEW_ACTIONS = ['APPROVE', 'REJECT'] as const;
 
 function assertReviewPinDto(input: ReviewPinDto): void {
   if (!input || typeof input !== 'object') {
@@ -557,6 +619,30 @@ function assertReviewPinDto(input: ReviewPinDto): void {
 
   if (input.action === 'REJECT' && !input.reason) {
     throw new BadRequestException('reason is required when rejecting a pin.');
+  }
+
+  if (input.reason != null && typeof input.reason !== 'string') {
+    throw new BadRequestException('reason must be a string.');
+  }
+}
+
+function assertReviewDamageReportDto(input: ReviewDamageReportDto): void {
+  if (!input || typeof input !== 'object') {
+    throw new BadRequestException('Request body is required.');
+  }
+
+  if (
+    !DAMAGE_REPORT_REVIEW_ACTIONS.includes(
+      input.action as (typeof DAMAGE_REPORT_REVIEW_ACTIONS)[number],
+    )
+  ) {
+    throw new BadRequestException('action must be one of: APPROVE, REJECT.');
+  }
+
+  if (input.action === 'REJECT' && !input.reason) {
+    throw new BadRequestException(
+      'reason is required when rejecting a damage report.',
+    );
   }
 
   if (input.reason != null && typeof input.reason !== 'string') {
@@ -845,6 +931,13 @@ export class AdminOperationsController {
     return this.adminService.getPinStatuses();
   }
 
+  @Get('damage-reports')
+  @ApiOperation({ summary: 'List submitted damage reports for admin review' })
+  @ApiOkResponse({ type: [AdminDamageReportDto] })
+  async damageReports() {
+    return this.adminService.getDamageReports();
+  }
+
   @Post('pins/:id/review')
   @ApiOperation({ summary: 'Approve or reject a hazard pin (admin only)' })
   @ApiParam({ name: 'id', type: String })
@@ -857,6 +950,24 @@ export class AdminOperationsController {
     assertReviewPinDto(body);
     return this.adminService.reviewPin({
       pinId,
+      reviewerId: session.user.id,
+      action: body.action,
+      reason: body.reason,
+    });
+  }
+
+  @Post('damage-reports/:id/review')
+  @ApiOperation({ summary: 'Approve or reject a submitted damage report (admin only)' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: ReviewDamageReportDto })
+  async reviewDamageReport(
+    @Param('id') damageReportId: string,
+    @AuthSessionParam() session: AuthSession,
+    @Body() body: ReviewDamageReportDto,
+  ) {
+    assertReviewDamageReportDto(body);
+    return this.adminService.reviewDamageReport({
+      damageReportId,
       reviewerId: session.user.id,
       action: body.action,
       reason: body.reason,

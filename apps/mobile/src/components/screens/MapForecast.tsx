@@ -7,6 +7,7 @@ import {
   useRiskIntelligenceControllerGetForecast,
   useRiskIntelligenceControllerGetVulnerableRegions,
   useHelpRequestsControllerListOpen,
+  useDamageReportsControllerFindVisible,
   usePinsControllerFindVisible,
   useVolunteersControllerGetStatus,
   useRoutingControllerGetRoute,
@@ -89,6 +90,7 @@ export default function MapForecast({
   const { data: vulnerableRegions } = useRiskIntelligenceControllerGetVulnerableRegions();
   const { data: openRequests } = useHelpRequestsControllerListOpen();
   const { data: hazardPins } = usePinsControllerFindVisible();
+  const { data: damageReports } = useDamageReportsControllerFindVisible();
   const { data: volunteerStatus } = useVolunteersControllerGetStatus();
   const status = volunteerStatus as { profile?: { baseLatitude?: number; baseLongitude?: number } } | null | undefined;
   const profile = status?.profile;
@@ -169,6 +171,7 @@ export default function MapForecast({
   const [evacTypeFilter, setEvacTypeFilter] = React.useState<string | 'ALL'>('ALL');
   const [showVulnerableRegions, setShowVulnerableRegions] = React.useState(true);
   const [showHazardPins, setShowHazardPins] = React.useState(true);
+  const [showDamageReports, setShowDamageReports] = React.useState(true);
 
   const filteredEvacuationSites =
     evacTypeFilter === 'ALL'
@@ -180,6 +183,8 @@ export default function MapForecast({
   const filteredVulnerableRegions = showVulnerableRegions ? (vulnerableRegions as any) : [];
   const filteredHazardPins =
     showHazardPins && Array.isArray(hazardPins) ? (hazardPins as any) : [];
+  const filteredDamageReports =
+    showDamageReports && Array.isArray(damageReports) ? (damageReports as any) : [];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -257,6 +262,15 @@ export default function MapForecast({
             <label className="inline-flex items-center gap-1 cursor-pointer">
               <input
                 type="checkbox"
+                checked={showDamageReports}
+                onChange={(e) => setShowDamageReports(e.target.checked)}
+                className="h-3 w-3 rounded border-wira-ivory-dark"
+              />
+              <span>Damage reports</span>
+            </label>
+            <label className="inline-flex items-center gap-1 cursor-pointer">
+              <input
+                type="checkbox"
                 checked={showRiskLayer}
                 onChange={(e) => setShowRiskLayer(e.target.checked)}
                 className="h-3 w-3 rounded border-wira-ivory-dark"
@@ -271,6 +285,7 @@ export default function MapForecast({
           vulnerableRegions={filteredVulnerableRegions} 
           helpRequests={showAllPins ? (openRequests as any) : []}
           hazardPins={filteredHazardPins}
+          damageReports={filteredDamageReports}
           focusedHelpRequestId={focusedHelpRequestId}
           mapFocus={mapFocus}
           homeLocation={homeLocation}

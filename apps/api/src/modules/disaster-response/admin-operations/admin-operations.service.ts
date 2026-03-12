@@ -503,6 +503,28 @@ export class AdminOperationsService {
     });
   }
 
+  async getDamageReports() {
+    return this.prisma.damageReport.findMany({
+      include: {
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        reviewedBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: [{ reviewStatus: 'asc' }, { createdAt: 'desc' }],
+    });
+  }
+
   async reviewPin(input: {
     pinId: string;
     reviewerId: string;
@@ -528,6 +550,49 @@ export class AdminOperationsService {
         reviewNote: input.reason ?? undefined,
         reviewStatus,
         status,
+      },
+    });
+  }
+
+  async reviewDamageReport(input: {
+    damageReportId: string;
+    reviewerId: string;
+    action: 'APPROVE' | 'REJECT';
+    reason?: string;
+  }) {
+    const report = await this.prisma.damageReport.findUnique({
+      where: { id: input.damageReportId },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Damage report not found.');
+    }
+
+    const reviewStatus = input.action === 'APPROVE' ? 'APPROVED' : 'REJECTED';
+
+    return this.prisma.damageReport.update({
+      where: { id: input.damageReportId },
+      data: {
+        reviewedById: input.reviewerId,
+        reviewedAt: new Date(),
+        reviewNote: input.reason ?? undefined,
+        reviewStatus,
+      },
+      include: {
+        reporter: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        reviewedBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
     });
   }
@@ -577,9 +642,10 @@ export class AdminOperationsService {
   }
 
   async getMapOverview() {
-    const [vulnerableRegions, pinStatuses, userLocations, helpRequests] = await Promise.all([
+    const [vulnerableRegions, pinStatuses, damageReports, userLocations, helpRequests] = await Promise.all([
       this.getVulnerableRegions(),
       this.getPinStatuses(),
+      this.getDamageReports(),
       this.getUserLocations(),
       this.getHelpRequests(),
     ]);
@@ -587,6 +653,7 @@ export class AdminOperationsService {
     return {
       vulnerableRegions,
       pinStatuses,
+      damageReports,
       userLocations,
       helpRequests,
     };

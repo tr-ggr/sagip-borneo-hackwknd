@@ -45,6 +45,25 @@ export interface HazardPin {
   reporterId?: string | null;
 }
 
+export interface DamageReport {
+  id: string;
+  title: string;
+  description?: string;
+  damageCategories: string[];
+  latitude: number;
+  longitude: number;
+  photoUrl: string;
+  confidenceScore: number;
+  confidenceThreshold: number;
+  reviewStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+  createdAt: string;
+  reporter: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
 export interface EvacuationSite {
   id: string;
   name: string;
@@ -71,6 +90,7 @@ interface MapComponentProps {
   helpRequests?: HelpRequest[];
   /** Hazard pins visible to user (approved + own); styled by reviewStatus. */
   hazardPins?: HazardPin[];
+  damageReports?: DamageReport[];
   focusedHelpRequestId?: string | null;
   mapFocus?: { latitude: number; longitude: number } | null;
   homeLocation?: { latitude: number; longitude: number } | null;
@@ -119,6 +139,10 @@ function getHazardPinSvg(fill: string): string {
   return `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C5.5 2 0 7.5 0 14c0 8 12 18 12 18s12-10 12-18C24 7.5 18.5 2 12 2zm0 10a4 4 0 100-8 4 4 0 000 8z" fill="${fill}"/></svg>`;
 }
 
+function getDamageReportSvg(fill: string): string {
+  return `<svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 1C8.20101 1 3.5 5.70101 3.5 11.5C3.5 19.25 14 33 14 33C14 33 24.5 19.25 24.5 11.5C24.5 5.70101 19.799 1 14 1Z" fill="${fill}" stroke="white" stroke-width="2"/><rect x="8.5" y="8" width="11" height="7.5" rx="1.5" fill="white"/><circle cx="11.5" cy="11.75" r="1.25" fill="${fill}"/><path d="M18.5 14.5L15.7 11.7L13.2 14.2L11.8 12.8L8.5 16H19.5C19.5 15.3 19.1 14.8 18.5 14.5Z" fill="${fill}"/></svg>`;
+}
+
 /** Risk value to color: green (low), yellow (mid), red (high). */
 function getRiskColor(risk: number): string {
   if (risk <= 1 / 3) return '#22c55e';
@@ -131,6 +155,7 @@ export default function MapComponent({
   vulnerableRegions = [],
   helpRequests = [],
   hazardPins = [],
+  damageReports = [],
   focusedHelpRequestId,
   mapFocus,
   homeLocation,
@@ -147,6 +172,7 @@ export default function MapComponent({
   const regionsLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const helpLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const hazardLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const damageLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const riskLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const homeLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const evacLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
@@ -160,6 +186,12 @@ export default function MapComponent({
   onMapClickRef.current = onMapClick;
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [selectedMapItem, setSelectedMapItem] = useState<
+    | { kind: 'hazard'; pin: HazardPin }
+    | { kind: 'damage'; report: DamageReport }
+    | { kind: 'help'; request: HelpRequest }
+    | null
+  >(null);
   const [userCoords, setUserCoords] = useState<number[] | null>(null);
 
   // Location cache helpers
@@ -337,6 +369,14 @@ export default function MapComponent({
     map.addLayer(hazardLayer);
     hazardLayerRef.current = hazardLayer;
 
+    const damageSource = new VectorSource();
+    const damageLayer = new VectorLayer({
+      source: damageSource,
+      zIndex: 9,
+    });
+    map.addLayer(damageLayer);
+    damageLayerRef.current = damageLayer;
+
     // 6. Setup Home Layer
     const homeSource = new VectorSource();
     const homeLayer = new VectorLayer({
@@ -400,8 +440,32 @@ export default function MapComponent({
         return;
       }
       const hit = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+      const damageReport = hit?.get('damageReport') as DamageReport | undefined;
+      if (damageReport) {
+        setSelectedMapItem({ kind: 'damage', report: damageReport });
+        return;
+      }
+
+      const hazardPin = hit?.get('hazardPin') as HazardPin | undefined;
+      if (hazardPin) {
+        setSelectedMapItem({ kind: 'hazard', pin: hazardPin });
+        return;
+      }
+
+      const helpRequest = hit?.get('helpRequest') as HelpRequest | undefined;
+      if (helpRequest) {
+        setSelectedMapItem({ kind: 'help', request: helpRequest });
+        return;
+      }
+
       const evac = hit?.get('evac') as EvacuationSite | undefined;
-      if (evac && onEvacClickRef.current) onEvacClickRef.current(evac);
+      if (evac && onEvacClickRef.current) {
+        setSelectedMapItem(null);
+        onEvacClickRef.current(evac);
+        return;
+      }
+
+      setSelectedMapItem(null);
     });
 
     // 8. Setup Route Layer (OSRM – fastest)
@@ -523,6 +587,7 @@ export default function MapComponent({
       const feature = new Feature({
         geometry: point,
       });
+      feature.set('helpRequest', req);
 
       const color = req.urgency === 'CRITICAL' ? '#DC2626' : '#EAB308';
       
@@ -559,6 +624,7 @@ export default function MapComponent({
     const features = list.map((pin) => {
       const point = new Point(fromLonLat([pin.longitude, pin.latitude]));
       const feature = new Feature({ geometry: point });
+      feature.set('hazardPin', pin);
 
       const fill =
         pin.reviewStatus === 'REJECTED'
@@ -582,6 +648,42 @@ export default function MapComponent({
 
     source.addFeatures(features);
   }, [hazardPins]);
+
+  // Update Damage Reports Layer
+  useEffect(() => {
+    if (!damageLayerRef.current) return;
+    const source = damageLayerRef.current.getSource();
+    if (!source) return;
+
+    source.clear();
+
+    const features = damageReports.map((report) => {
+      const point = new Point(fromLonLat([report.longitude, report.latitude]));
+      const feature = new Feature({ geometry: point });
+      feature.set('damageReport', report);
+
+      const fill =
+        report.reviewStatus === 'REJECTED'
+          ? '#6B7280'
+          : report.reviewStatus === 'PENDING'
+            ? '#F59E0B'
+            : '#0F766E';
+
+      feature.setStyle(
+        new Style({
+          image: new Icon({
+            src: `data:image/svg+xml;utf8,${encodeURIComponent(getDamageReportSvg(fill))}`,
+            scale: 1,
+            anchor: [0.5, 1],
+          }),
+        }),
+      );
+
+      return feature;
+    });
+
+    source.addFeatures(features);
+  }, [damageReports]);
 
   // Update Hazard Risk Points Layer (color by risk: green / yellow / red)
   useEffect(() => {
@@ -757,6 +859,102 @@ export default function MapComponent({
                 {info}
             </div>
         )}
+        {selectedMapItem ? (
+          <div className="absolute bottom-3 left-3 right-3 rounded-2xl border border-wira-teal/20 bg-white/95 p-4 shadow-xl backdrop-blur-sm">
+            {selectedMapItem.kind === 'damage' ? (
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-display font-bold text-wira-earth">{selectedMapItem.report.title}</p>
+                    <p className="text-xs text-wira-earth/60">
+                      Submitted by {selectedMapItem.report.reporter.name}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMapItem(null)}
+                    className="text-xs font-bold uppercase tracking-wide text-wira-earth/50"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {selectedMapItem.report.damageCategories.map((category) => (
+                    <span
+                      key={category}
+                      className="rounded-full bg-wira-ivory-dark px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-wira-earth/70"
+                    >
+                      {category.replaceAll('_', ' ')}
+                    </span>
+                  ))}
+                </div>
+
+                {selectedMapItem.report.description ? (
+                  <p className="text-xs text-wira-earth/75">{selectedMapItem.report.description}</p>
+                ) : null}
+
+                <div className="grid grid-cols-2 gap-3 text-xs text-wira-earth/70">
+                  <div>
+                    Confidence {Math.round(selectedMapItem.report.confidenceScore * 100)}%
+                  </div>
+                  <div>
+                    Threshold {Math.round(selectedMapItem.report.confidenceThreshold * 100)}%
+                  </div>
+                </div>
+
+                <div className="text-xs text-wira-earth/70">
+                  Status: {selectedMapItem.report.reviewStatus}
+                </div>
+
+                <img
+                  src={selectedMapItem.report.photoUrl}
+                  alt={selectedMapItem.report.title}
+                  className="h-32 w-full rounded-xl object-cover"
+                />
+              </div>
+            ) : selectedMapItem.kind === 'hazard' ? (
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-display font-bold text-wira-earth">
+                      {selectedMapItem.pin.title ?? 'Hazard pin'}
+                    </p>
+                    <p className="text-xs text-wira-earth/60">
+                      {selectedMapItem.pin.hazardType ?? 'Unknown hazard'}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMapItem(null)}
+                    className="text-xs font-bold uppercase tracking-wide text-wira-earth/50"
+                  >
+                    Close
+                  </button>
+                </div>
+                <p className="text-xs text-wira-earth/70">Review: {selectedMapItem.pin.reviewStatus ?? 'APPROVED'}</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-display font-bold text-wira-earth">Help request</p>
+                    <p className="text-xs text-wira-earth/60">{selectedMapItem.request.hazardType}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMapItem(null)}
+                    className="text-xs font-bold uppercase tracking-wide text-wira-earth/50"
+                  >
+                    Close
+                  </button>
+                </div>
+                <p className="text-xs text-wira-earth/75">{selectedMapItem.request.id}</p>
+                <p className="text-xs text-wira-earth/70">Urgency: {selectedMapItem.request.urgency}</p>
+              </div>
+            )}
+          </div>
+        ) : null}
     </div>
   );
 }

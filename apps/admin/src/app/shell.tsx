@@ -8,6 +8,7 @@ import { useAuth } from '../lib/auth';
 const navItems = [
   { href: '/', label: 'Dashboard', icon: 'home' as const },
   { href: '/volunteers', label: 'Resources', icon: 'users' as const },
+  { href: '/damage-reports', label: 'Damage Reports', icon: 'damage' as const },
   { href: '/warnings', label: 'Warnings', icon: 'alert' as const },
   { href: '/map', label: 'Map', icon: 'map' as const },
 ] as const;
@@ -66,6 +67,25 @@ function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
           <path d="M12 9v4" />
           <path d="M12 17h.01" />
           <path d="M10.29 3.86 2.82 18a1 1 0 0 0 .9 1.48h16.56a1 1 0 0 0 .9-1.48L13.71 3.86a1 1 0 0 0-1.72 0z" />
+        </svg>
+      );
+    case 'damage':
+      return (
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5 7h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" />
+          <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+          <circle cx="10" cy="13" r="1.5" />
+          <path d="m21 16-4.5-4.5-5 5-2-2L3 20" />
         </svg>
       );
     case 'map':

@@ -2,6 +2,7 @@
 
 import {
   useAdminOperationsControllerMapOverview,
+  useAdminOperationsControllerReviewDamageReport,
   useAdminOperationsControllerReviewPin,
   useAdminOperationsControllerWeatherForecast,
   useAdminOperationsControllerWeatherGeocoding,
@@ -64,6 +65,24 @@ interface PinStatus {
   updatedAt?: string;
 }
 
+interface DamageReportItem {
+  id: string;
+  title: string;
+  description?: string | null;
+  damageCategories: Array<'FLOODED_ROAD' | 'COLLAPSED_STRUCTURE' | 'DAMAGED_INFRASTRUCTURE'>;
+  latitude: number;
+  longitude: number;
+  photoUrl: string;
+  confidenceScore: number;
+  confidenceThreshold: number;
+  reviewStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+  reviewNote?: string | null;
+  reviewedAt?: string | null;
+  createdAt: string;
+  reporter: { id: string; name: string; email: string };
+  reviewedBy?: { id: string; name: string; email: string } | null;
+}
+
 interface UserLocation {
   id: string;
   userId: string;
@@ -89,6 +108,7 @@ interface UserHelpRequest {
 interface MapOverviewPayload {
   vulnerableRegions: RegionRisk[];
   pinStatuses: PinStatus[];
+  damageReports: DamageReportItem[];
   userLocations: UserLocation[];
   helpRequests: UserHelpRequest[];
 }
@@ -125,6 +145,10 @@ function toPins(raw: unknown): PinStatus[] {
   return Array.isArray(raw) ? (raw as PinStatus[]) : [];
 }
 
+function toDamageReports(raw: unknown): DamageReportItem[] {
+  return Array.isArray(raw) ? (raw as DamageReportItem[]) : [];
+}
+
 function toUsers(raw: unknown): UserLocation[] {
   return Array.isArray(raw) ? (raw as UserLocation[]) : [];
 }
@@ -138,6 +162,7 @@ function toMapOverview(raw: unknown): MapOverviewPayload {
     return {
       vulnerableRegions: [],
       pinStatuses: [],
+      damageReports: [],
       userLocations: [],
       helpRequests: [],
     };
@@ -147,6 +172,7 @@ function toMapOverview(raw: unknown): MapOverviewPayload {
   return {
     vulnerableRegions: toRisks(input.vulnerableRegions),
     pinStatuses: toPins(input.pinStatuses),
+    damageReports: toDamageReports(input.damageReports),
     userLocations: toUsers(input.userLocations),
     helpRequests: toHelpRequests(input.helpRequests),
   };
@@ -232,11 +258,13 @@ export function OperationsMapPage() {
   const mapViewRef = useRef<View | null>(null);
   const hazardSourceRef = useRef(new VectorSource());
   const pinSourceRef = useRef(new VectorSource());
+  const damageSourceRef = useRef(new VectorSource());
   const userSourceRef = useRef(new VectorSource());
   const helpSourceRef = useRef(new VectorSource());
   const clusteringSourceRef = useRef(new VectorSource());
   const aseanExtentRef = useRef(toAseanExtentProjection());
   const filteredPinsRef = useRef<PinStatus[]>([]);
+  const damageReportsRef = useRef<DamageReportItem[]>([]);
   const filteredUsersRef = useRef<UserLocation[]>([]);
   const filteredHelpRequestsRef = useRef<UserHelpRequest[]>([]);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -267,6 +295,7 @@ export function OperationsMapPage() {
     CRITICAL: true,
   });
   const [selectedPin, setSelectedPin] = useState<PinStatus | null>(null);
+  const [selectedDamageReport, setSelectedDamageReport] = useState<DamageReportItem | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserLocation | null>(null);
   const [selectedHelpRequest, setSelectedHelpRequest] = useState<UserHelpRequest | null>(null);
   const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(null);
@@ -290,6 +319,16 @@ export function OperationsMapPage() {
       onSuccess: () => {
         overviewQuery.refetch();
         setSelectedPin(null);
+        setPinReviewReason('');
+      },
+    },
+  });
+
+  const reviewDamageReportMutation = useAdminOperationsControllerReviewDamageReport({
+    mutation: {
+      onSuccess: () => {
+        overviewQuery.refetch();
+        setSelectedDamageReport(null);
         setPinReviewReason('');
       },
     },
@@ -338,6 +377,7 @@ export function OperationsMapPage() {
 
   const risks = overviewQuery.data?.vulnerableRegions ?? [];
   const pins = overviewQuery.data?.pinStatuses ?? [];
+  const damageReports = overviewQuery.data?.damageReports ?? [];
   const users = overviewQuery.data?.userLocations ?? [];
   const helpRequests = overviewQuery.data?.helpRequests ?? [];
 
@@ -366,6 +406,10 @@ export function OperationsMapPage() {
   useEffect(() => {
     filteredPinsRef.current = filteredPins;
   }, [filteredPins]);
+
+  useEffect(() => {
+    damageReportsRef.current = damageReports;
+  }, [damageReports]);
 
   useEffect(() => {
     filteredUsersRef.current = filteredUsers;
@@ -427,6 +471,10 @@ export function OperationsMapPage() {
 
     filteredPins.forEach((pin) => {
       points.push([pin.longitude, pin.latitude]);
+    });
+
+    damageReports.forEach((report) => {
+      points.push([report.longitude, report.latitude]);
     });
 
     filteredUsers.forEach((user) => {
@@ -512,6 +560,7 @@ export function OperationsMapPage() {
 
     const hazardLayer = new VectorLayer({ source: hazardSourceRef.current });
     const pinLayer = new VectorLayer({ source: pinSourceRef.current });
+    const damageLayer = new VectorLayer({ source: damageSourceRef.current });
     const userLayer = new VectorLayer({ source: userSourceRef.current });
     const helpLayer = new VectorLayer({ source: helpSourceRef.current });
 
@@ -578,6 +627,7 @@ export function OperationsMapPage() {
         clusteringLayer,
         hazardLayer,
         pinLayer,
+        damageLayer,
         userLayer,
         helpLayer,
       ],
@@ -615,7 +665,7 @@ export function OperationsMapPage() {
 
       const clickedFeature = clickedFeatures.find((feature) => {
         const featureType = String(feature.get('featureType'));
-        return featureType === 'pin' || featureType === 'user' || featureType === 'help';
+        return featureType === 'pin' || featureType === 'damage' || featureType === 'user' || featureType === 'help';
       });
 
       if (!clickedFeature) {
@@ -628,10 +678,24 @@ export function OperationsMapPage() {
         const pinId = String(clickedFeature.get('pinId'));
         const pin = filteredPinsRef.current.find((item) => item.id === pinId) ?? null;
         setSelectedPin(pin);
+        setSelectedDamageReport(null);
         setSelectedUser(null);
         setSelectedHelpRequest(null);
         if (pin) {
           setSelectedCoords([pin.longitude, pin.latitude]);
+        }
+        return;
+      }
+
+      if (featureType === 'damage') {
+        const damageReportId = String(clickedFeature.get('damageReportId'));
+        const report = damageReportsRef.current.find((item) => item.id === damageReportId) ?? null;
+        setSelectedDamageReport(report);
+        setSelectedPin(null);
+        setSelectedUser(null);
+        setSelectedHelpRequest(null);
+        if (report) {
+          setSelectedCoords([report.longitude, report.latitude]);
         }
         return;
       }
@@ -641,6 +705,7 @@ export function OperationsMapPage() {
         const user = filteredUsersRef.current.find((item) => item.id === userLocationId) ?? null;
         setSelectedUser(user);
         setSelectedPin(null);
+        setSelectedDamageReport(null);
         setSelectedHelpRequest(null);
         if (user) {
           setSelectedCoords([user.longitude, user.latitude]);
@@ -654,6 +719,7 @@ export function OperationsMapPage() {
           filteredHelpRequestsRef.current.find((item) => item.id === helpRequestId) ?? null;
         setSelectedHelpRequest(helpRequest);
         setSelectedPin(null);
+        setSelectedDamageReport(null);
         setSelectedUser(null);
         if (helpRequest) {
           setSelectedCoords([helpRequest.longitude, helpRequest.latitude]);
@@ -726,7 +792,10 @@ export function OperationsMapPage() {
   }, []);
 
   const hasAnyMapData =
-    filteredRisks.length > 0 || filteredPins.length > 0 || filteredUsers.length > 0;
+    filteredRisks.length > 0 ||
+    filteredPins.length > 0 ||
+    damageReports.length > 0 ||
+    filteredUsers.length > 0;
 
 
   useEffect(() => {
@@ -785,6 +854,43 @@ export function OperationsMapPage() {
       source.addFeature(feature);
     });
   }, [filteredPins]);
+
+  useEffect(() => {
+    const source = damageSourceRef.current;
+    source.clear();
+
+    damageReports.forEach((report) => {
+      const feature = new Feature({
+        geometry: new Point(fromLonLat([report.longitude, report.latitude])),
+        featureType: 'damage',
+        damageReportId: report.id,
+      });
+
+      feature.setStyle(
+        new Style({
+          image: new CircleStyle({
+            radius: 9,
+            fill: new Fill({
+              color:
+                report.reviewStatus === 'REJECTED'
+                  ? '#6B7280'
+                  : report.reviewStatus === 'APPROVED'
+                    ? '#0F766E'
+                    : '#F59E0B',
+            }),
+            stroke: new Stroke({ color: '#F5F0E8', width: 2 }),
+          }),
+          text: new Text({
+            text: 'D',
+            fill: new Fill({ color: '#ffffff' }),
+            font: 'bold 11px sans-serif',
+          }),
+        }),
+      );
+
+      source.addFeature(feature);
+    });
+  }, [damageReports]);
 
   useEffect(() => {
     const source = userSourceRef.current;
@@ -1275,6 +1381,7 @@ export function OperationsMapPage() {
                         onClick={() => {
                           setSelectedHelpRequest(req);
                           setSelectedPin(null);
+                          setSelectedDamageReport(null);
                           setSelectedUser(null);
                           setSelectedCoords([req.longitude, req.latitude]);
                         }}
@@ -1395,6 +1502,98 @@ export function OperationsMapPage() {
               </>
             ) : null}
 
+            {selectedDamageReport ? (
+              <>
+                <p className="small muted">Damage Report</p>
+                <dl className="summary-grid">
+                  <dt>Title</dt>
+                  <dd>{selectedDamageReport.title}</dd>
+                  <dt>Reporter</dt>
+                  <dd>{selectedDamageReport.reporter.name}</dd>
+                  <dt>Email</dt>
+                  <dd>{selectedDamageReport.reporter.email}</dd>
+                  <dt>Categories</dt>
+                  <dd>{selectedDamageReport.damageCategories.join(', ')}</dd>
+                  <dt>Confidence</dt>
+                  <dd>{Math.round(selectedDamageReport.confidenceScore * 100)}%</dd>
+                  <dt>Threshold</dt>
+                  <dd>{Math.round(selectedDamageReport.confidenceThreshold * 100)}%</dd>
+                  <dt>Status</dt>
+                  <dd>{selectedDamageReport.reviewStatus}</dd>
+                  <dt>Submitted</dt>
+                  <dd>{new Date(selectedDamageReport.createdAt).toLocaleString()}</dd>
+                  {selectedDamageReport.description ? (
+                    <>
+                      <dt>Description</dt>
+                      <dd className="small">{selectedDamageReport.description}</dd>
+                    </>
+                  ) : null}
+                  {selectedDamageReport.reviewNote ? (
+                    <>
+                      <dt>Review note</dt>
+                      <dd className="small">{selectedDamageReport.reviewNote}</dd>
+                    </>
+                  ) : null}
+                </dl>
+                <div className="summary-grid" style={{ marginTop: '0.5rem' }}>
+                  <dt>Photo</dt>
+                  <dd>
+                    <img
+                      src={selectedDamageReport.photoUrl}
+                      alt="Damage report attachment"
+                      style={{ maxWidth: '100%', maxHeight: 220, objectFit: 'contain', borderRadius: 8 }}
+                    />
+                  </dd>
+                </div>
+                {selectedDamageReport.reviewStatus === 'PENDING' ? (
+                  <div style={{ marginTop: '1rem' }}>
+                    <h3 className="card-title" style={{ marginBottom: '0.5rem' }}>Review damage report</h3>
+                    <div className="map-toolbar-row" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <input
+                        type="text"
+                        className="field"
+                        placeholder="Reason (required for reject)"
+                        value={pinReviewReason}
+                        onChange={(e) => setPinReviewReason(e.target.value)}
+                        aria-label="Damage report review reason"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-neutral"
+                        disabled={reviewDamageReportMutation.isPending}
+                        onClick={() => {
+                          reviewDamageReportMutation.mutate({
+                            id: selectedDamageReport.id,
+                            data: { action: 'APPROVE' },
+                          });
+                        }}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-warning"
+                        disabled={reviewDamageReportMutation.isPending || !pinReviewReason.trim()}
+                        onClick={() => {
+                          reviewDamageReportMutation.mutate({
+                            id: selectedDamageReport.id,
+                            data: { action: 'REJECT', reason: pinReviewReason.trim() },
+                          });
+                        }}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                    {reviewDamageReportMutation.isError ? (
+                      <p className="error-text small" style={{ marginTop: '0.5rem' }}>
+                        Review failed. Please try again.
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </>
+            ) : null}
+
             {selectedUser ? (
               <>
                 <p className="small muted">User Location</p>
@@ -1436,9 +1635,9 @@ export function OperationsMapPage() {
               </>
             ) : null}
 
-            {!selectedPin && !selectedUser && !selectedHelpRequest ? (
+            {!selectedPin && !selectedDamageReport && !selectedUser && !selectedHelpRequest ? (
               <p className="muted">
-                Select an operations pin, user, or help request to inspect details.
+                Select an operations pin, damage report, user, or help request to inspect details.
               </p>
             ) : null}
 

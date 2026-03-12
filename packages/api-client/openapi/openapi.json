@@ -1320,9 +1320,15 @@
         "parameters": [
           {
             "name": "status",
-            "required": true,
+            "required": false,
             "in": "query",
+            "description": "Optional warning status filter.",
             "schema": {
+              "enum": [
+                "DRAFT",
+                "SENT",
+                "CANCELLED"
+              ],
               "type": "string"
             }
           }
@@ -1488,6 +1494,36 @@
         ]
       }
     },
+    "/api/admin/damage-reports": {
+      "get": {
+        "operationId": "AdminOperationsController_damageReports",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminDamageReportDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List submitted damage reports for admin review",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
     "/api/admin/pins/{id}/review": {
       "post": {
         "operationId": "AdminOperationsController_reviewPin",
@@ -1522,6 +1558,45 @@
           }
         ],
         "summary": "Approve or reject a hazard pin (admin only)",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/damage-reports/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewDamageReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDamageReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject a submitted damage report (admin only)",
         "tags": [
           "admin-operations"
         ]
@@ -1957,6 +2032,107 @@
         "summary": "Delete an asset",
         "tags": [
           "Assets"
+        ]
+      }
+    },
+    "/api/damage-reports": {
+      "post": {
+        "operationId": "DamageReportsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDamageReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DamageReportDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit a geo-tagged damage report with photo and mocked AI analysis",
+        "tags": [
+          "damage-reports"
+        ]
+      },
+      "get": {
+        "operationId": "DamageReportsController_findVisible",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DamageReportDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List visible damage reports (approved + own submissions)",
+        "tags": [
+          "damage-reports"
+        ]
+      }
+    },
+    "/api/damage-reports/{id}": {
+      "get": {
+        "operationId": "DamageReportsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DamageReportDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get one damage report with reporter and review details",
+        "tags": [
+          "damage-reports"
         ]
       }
     },
@@ -2759,7 +2935,126 @@
         "type": "object",
         "properties": {}
       },
+      "AdminDamageReportDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number"
+          },
+          "confidenceThreshold": {
+            "type": "number"
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "reviewNote": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reporter": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "reviewedBy": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "damageCategories",
+          "latitude",
+          "longitude",
+          "photoUrl",
+          "confidenceScore",
+          "confidenceThreshold",
+          "reviewStatus",
+          "createdAt",
+          "reporter"
+        ]
+      },
       "ReviewPinDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "ReviewDamageReportDto": {
         "type": "object",
         "properties": {
           "action": {
@@ -2891,6 +3186,233 @@
         },
         "required": [
           "name"
+        ]
+      },
+      "CreateDamageReportDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "title",
+          "latitude",
+          "longitude",
+          "photo"
+        ]
+      },
+      "ReporterDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "DamageReportDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number"
+          },
+          "confidenceThreshold": {
+            "type": "number"
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reporter": {
+            "$ref": "#/components/schemas/ReporterDto"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "damageCategories",
+          "latitude",
+          "longitude",
+          "photoUrl",
+          "confidenceScore",
+          "confidenceThreshold",
+          "reviewStatus",
+          "createdAt",
+          "reporter"
+        ]
+      },
+      "ReviewedByDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "DamageReportDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number"
+          },
+          "confidenceThreshold": {
+            "type": "number"
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reporter": {
+            "$ref": "#/components/schemas/ReporterDto"
+          },
+          "reviewNote": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reviewedBy": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewedByDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "damageCategories",
+          "latitude",
+          "longitude",
+          "photoUrl",
+          "confidenceScore",
+          "confidenceThreshold",
+          "reviewStatus",
+          "createdAt",
+          "reporter"
         ]
       },
       "TrackerShipmentDto": {
