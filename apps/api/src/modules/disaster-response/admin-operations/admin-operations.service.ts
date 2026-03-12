@@ -237,7 +237,10 @@ export class AdminOperationsService {
   async getAssetRegistry() {
     const users = await this.prisma.user.findMany({
       where: {
-        assets: { not: null },
+        OR: [
+          { assets: { not: null } },
+          { assetRecords: { some: {} } },
+        ],
       },
       select: {
         id: true,
@@ -245,6 +248,9 @@ export class AdminOperationsService {
         email: true,
         createdAt: true,
         assets: true,
+        assetRecords: {
+          select: { name: true },
+        },
         volunteerProfile: {
           select: { status: true },
         },
@@ -253,18 +259,22 @@ export class AdminOperationsService {
     });
 
     return users
-      .filter((u) => {
-        const a = u.assets;
-        return Array.isArray(a) && a.length > 0 && a.every((x) => typeof x === 'string');
+      .map((u) => {
+        // Merge legacy JSON assets with new structured records
+        const legacyAssets = Array.isArray(u.assets) ? (u.assets as string[]) : [];
+        const recordAssets = u.assetRecords.map((r) => r.name);
+        const allAssets = Array.from(new Set([...legacyAssets, ...recordAssets]));
+
+        return {
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          createdAt: u.createdAt,
+          assets: allAssets,
+          volunteerStatus: u.volunteerProfile?.status ?? null,
+        };
       })
-      .map((u) => ({
-        id: u.id,
-        name: u.name,
-        email: u.email,
-        createdAt: u.createdAt,
-        assets: u.assets as string[],
-        volunteerStatus: u.volunteerProfile?.status ?? null,
-      }));
+      .filter((u) => u.assets.length > 0);
   }
 
   async getApplicationHistory(applicationId: string) {
