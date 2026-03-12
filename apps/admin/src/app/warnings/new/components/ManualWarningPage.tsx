@@ -4,13 +4,13 @@ import {
   useAdminOperationsControllerCreateWarning,
   useAdminOperationsControllerGetPromptSuggestion,
 } from '@wira-borneo/api-client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   canProceedToConfirmation,
   warningFlowReducer,
   warningSummary,
 } from './warning-flow.utils';
-import WarningMapSupport from './WarningMapSupport';
+import WarningMapSupport, { type WarningCoordinatePoint } from './WarningMapSupport';
 import {
   getLastWarningLocation,
   isLocationEmpty,
@@ -19,6 +19,19 @@ import {
 
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+type DrawMode = 'pin' | 'box' | 'polygon';
+
+function formatCoordinate(value: number): string {
+  return value.toFixed(6);
+}
+
+function coordinateLabel(drawMode: DrawMode, index: number, total: number): string {
+  if (drawMode === 'box' && total === 4) {
+    return ['Point 1', 'Point 2', 'Point 3', 'Point 4'][index] ?? `Point ${index + 1}`;
+  }
+
+  return `Pin ${index + 1}`;
+}
 
 const defaultTarget = {
   areaName: '',
@@ -37,15 +50,19 @@ export function ManualWarningPage() {
   const [startsAt, setStartsAt] = useState(new Date().toISOString().slice(0, 16));
   const [endsAt, setEndsAt] = useState('');
   const [target, setTarget] = useState(defaultTarget);
+  const [drawMode, setDrawMode] = useState<DrawMode>('pin');
+  const [targetCoordinates, setTargetCoordinates] = useState<WarningCoordinatePoint[]>([]);
 
   const promptMutation = useAdminOperationsControllerGetPromptSuggestion();
   const createWarningMutation = useAdminOperationsControllerCreateWarning();
 
-  useMemo(() => {
+  useEffect(() => {
     const saved = getLastWarningLocation();
-    if (saved && isLocationEmpty(target)) {
-      setTarget(saved);
+    if (!saved) {
+      return;
     }
+
+    setTarget((current) => (isLocationEmpty(current) ? saved : current));
   }, []);
 
   const payload = useMemo(
@@ -65,7 +82,8 @@ export function ManualWarningPage() {
           areaName: target.areaName,
           latitude: target.latitude ? Number(target.latitude) : undefined,
           longitude: target.longitude ? Number(target.longitude) : undefined,
-          radiusKm: target.radiusKm ? Number(target.radiusKm) : undefined,
+          // Only include radiusKm for pin mode; for box/polygon, use polygonGeoJson
+          radiusKm: drawMode === 'pin' && target.radiusKm ? Number(target.radiusKm) : undefined,
           polygonGeoJson: target.polygonGeoJson || undefined,
         },
       ],
@@ -84,6 +102,7 @@ export function ManualWarningPage() {
       target.longitude,
       target.radiusKm,
       target.polygonGeoJson,
+      drawMode,
     ],
   );
 
@@ -91,9 +110,16 @@ export function ManualWarningPage() {
     title: payload.title,
     message: payload.message,
     areaName: payload.targets[0].areaName,
-    radiusKm: payload.targets[0].radiusKm,
+    radiusKm: drawMode === 'pin' ? payload.targets[0].radiusKm : undefined,
+    drawMode: drawMode,
+    hasPolygon: Boolean(payload.targets[0].polygonGeoJson),
     evacuationCount: payload.evacuationAreaIds.length,
   });
+
+  const coordinateCountLabel =
+    drawMode === 'box'
+      ? `4 corners`
+      : `${targetCoordinates.length} ${targetCoordinates.length === 1 ? 'pin' : 'pins'}`;
 
   return (
     <section className="page-shell warning-page">
@@ -283,43 +309,75 @@ export function ManualWarningPage() {
                 </label>
 
                 <div className="row-3 warning-latlng-row">
-                  <label className="field-label small">
-                    Lat / Long
-                    <input
-                      className="field"
-                      placeholder="Latitude"
-                      value={target.latitude}
-                      onChange={(event) =>
-                        setTarget((prev) => ({ ...prev, latitude: event.target.value }))
-                      }
-                    />
-                  </label>
-                  <label className="field-label small">
-                    &nbsp;
-                    <input
-                      className="field"
-                      placeholder="Longitude"
-                      value={target.longitude}
-                      onChange={(event) =>
-                        setTarget((prev) => ({ ...prev, longitude: event.target.value }))
-                      }
-                    />
-                  </label>
-                  <label className="field-label small">
-                    Radius (km)
-                    <div className="radius-row">
-                      <input
-                        type="number"
-                        min={1}
-                        className="field"
-                        value={target.radiusKm}
-                        onChange={(event) =>
-                          setTarget((prev) => ({ ...prev, radiusKm: event.target.value }))
-                        }
-                      />
-                      <span className="radius-unit small muted">km</span>
+                  {drawMode === 'pin' ? (
+                    <>
+                      <label className="field-label small">
+                        Lat / Long
+                        <input
+                          className="field"
+                          placeholder="Latitude"
+                          value={target.latitude}
+                          onChange={(event) =>
+                            setTarget((prev) => ({ ...prev, latitude: event.target.value }))
+                          }
+                        />
+                      </label>
+                      <label className="field-label small">
+                        &nbsp;
+                        <input
+                          className="field"
+                          placeholder="Longitude"
+                          value={target.longitude}
+                          onChange={(event) =>
+                            setTarget((prev) => ({ ...prev, longitude: event.target.value }))
+                          }
+                        />
+                      </label>
+                      <label className="field-label small">
+                        Radius (km)
+                        <div className="radius-row">
+                          <input
+                            type="number"
+                            min={1}
+                            className="field"
+                            value={target.radiusKm}
+                            onChange={(event) =>
+                              setTarget((prev) => ({ ...prev, radiusKm: event.target.value }))
+                            }
+                          />
+                          <span className="radius-unit small muted">km</span>
+                        </div>
+                      </label>
+                    </>
+                  ) : (
+                    <div className="warning-shape-info">
+                      <p className="small">
+                        <strong>
+                          {drawMode === 'box' ? 'Bounding Box Coordinates' : 'Polygon Vertices'}
+                        </strong>
+                      </p>
+                      <p className="small muted">
+                        {targetCoordinates.length > 0
+                          ? coordinateCountLabel
+                          : drawMode === 'box'
+                            ? 'Draw a box to capture 4 corners.'
+                            : 'Draw a polygon to capture each pin you add.'}
+                      </p>
+                      {targetCoordinates.length > 0 ? (
+                        <div className="coordinate-grid">
+                          {targetCoordinates.map((point, index) => (
+                            <div key={`${point.latitude}-${point.longitude}-${index}`} className="coordinate-card">
+                              <p className="small muted mono coordinate-card-label">
+                                {coordinateLabel(drawMode, index, targetCoordinates.length)}
+                              </p>
+                              <p className="small">Lat: {formatCoordinate(point.latitude)}</p>
+                              <p className="small">Long: {formatCoordinate(point.longitude)}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
-                  </label>
+                  )}
                 </div>
 
                 <div className="warning-map-shell">
@@ -328,16 +386,49 @@ export function ManualWarningPage() {
                   </div>
                   <div className="warning-map-body">
                     <WarningMapSupport
+                      drawMode={drawMode}
+                      radiusKm={Number(target.radiusKm) || 5}
+                      onDrawModeChange={(mode) => {
+                        setDrawMode(mode);
+                        if (mode !== drawMode) {
+                          setTargetCoordinates([]);
+                          setTarget((prev) => ({
+                            ...prev,
+                            latitude: '',
+                            longitude: '',
+                            polygonGeoJson: '',
+                          }));
+                        }
+                      }}
                       onTargetChange={(data: {
                         latitude?: number | string;
                         longitude?: number | string;
                         radiusKm?: number | string;
                         polygonGeoJson?: string;
+                        coordinates?: WarningCoordinatePoint[];
                       }) => {
+                        if (
+                          data.latitude == null &&
+                          data.longitude == null &&
+                          data.polygonGeoJson == null
+                        ) {
+                          setTargetCoordinates([]);
+                          setTarget((prev) => ({
+                            ...prev,
+                            latitude: '',
+                            longitude: '',
+                            polygonGeoJson: '',
+                          }));
+                          return;
+                        }
+
+                        setTargetCoordinates(data.coordinates ?? []);
                         setTarget((prev) => ({
                           ...prev,
-                          latitude: data.latitude?.toString() ?? prev.latitude,
-                          longitude: data.longitude?.toString() ?? prev.longitude,
+                          latitude:
+                            data.latitude != null ? data.latitude.toString() : prev.latitude,
+                          longitude:
+                            data.longitude != null ? data.longitude.toString() : prev.longitude,
                           radiusKm: data.radiusKm?.toString() ?? prev.radiusKm,
                           polygonGeoJson: data.polygonGeoJson ?? '',
                         }));
@@ -453,22 +544,36 @@ export function ManualWarningPage() {
         .warning-page {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
-        }
-
-        .warning-modal-shell {
-          border-radius: 12px;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-          overflow: hidden;
-          background: #ffffff;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .warning-modal-header {
-          background: #0f172a;
-          border-bottom: 4px solid var(--status-critical);
-          padding: 16px;
+                    <WarningMapSupport
+                      drawMode={drawMode as 'pin' | 'box' | 'polygon'}
+                      radiusKm={Number(target.radiusKm) || 5}
+                      onDrawModeChange={(mode) => {
+                        setDrawMode(mode as DrawMode);
+                        // Clear previous collected data when switching modes
+                        if (mode !== drawMode) {
+                          setTarget((prev) => ({
+                            ...prev,
+                            latitude: '',
+                            longitude: '',
+                            polygonGeoJson: '',
+                          }));
+                        }
+                      }}
+                      onTargetChange={(data: {
+                        latitude?: number | string;
+                        longitude?: number | string;
+                        radiusKm?: number | string;
+                        polygonGeoJson?: string;
+                      }) => {
+                        setTarget((prev) => ({
+                          ...prev,
+                          latitude: data.latitude?.toString() ?? prev.latitude,
+                          longitude: data.longitude?.toString() ?? prev.longitude,
+                          radiusKm: data.radiusKm?.toString() ?? prev.radiusKm,
+                          polygonGeoJson: data.polygonGeoJson ?? '',
+                        }));
+                      }}
+                    />
           color: #e5e7eb;
         }
 
@@ -690,6 +795,32 @@ export function ManualWarningPage() {
 
         .warning-map-success {
           margin-top: 0.5rem;
+        }
+
+        .warning-shape-info {
+          grid-column: 1 / -1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .coordinate-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 0.75rem;
+        }
+
+        .coordinate-card {
+          border: 1px solid #cbd5e1;
+          border-radius: 8px;
+          background: #ffffff;
+          padding: 0.75rem;
+        }
+
+        .coordinate-card-label {
+          margin: 0 0 0.4rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
         }
 
         .warning-map-footer {
