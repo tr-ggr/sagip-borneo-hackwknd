@@ -11,6 +11,7 @@ import {
   warningSummary,
 } from './warning-flow.utils';
 import WarningMapSupport from './WarningMapSupport';
+import WarningMapSupport from './WarningMapSupport';
 
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
@@ -22,6 +23,13 @@ const defaultTarget = {
   radiusKm: '5',
   polygonGeoJson: '',
 };
+
+function toAreas(raw: unknown): EvacuationArea[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+  return raw as EvacuationArea[];
+}
 
 export function ManualWarningPage() {
   const [step, setStep] = useState<'compose' | 'confirm'>('compose');
@@ -54,6 +62,7 @@ export function ManualWarningPage() {
           latitude: target.latitude ? Number(target.latitude) : undefined,
           longitude: target.longitude ? Number(target.longitude) : undefined,
           radiusKm: target.radiusKm ? Number(target.radiusKm) : undefined,
+          polygonGeoJson: target.polygonGeoJson || undefined,
         },
       ],
       evacuationAreaIds: [] as string[],
@@ -70,6 +79,8 @@ export function ManualWarningPage() {
       target.latitude,
       target.longitude,
       target.radiusKm,
+      target.polygonGeoJson,
+      selectedEvacuationAreas,
     ],
   );
 

@@ -70,12 +70,13 @@ describe('HelpRequests Lifecycle (Integration)', () => {
   });
 
   it('should list open help requests', async () => {
+    const session = { user: { id: 'vol-1' } } as any;
     mockPrisma.helpRequest.findMany.mockResolvedValue([{ id: 'hr-1', status: 'OPEN' }]);
 
-    const result = await controller.listOpen();
+    const result = await controller.listOpen(session);
     expect(result).toHaveLength(1);
     expect(mockPrisma.helpRequest.findMany).toHaveBeenCalledWith(expect.objectContaining({
-      where: { status: 'OPEN' }
+      where: expect.objectContaining({ status: 'OPEN' }),
     }));
   });
 

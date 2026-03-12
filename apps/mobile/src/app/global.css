@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,6 +16,19 @@
     --color-status-advisory: #1B5FA8;
     --color-status-safe: #2E7D32;
     --color-status-offline: #616161;
+
+    /* SAGIP / ASEAN design tokens */
+    --asean-blue: #00368e;
+    --asean-red: #fd1813;
+    --asean-yellow: #ffff00;
+    --sagip-bg: #f6f6f8;
+    --sagip-card: #fff;
+    --sagip-muted: #475569;
+    --sagip-slate: #64748b;
+    --sagip-border: #e2e8f0;
+    --sagip-heading: #0f172a;
+    --bottom-nav-height: 96px;
+    --font-sagip: "Space Grotesk", system-ui, sans-serif;
   }
 
   html {
@@ -87,7 +100,28 @@
 
   .form-input-placeholder::placeholder {
     color: var(--color-wira-earth-brown);
-    opacity: 0.7;
+    opacity: 0.9;
+  }
+
+  /* Location block: high-contrast text on any card background */
+  .form-location-block {
+    color: var(--color-wira-night-black);
+  }
+  .form-location-block .form-label,
+  .form-location-block .form-hint {
+    color: var(--color-wira-night-black);
+    opacity: 0.9;
+  }
+
+  /* Change location link: high-contrast, meets WCAG */
+  .form-change-location-link {
+    color: var(--color-wira-deep-teal);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .form-change-location-link:hover {
+    color: var(--color-wira-night-black);
   }
 
   .nav-inactive {
@@ -96,6 +130,44 @@
   }
   .nav-inactive:hover {
     color: var(--color-wira-deep-teal);
+  }
+
+  /* SAGIP mobile: safe area for fixed bottom nav */
+  .mobile-nav-safe {
+    padding-bottom: calc(var(--bottom-nav-height) + 1rem);
+  }
+
+  /* T'nalak divider (red / yellow / blue stripe) */
+  .tnalak-stripe {
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      var(--asean-red) 0%,
+      var(--asean-red) 25%,
+      var(--asean-yellow) 25%,
+      var(--asean-yellow) 50%,
+      var(--asean-blue) 50%,
+      var(--asean-blue) 75%,
+      var(--asean-red) 75%,
+      var(--asean-red) 100%
+    );
+  }
+
+  .sagip-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: var(--sagip-card);
+    border-top: 1px solid rgba(0, 54, 142, 0.1);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px 24px;
+    z-index: 50;
+    overflow: visible;
   }
 }
 

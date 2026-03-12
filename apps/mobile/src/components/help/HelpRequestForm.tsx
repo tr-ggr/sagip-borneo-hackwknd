@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { AlertTriangle, MapPin, Send, Loader2 } from 'lucide-react';
+import { AlertTriangle, Send, Loader2 } from 'lucide-react';
 import { useHelpRequestsControllerCreate } from '@wira-borneo/api-client';
+import FormLocationMap from '../FormLocationMap';
 
 interface HelpRequestFormProps {
-  initialLocation?: { latitude: number; longitude: number };
+  location: { latitude: number; longitude: number } | null;
+  onLocationChange: (loc: { latitude: number; longitude: number }) => void;
   onSuccess: () => void;
-  onChangeLocation?: () => void;
 }
 
-export default function HelpRequestForm({ initialLocation, onSuccess, onChangeLocation }: HelpRequestFormProps) {
+export default function HelpRequestForm({ location, onLocationChange, onSuccess }: HelpRequestFormProps) {
   const [hazardType, setHazardType] = useState<'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK'>('FLOOD');
   const [urgency, setUrgency] = useState<'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'>('MEDIUM');
   const [description, setDescription] = useState('');
@@ -19,8 +20,8 @@ export default function HelpRequestForm({ initialLocation, onSuccess, onChangeLo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!initialLocation) {
-      alert('Location is required. Please enable GPS or select on map.');
+    if (!location) {
+      alert('Location is required. Please enable GPS or tap the map to pick a location.');
       return;
     }
 
@@ -29,15 +30,14 @@ export default function HelpRequestForm({ initialLocation, onSuccess, onChangeLo
         hazardType,
         urgency,
         description,
-        latitude: initialLocation.latitude,
-        longitude: initialLocation.longitude,
+        latitude: location.latitude,
+        longitude: location.longitude,
       } as any // CreateHelpRequestDto is generated as [key: string]: any in some cases
     }, {
       onSuccess: () => {
         onSuccess();
       },
-      onError: (error) => {
-        console.error('Failed to create help request:', error);
+      onError: () => {
         alert('Failed to submit request. Please try again.');
       }
     });
@@ -95,29 +95,16 @@ export default function HelpRequestForm({ initialLocation, onSuccess, onChangeLo
           />
         </label>
 
-        <div className="wira-card p-4 bg-wira-ivory-dark/20 border-dashed border-wira-earth/10 flex items-center justify-between">
-           <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-wira-teal/10 flex items-center justify-center">
-                 <MapPin size={18} className="text-wira-teal" />
-              </div>
-              <div className="space-y-0.5">
-                 <p className="form-label text-[11px] tracking-wider">Location Context</p>
-                 <p className="form-hint">
-                    {initialLocation ? `${initialLocation.latitude.toFixed(4)}, ${initialLocation.longitude.toFixed(4)}` : 'Detecting...'}
-                 </p>
-              </div>
-           </div>
-           {onChangeLocation && (
-             <button type="button" onClick={onChangeLocation} className="text-[10px] font-bold text-wira-teal underline shrink-0 hover:text-wira-teal-dark">
-               Change location
-             </button>
-           )}
-        </div>
+        <FormLocationMap
+          location={location}
+          onLocationChange={onLocationChange}
+          label="Location context"
+        />
       </div>
 
       <button 
         type="submit" 
-        disabled={isPending || !initialLocation}
+        disabled={isPending || !location}
         className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-display font-bold uppercase tracking-widest transition-all ${
             urgency === 'CRITICAL' ? 'wira-btn-emergency shadow-lg shadow-status-critical/20' : 'wira-btn-primary shadow-lg shadow-wira-teal/20'
         } disabled:opacity-50 disabled:cursor-not-allowed`}

@@ -1,14 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit, Logger, StreamableFile } from '@nestjs/common';
+import { join } from 'path';
+import { access } from 'fs/promises';
+import { constants, createReadStream } from 'fs';
 import { OpenMeteoService } from '../../../providers/open-meteo/open-meteo.service';
 import { PrismaService } from '../../../core/database/database.service';
 import { withinRadiusKm } from '../shared/geo.util';
 
 @Injectable()
-export class RiskIntelligenceService {
+export class RiskIntelligenceService implements OnModuleInit {
+  private readonly logger = new Logger(RiskIntelligenceService.name);
+
   constructor(
     private readonly openMeteoService: OpenMeteoService,
     private readonly prisma: PrismaService,
   ) {}
+
+  async onModuleInit() {
+    const requiredIso3Codes = ['brn', 'idn', 'mys', 'phl', 'sgp'];
+    const missingFiles: string[] = [];
+
+    for (const iso3 of requiredIso3Codes) {
+      const filename = `vulnerability_${iso3}.geojson`;
+      const filePath = join(
+        process.cwd(),
+        'apps/api/geojson/building_profiles',
+        filename,
+      );
+
+      try {
+        await access(filePath, constants.R_OK);
+      } catch {
+        missingFiles.push(filename);
+      }
+    }
+
+    if (missingFiles.length > 0) {
+      this.logger.warn(
+        `Missing GeoJSON building profiles: ${missingFiles.join(', ')}. ` +
+          'Vulnerable-regions features may be limited. Add files to apps/api/geojson/building_profiles/',
+      );
+    } else {
+      this.logger.log('GeoJSON building profiles validated successfully.');
+    }
+  }
 
   async getForecast(latitude: number, longitude: number, forecastDays = 3) {
     const forecast = await this.openMeteoService.getForecast({
@@ -170,5 +204,4 @@ export class RiskIntelligenceService {
       })),
     };
   }
-
 }

@@ -1,22 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, Send, Loader2 } from 'lucide-react';
+import { Send, Loader2 } from 'lucide-react';
 import { usePinsControllerCreate } from '@wira-borneo/api-client';
+import FormLocationMap from '../FormLocationMap';
 
 const HAZARD_TYPES = ['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] as const;
 type HazardType = (typeof HAZARD_TYPES)[number];
 
 interface HazardPinFormProps {
-  initialLocation?: { latitude: number; longitude: number };
+  location: { latitude: number; longitude: number } | null;
+  onLocationChange: (loc: { latitude: number; longitude: number }) => void;
   onSuccess: () => void;
-  onChangeLocation?: () => void;
 }
 
 export default function HazardPinForm({
-  initialLocation,
+  location,
+  onLocationChange,
   onSuccess,
-  onChangeLocation,
 }: HazardPinFormProps) {
   const [title, setTitle] = useState('');
   const [hazardType, setHazardType] = useState<HazardType>('FLOOD');
@@ -26,8 +27,8 @@ export default function HazardPinForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!initialLocation) {
-      alert('Location is required. Please enable GPS or select on map.');
+    if (!location) {
+      alert('Location is required. Please enable GPS or tap the map to pick a location.');
       return;
     }
     const trimmedTitle = title.trim();
@@ -41,8 +42,8 @@ export default function HazardPinForm({
         data: {
           title: trimmedTitle,
           hazardType,
-          latitude: initialLocation.latitude,
-          longitude: initialLocation.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
           note: note.trim() || undefined,
         },
       },
@@ -58,7 +59,7 @@ export default function HazardPinForm({
   };
 
   const isValid =
-    initialLocation && title.trim().length > 0;
+    location && title.trim().length > 0;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 animate-slide-up">
@@ -106,30 +107,11 @@ export default function HazardPinForm({
           />
         </label>
 
-        <div className="wira-card p-4 bg-wira-ivory-dark/20 border-dashed border-wira-earth/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-wira-teal/10 flex items-center justify-center">
-              <MapPin size={18} className="text-wira-teal" />
-            </div>
-            <div className="space-y-0.5">
-              <p className="form-label text-[11px] tracking-wider">Location</p>
-              <p className="form-hint">
-                {initialLocation
-                  ? `${initialLocation.latitude.toFixed(4)}, ${initialLocation.longitude.toFixed(4)}`
-                  : 'Detecting...'}
-              </p>
-            </div>
-          </div>
-          {onChangeLocation && (
-            <button
-              type="button"
-              onClick={onChangeLocation}
-              className="text-[10px] font-bold text-wira-teal underline shrink-0 hover:text-wira-teal-dark"
-            >
-              Change location
-            </button>
-          )}
-        </div>
+        <FormLocationMap
+          location={location}
+          onLocationChange={onLocationChange}
+          label="Location"
+        />
       </div>
 
       <button

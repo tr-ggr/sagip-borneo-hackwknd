@@ -6,7 +6,6 @@ import {
   HandHeart, 
   AlertCircle, 
   HelpCircle, 
-  Plus, 
   MapPin, 
   History, 
   ChevronRight, 
@@ -30,9 +29,7 @@ import HelpRequestForm from '../help/HelpRequestForm';
 import HelpRequestTimeline from '../help/HelpRequestTimeline';
 import HazardPinForm from '../pin/HazardPinForm';
 
-const FALLBACK_LOCATION = { latitude: 1.5533, longitude: 110.3592 };
-
-export default function HelpDashboard({ 
+export default function HelpDashboard({
   onNavigateToRequest,
   showAllPins,
   onToggleShowAllPins,
@@ -47,9 +44,6 @@ export default function HelpDashboard({
   onToggleShowAllPins: (show: boolean) => void;
   formLocation: { latitude: number; longitude: number } | null;
   setFormLocation: (loc: { latitude: number; longitude: number } | null) => void;
-  pickLocationFor: 'hazard' | 'help' | null;
-  setPickLocationFor: (v: 'hazard' | 'help' | null) => void;
-  onNavigateToMap: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<'request' | 'volunteer'>('request');
   const [volunteerSubTab, setVolunteerSubTab] = useState<'available' | 'assigned'>('available');
@@ -75,8 +69,6 @@ export default function HelpDashboard({
       { enableHighAccuracy: true }
     );
   }, [setFormLocation]);
-
-  const formLocationOrFallback = formLocation ?? FALLBACK_LOCATION;
 
   const handleFormSuccess = () => {
     setShowForm(false);
@@ -129,15 +121,6 @@ export default function HelpDashboard({
               <h1 className="text-2xl font-display font-bold wira-card-title">Help Center</h1>
               <HelpCircle size={20} className="text-wira-gold" />
             </div>
-            
-            {!showForm && !showHazardPinForm && !selectedRequest && activeTab === 'request' && (
-               <button 
-                 onClick={() => setShowForm(true)}
-                 className="h-10 w-10 rounded-full bg-wira-teal text-white flex items-center justify-center shadow-lg shadow-wira-teal/20"
-               >
-                 <Plus size={20} />
-               </button>
-            )}
           </div>
           
           <div className="flex bg-wira-ivory-dark rounded-xl p-1">
@@ -170,12 +153,9 @@ export default function HelpDashboard({
                 <div className="wira-card p-6 border-wira-teal/10">
                    <h3 className="text-xl font-display font-bold wira-card-title mb-6">Report hazard pin</h3>
                    <HazardPinForm
-                     initialLocation={formLocationOrFallback}
+                     location={formLocation}
+                     onLocationChange={(loc) => setFormLocation(loc)}
                      onSuccess={handleHazardPinSuccess}
-                     onChangeLocation={() => {
-                       setPickLocationFor('hazard');
-                       onNavigateToMap();
-                     }}
                    />
                 </div>
              </div>
@@ -191,12 +171,9 @@ export default function HelpDashboard({
                 <div className="wira-card p-6 border-wira-teal/10">
                    <h3 className="text-xl font-display font-bold wira-card-title mb-6">New Help Request</h3>
                    <HelpRequestForm
-                     initialLocation={formLocationOrFallback}
+                     location={formLocation}
+                     onLocationChange={(loc) => setFormLocation(loc)}
                      onSuccess={handleFormSuccess}
-                     onChangeLocation={() => {
-                       setPickLocationFor('help');
-                       onNavigateToMap();
-                     }}
                    />
                 </div>
              </div>

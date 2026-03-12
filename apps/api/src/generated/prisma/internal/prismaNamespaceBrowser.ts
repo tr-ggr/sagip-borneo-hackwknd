@@ -348,6 +348,7 @@ export const HelpRequestScalarFieldEnum = {
   description: 'description',
   latitude: 'latitude',
   longitude: 'longitude',
+  sosExpiresAt: 'sosExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -371,6 +372,7 @@ export const WarningEventLogScalarFieldEnum = {
   id: 'id',
   warningEventId: 'warningEventId',
   actorId: 'actorId',
+  action: 'action',
   status: 'status',
   note: 'note',
   createdAt: 'createdAt'

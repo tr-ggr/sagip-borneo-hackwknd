@@ -16,8 +16,7 @@ import { boundingExtent, createEmpty, extend as extendExtent, isEmpty } from 'ol
 import { Point, Polygon } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import { transformExtent } from 'ol/proj';
-import { fromLonLat } from 'ol/proj';
+import { transformExtent, fromLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
@@ -282,7 +281,7 @@ export function OperationsMapPage() {
 
   const overviewQuery = useAdminOperationsControllerMapOverview({
     query: {
-      select: (response) => toMapOverview(response),
+      select: (response) => toMapOverview(response?.data ?? response),
     },
   });
 
@@ -556,7 +555,6 @@ export function OperationsMapPage() {
         }),
       });
     });
-
 
     const view = new View({
       center: fromLonLat(ASEAN_CENTER_LON_LAT),
