@@ -3,6 +3,7 @@
 import React from 'react';
 
 import {
+  useAuthControllerUpdateLocation,
   useRiskIntelligenceControllerGetForecast,
   useRiskIntelligenceControllerGetVulnerableRegions,
   useHelpRequestsControllerListOpen,
@@ -17,6 +18,15 @@ import MapComponent, { type EvacuationSite, type HazardRiskPoint } from '../MapC
 import { X, Navigation2, MapPin, Home } from 'lucide-react';
 
 export type RouteOrigin = 'current' | 'home';
+
+function hasValidCoordinates(latitude: unknown, longitude: unknown): latitude is number {
+  return (
+    typeof latitude === 'number' &&
+    typeof longitude === 'number' &&
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude)
+  );
+}
 
 export default function MapForecast({
   focusedHelpRequestId,
@@ -46,14 +56,21 @@ export default function MapForecast({
   const [userLocation, setUserLocation] = React.useState<{ latitude: number, longitude: number } | null>(null);
   const [routeOrigin, setRouteOrigin] = React.useState<RouteOrigin>('current');
   const [selectedLocationForWeather, setSelectedLocationForWeather] = React.useState<{ latitude: number; longitude: number } | null>(null);
+  const updateLocationSnapshot = useAuthControllerUpdateLocation();
 
   React.useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition((pos) => {
-        setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
+        const { latitude, longitude } = pos.coords;
+        if (!hasValidCoordinates(latitude, longitude)) {
+          return;
+        }
+
+        setUserLocation({ latitude, longitude });
+        updateLocationSnapshot.mutate({ data: { latitude, longitude } });
       });
     }
-  }, []);
+  }, [updateLocationSnapshot]);
 
   const activeLoc = mapFocus || userLocation || { latitude: 1.5533, longitude: 110.3592 };
 

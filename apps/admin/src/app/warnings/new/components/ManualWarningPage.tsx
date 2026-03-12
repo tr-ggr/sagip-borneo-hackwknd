@@ -28,13 +28,6 @@ const defaultTarget = {
   polygonGeoJson: '',
 };
 
-function toAreas(raw: unknown): EvacuationArea[] {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-  return raw as EvacuationArea[];
-}
-
 export function ManualWarningPage() {
   const [step, setStep] = useState<'compose' | 'confirm'>('compose');
   const [title, setTitle] = useState('');

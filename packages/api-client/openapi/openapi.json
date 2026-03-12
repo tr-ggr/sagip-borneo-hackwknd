@@ -129,6 +129,30 @@
         ]
       }
     },
+    "/api/auth/location": {
+      "patch": {
+        "operationId": "AuthController_updateLocation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLocationPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/risk/forecast": {
       "get": {
         "operationId": "RiskIntelligenceController_getForecast",
@@ -465,6 +489,36 @@
         ]
       }
     },
+    "/api/help-requests/sos": {
+      "post": {
+        "operationId": "HelpRequestsController_createSos",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSosDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "One-tap SOS: create help request with current location only (time-limited)",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
     "/api/help-requests/me": {
       "get": {
         "operationId": "HelpRequestsController_me",
@@ -668,14 +722,101 @@
               ],
               "type": "string"
             }
+          },
+          {
+            "name": "rainfall_mm",
+            "required": false,
+            "in": "query",
+            "description": "Rainfall in mm; when provided and hazard server configured, returns hazard-aware safest routes",
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "List of nearest evacuation areas with optional route and risk metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NearestEvacResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
-        "summary": "Nearest evacuation sites by distance, top 5 re-sorted by OSRM duration",
+        "summary": "Nearest evacuation sites; with rainfall_mm uses hazard-aware routing (safest first)",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/route": {
+      "get": {
+        "operationId": "EvacuationController_route",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "evacuationAreaId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "rainfall_mm",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route to the evacuation area with optional hazard metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteToAreaResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Route to a specific evacuation area; optional hazard-aware when rainfall_mm provided",
         "tags": [
           "evacuation"
         ]
@@ -698,6 +839,30 @@
         "summary": "Get warning-context route suggestions to shelters",
         "tags": [
           "evacuation"
+        ]
+      }
+    },
+    "/api/hazard-risk-layer": {
+      "get": {
+        "operationId": "HazardRiskLayerController_getRiskLayer",
+        "parameters": [
+          {
+            "name": "rainfall_mm",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of risk points (latitude, longitude, risk, elevation, etc.)"
+          }
+        },
+        "summary": "Risk points for map layer (from hazard routing server); color by risk, hover for details",
+        "tags": [
+          "hazard-risk-layer"
         ]
       }
     },
@@ -1058,7 +1223,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminAssetRegistryEntryDto"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1067,6 +1242,45 @@
           }
         ],
         "summary": "List volunteered assets (users who registered assets for disaster use)",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/assets/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewAssetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject a volunteered asset",
         "tags": [
           "admin-operations"
         ]
@@ -1097,6 +1311,74 @@
           }
         ],
         "summary": "Manually create and dispatch warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings/{id}": {
+      "patch": {
+        "operationId": "AdminOperationsController_updateWarning",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWarningDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update an existing warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings/{id}/cancel": {
+      "post": {
+        "operationId": "AdminOperationsController_cancelWarning",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel an active warning event",
         "tags": [
           "admin-operations"
         ]
@@ -1430,6 +1712,34 @@
       }
     },
     "/api/pins": {
+      "get": {
+        "operationId": "PinsController_findVisible",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of pins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VisiblePinDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List hazard pins visible to the current user (approved + own)",
+        "tags": [
+          "pins"
+        ]
+      },
       "post": {
         "operationId": "PinsController_create",
         "parameters": [],
@@ -1456,6 +1766,133 @@
         "summary": "Submit a hazard pin with location and optional photo",
         "tags": [
           "pins"
+        ]
+      }
+    },
+    "/api/assets": {
+      "post": {
+        "operationId": "AssetsController_createAsset",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Register a new asset (e.g. vehicle, equipment)",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/assets/my": {
+      "get": {
+        "operationId": "AssetsController_listMyAssets",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List assets registered by the current user",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/assets/registry": {
+      "get": {
+        "operationId": "AssetsController_listApprovedAssets",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List all approved assets for disaster response",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/assets/{id}": {
+      "get": {
+        "operationId": "AssetsController_getAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get asset details",
+        "tags": [
+          "Assets"
+        ]
+      },
+      "delete": {
+        "operationId": "AssetsController_deleteAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Delete an asset",
+        "tags": [
+          "Assets"
         ]
       }
     },
@@ -1798,6 +2235,25 @@
           }
         }
       },
+      "UpdateLocationPayload": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "region": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      },
       "CreateFamilyDto": {
         "type": "object",
         "properties": {}
@@ -1818,9 +2274,129 @@
         "type": "object",
         "properties": {}
       },
+      "CreateSosDto": {
+        "type": "object",
+        "properties": {}
+      },
       "UpdateHelpRequestStatusDto": {
         "type": "object",
         "properties": {}
+      },
+      "NearestEvacResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "address": {
+            "type": "object",
+            "nullable": true
+          },
+          "region": {
+            "type": "object",
+            "nullable": true
+          },
+          "type": {
+            "type": "object",
+            "nullable": true
+          },
+          "capacity": {
+            "type": "object",
+            "nullable": true
+          },
+          "population": {
+            "type": "object",
+            "nullable": true
+          },
+          "source": {
+            "type": "object",
+            "nullable": true
+          },
+          "durationSeconds": {
+            "type": "number"
+          },
+          "distanceMeters": {
+            "type": "number"
+          },
+          "geometry": {
+            "type": "object",
+            "description": "Route geometry when hazard-aware or OSRM route is available",
+            "example": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  123.9,
+                  10.3
+                ],
+                [
+                  123.91,
+                  10.31
+                ]
+              ]
+            }
+          },
+          "avgRisk": {
+            "type": "number",
+            "description": "Average risk (0–1) along the path; present when hazard-aware routing was used"
+          },
+          "totalRiskCost": {
+            "type": "number",
+            "description": "Total risk cost; present when hazard-aware routing was used"
+          },
+          "hazardAware": {
+            "type": "boolean",
+            "description": "True when route was computed by the hazard-aware routing service"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "RouteToAreaResponseDto": {
+        "type": "object",
+        "properties": {
+          "evacuationArea": {
+            "type": "object",
+            "description": "Evacuation area summary"
+          },
+          "geometry": {
+            "type": "object",
+            "description": "Route geometry (LineString)"
+          },
+          "durationSeconds": {
+            "type": "number"
+          },
+          "distanceMeters": {
+            "type": "number"
+          },
+          "avgRisk": {
+            "type": "number",
+            "description": "Average risk when hazard-aware"
+          },
+          "totalRiskCost": {
+            "type": "number",
+            "description": "Total risk cost when hazard-aware"
+          },
+          "hazardAware": {
+            "type": "boolean",
+            "description": "True when hazard-aware routing was used"
+          }
+        },
+        "required": [
+          "evacuationArea"
+        ]
       },
       "AssistantInquiryDto": {
         "type": "object",
@@ -1921,7 +2497,96 @@
         "type": "object",
         "properties": {}
       },
+      "AdminAssetRegistryEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerEmail": {
+            "type": "string"
+          },
+          "ownerCreatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "volunteerStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED",
+              "SUSPENDED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "ownerId",
+          "ownerName",
+          "ownerEmail",
+          "ownerCreatedAt",
+          "createdAt"
+        ]
+      },
+      "ReviewAssetDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
       "CreateWarningDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateWarningDto": {
         "type": "object",
         "properties": {}
       },
@@ -1950,6 +2615,51 @@
       "Object": {
         "type": "object",
         "properties": {}
+      },
+      "VisiblePinDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "reporterId": {
+            "type": "object",
+            "description": "Set when the pin was reported by the current user"
+          }
+        },
+        "required": [
+          "id",
+          "latitude",
+          "longitude",
+          "title",
+          "hazardType"
+        ]
       },
       "CreatePinDto": {
         "type": "object",
@@ -1988,6 +2698,30 @@
           "hazardType",
           "latitude",
           "longitude"
+        ]
+      },
+      "CreateAssetDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "TrackerShipmentDto": {
