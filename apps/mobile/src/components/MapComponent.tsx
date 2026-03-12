@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -160,7 +159,43 @@ export default function MapComponent({
   const onMapClickRef = useRef(onMapClick);
   onMapClickRef.current = onMapClick;
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [userCoords, setUserCoords] = useState<number[] | null>(null);
+
+  // Location cache helpers
+  const LOCATION_CACHE_KEY = 'wira-mobile-last-known-location';
+
+  const getCachedLocation = (): { lat: number; lon: number } | null => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const cached = localStorage.getItem(LOCATION_CACHE_KEY);
+      if (!cached) return null;
+      const { lat, lon } = JSON.parse(cached);
+      // Validate coordinates are in valid range
+      if (
+        typeof lat === 'number' &&
+        typeof lon === 'number' &&
+        lat >= -90 &&
+        lat <= 90 &&
+        lon >= -180 &&
+        lon <= 180
+      ) {
+        return { lat, lon };
+      }
+    } catch (e) {
+      console.warn('Failed to read location cache:', e);
+    }
+    return null;
+  };
+
+  const cacheLocation = (lat: number, lon: number): void => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify({ lat, lon }));
+    } catch (e) {
+      console.warn('Failed to cache location:', e);
+    }
+  };
 
   useEffect(() => {
     if (!mapElement.current || mapRef.current) return;
@@ -206,6 +241,11 @@ export default function MapComponent({
       if (coordinates) {
         setUserCoords(coordinates);
         locationOverlay.setPosition(coordinates);
+        // Cache the location when it updates
+        const lonLat = toLonLat(coordinates);
+        cacheLocation(lonLat[1], lonLat[0]);
+        setError(null);
+        setInfo(null);
         // Only auto-animate if NOT focused on something specific
         if (!mapFocus) {
           view.animate({ center: coordinates, zoom: 14 });
@@ -215,7 +255,19 @@ export default function MapComponent({
 
     geolocation.on('error', (error) => {
       console.warn('Geolocation error:', error.message);
-      setError('Could not access device location. Using standard map view.');
+      // Try cache fallback first
+      const cached = getCachedLocation();
+      if (cached) {
+        const coords = fromLonLat([cached.lon, cached.lat]);
+        setUserCoords(coords);
+        locationOverlay.setPosition(coords);
+        view.animate({ center: coords, zoom: 14 });
+        setError(null);
+        setInfo(null);
+      } else {
+        setError(null);
+        setInfo('Using default map view.');
+      }
     });
     
     // Auto-start tracking explicitly asking for permission first
@@ -226,12 +278,31 @@ export default function MapComponent({
           const coords = fromLonLat([pos.coords.longitude, pos.coords.latitude]);
           setUserCoords(coords);
           locationOverlay.setPosition(coords);
+          // Cache successful location
+          cacheLocation(pos.coords.latitude, pos.coords.longitude);
+          // Clear any previous error/info messages on successful location
+          setError(null);
+          setInfo(null);
           view.animate({ center: coords, zoom: 14 });
           geolocation.setTracking(true);
         },
         (err) => {
           console.warn('Geolocation prompt error:', err.message);
-          setError('Location access denied or unavailable. Using standard view.');
+          // Try cache fallback first
+          const cached = getCachedLocation();
+          if (cached) {
+            const coords = fromLonLat([cached.lon, cached.lat]);
+            setUserCoords(coords);
+            locationOverlay.setPosition(coords);
+            view.animate({ center: coords, zoom: 14 });
+            setError(null);
+            setInfo(null);
+            // Don't show any message when cached location is available
+          } else {
+            // No cache available, use default map center with neutral message
+            setError(null);
+            setInfo('Using default map view.');
+          }
         },
         { enableHighAccuracy: true }
       );
@@ -679,6 +750,11 @@ export default function MapComponent({
         {error && (
             <div className="absolute top-2 left-2 right-2 bg-red-500/90 text-white text-xs p-2 rounded-lg backdrop-blur-sm shadow-lg border border-red-400">
                 {error}
+            </div>
+        )}
+        {info && (
+            <div className="absolute top-2 left-2 right-2 bg-gray-600/90 text-white text-xs p-2 rounded-lg backdrop-blur-sm shadow-lg border border-gray-500">
+                {info}
             </div>
         )}
     </div>
