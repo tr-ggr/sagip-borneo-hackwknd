@@ -11,6 +11,11 @@ import {
   warningSummary,
 } from './warning-flow.utils';
 import WarningMapSupport from './WarningMapSupport';
+import {
+  getLastWarningLocation,
+  isLocationEmpty,
+  saveLastWarningLocation,
+} from './location-prediction.utils';
 
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
@@ -42,6 +47,13 @@ export function ManualWarningPage() {
 
   const promptMutation = useAdminOperationsControllerGetPromptSuggestion();
   const createWarningMutation = useAdminOperationsControllerCreateWarning();
+
+  useMemo(() => {
+    const saved = getLastWarningLocation();
+    if (saved && isLocationEmpty(target)) {
+      setTarget(saved);
+    }
+  }, []);
 
   const payload = useMemo(
     () => ({
@@ -427,6 +439,7 @@ export function ManualWarningPage() {
                       setStep((current) => warningFlowReducer(current, { type: 'SENT' }));
                       setTitle('');
                       setMessage('');
+                      saveLastWarningLocation(target);
                       setTarget(defaultTarget);
                     },
                   },
