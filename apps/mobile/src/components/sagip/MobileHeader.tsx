@@ -7,7 +7,7 @@ const logoPath =
 
 export type MobileHeaderStatus = {
   label: string;
-  dotColor?: string;
+  dotColor?: 'green' | 'gray';
 };
 
 type MobileHeaderProps = {
@@ -29,7 +29,10 @@ export function MobileHeader({
   onMenuClick,
   onLanguageClick,
 }: MobileHeaderProps) {
-  const statusDotColor = status?.dotColor === 'green' ? 'bg-[#22c55e]' : 'bg-status-safe';
+  const statusDotColor =
+    status?.dotColor === 'gray' ? 'bg-status-offline' : 'bg-[#22c55e]';
+  const statusTextColor =
+    status?.dotColor === 'gray' ? 'text-status-offline' : 'text-[#22c55e]';
 
   return (
     <header className="bg-white flex items-center justify-between p-4 w-full shadow-[0_1px_2px_rgba(0,0,0,0.05)] shrink-0">
@@ -66,7 +69,7 @@ export function MobileHeader({
               />
               <span
                 className={`font-sagip font-medium text-[10px] leading-tight ${
-                  status.dotColor === 'green' ? 'text-[#22c55e]' : 'text-status-safe'
+                  statusTextColor
                 }`}
               >
                 {status.label}

@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Home, AlertTriangle, MapPin, User, Siren } from 'lucide-react';
 import { MobileHeader } from './sagip/MobileHeader';
 import { TnalakDivider } from './sagip/TnalakDivider';
 import { MenuDrawer } from './sagip/MenuDrawer';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import {
   LanguageSelector,
   type LanguageOption,
@@ -33,6 +34,9 @@ export default function LayoutWrapper({
   const [menuOpen, setMenuOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [language, setLanguage] = useState<LanguageOption>('ENg');
+  const [showBackOnline, setShowBackOnline] = useState(false);
+  const isOnline = useOnlineStatus();
+  const previousOnlineRef = useRef<boolean | null>(null);
 
   const isHome = currentPath === '/';
   const isSos = currentPath === '/sos';
@@ -40,6 +44,35 @@ export default function LayoutWrapper({
   const showTnalak = isHome || isAssistant || currentPath === '/profile';
 
   const headerLanguageLabel = isAssistant ? 'BISAYA' : language;
+
+  useEffect(() => {
+    if (previousOnlineRef.current === null) {
+      previousOnlineRef.current = isOnline;
+      return;
+    }
+
+    if (!previousOnlineRef.current && isOnline) {
+      setShowBackOnline(true);
+    }
+
+    previousOnlineRef.current = isOnline;
+  }, [isOnline]);
+
+  useEffect(() => {
+    if (!showBackOnline) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setShowBackOnline(false);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [showBackOnline]);
+
+  const showConnectivityBanner = !isOnline || showBackOnline;
 
   const renderHeader = () => {
     if (isHome) {
@@ -77,7 +110,11 @@ export default function LayoutWrapper({
     return (
       <MobileHeader
         title={title}
-        status={{ label: 'Systems Online' }}
+        status={
+          isOnline
+            ? { label: 'Systems Online', dotColor: 'green' }
+            : { label: 'Offline Mode', dotColor: 'gray' }
+        }
         languageLabel={headerLanguageLabel}
         onMenuClick={() => setMenuOpen(true)}
         onLanguageClick={() => setLanguageOpen(true)}
@@ -88,6 +125,25 @@ export default function LayoutWrapper({
   return (
     <div className={`flex flex-col h-screen overflow-hidden ${isHome || isAssistant ? 'bg-[var(--sagip-bg)]' : 'bg-wira-ivory wira-batik-bg'}`}>
       {renderHeader()}
+      {showConnectivityBanner && (
+        <div
+          className={`mx-auto mt-2 w-full max-w-md px-4 ${!isOnline ? 'animate-slide-down' : 'animate-fade-in'}`}
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            className={`rounded-xl border px-3 py-2 text-xs font-body font-semibold shadow-sm ${
+              !isOnline
+                ? 'border-status-warning/30 bg-status-warning/10 text-wira-earth'
+                : 'border-status-safe/30 bg-status-safe/10 text-status-safe'
+            }`}
+          >
+            {!isOnline
+              ? 'You are offline. Showing last saved data.'
+              : 'Back online. Refreshing data...'}
+          </div>
+        </div>
+      )}
       {showTnalak && <TnalakDivider />}
 
       <main className={`flex-1 ${showNav ? 'mobile-nav-safe' : 'pb-4'} ${isHome || isAssistant ? '' : 'px-4'} pt-0 ${isAssistant ? 'overflow-hidden min-h-0' : 'overflow-y-auto'} w-full max-w-md mx-auto scroll-smooth`}>

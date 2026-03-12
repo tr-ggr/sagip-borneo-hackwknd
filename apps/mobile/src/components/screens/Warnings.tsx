@@ -96,7 +96,7 @@ export default function Warnings({
   const { data: session } = useAuthControllerGetSession();
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [filterCategory, setFilterCategory] = useState<FilterCategory>('all');
-  const [mapLastUpdated, setMapLastUpdated] = useState<Date>(new Date());
+  const [mapLastUpdated] = useState<Date>(new Date());
   const situationMapRef = useRef<HTMLDivElement>(null);
   const situationMapInstanceRef = useRef<Map | null>(null);
 

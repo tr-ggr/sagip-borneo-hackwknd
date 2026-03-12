@@ -35,9 +35,6 @@ export default function HelpDashboard({
   onToggleShowAllPins,
   formLocation,
   setFormLocation,
-  pickLocationFor,
-  setPickLocationFor,
-  onNavigateToMap,
 }: { 
   onNavigateToRequest: (id: string, loc: { latitude: number, longitude: number }) => void;
   showAllPins: boolean;

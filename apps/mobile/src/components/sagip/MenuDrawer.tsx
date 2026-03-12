@@ -42,6 +42,8 @@ export function MenuDrawer({ open, onClose, onNavigate, onSignOut, currentPath }
         document.body.style.overflow = '';
       };
     }
+
+    return undefined;
   }, [open, onClose]);
 
   if (!open) return null;
