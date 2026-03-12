@@ -16,8 +16,7 @@ import { boundingExtent, createEmpty, extend as extendExtent, isEmpty } from 'ol
 import { Point, Polygon } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import { transformExtent } from 'ol/proj';
-import { fromLonLat } from 'ol/proj';
+import { transformExtent, fromLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
@@ -273,7 +272,7 @@ export function OperationsMapPage() {
 
   const overviewQuery = useAdminOperationsControllerMapOverview({
     query: {
-      select: (response) => toMapOverview(response),
+      select: (response) => toMapOverview(response?.data ?? response),
     },
   });
 
@@ -547,7 +546,6 @@ export function OperationsMapPage() {
         }),
       });
     });
-
 
     const view = new View({
       center: fromLonLat(ASEAN_CENTER_LON_LAT),
@@ -948,7 +946,7 @@ export function OperationsMapPage() {
             />
             <span>View Building Profiles (Overlay)</span>
           </label>
- 
+
           {viewBuildingProfiles && (
             <div className="card-content-stack" style={{ marginTop: '0.5rem', paddingLeft: '1.5rem' }}>
               <p className="small muted">Data fetched dynamically based on map area.</p>
@@ -1094,7 +1092,14 @@ export function OperationsMapPage() {
             <span className="chip">Help: {filteredHelpRequests.length}</span>
           </div>
           {overviewQuery.isLoading ? <p className="muted small">Loading map datasets...</p> : null}
-          {overviewQuery.isError ? <p className="error-text">Failed to load map datasets.</p> : null}
+          {overviewQuery.isError ? (
+            <p className="error-text">
+              Failed to load map datasets.
+              {overviewQuery.error && typeof overviewQuery.error === 'object' && 'response' in overviewQuery.error
+                ? ' Check that you are logged in as an admin.'
+                : ''}
+            </p>
+          ) : null}
           <div ref={mapTargetRef} className="map-canvas" />
           
           <div ref={popupRef} className="map-hover-popup card" style={{ 

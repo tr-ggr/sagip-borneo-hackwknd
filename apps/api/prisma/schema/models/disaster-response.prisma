@@ -239,17 +239,18 @@ model EvacuationRouteSuggestion {
 }
 
 model HelpRequest {
-  id          String             @id @default(cuid())
-  requesterId String
-  familyId    String?
-  hazardType  HazardType
-  urgency     HelpUrgency
-  status      HelpRequestStatus  @default(OPEN)
-  description String
-  latitude    Float
-  longitude   Float
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id           String             @id @default(cuid())
+  requesterId  String
+  familyId     String?
+  hazardType   HazardType
+  urgency      HelpUrgency
+  status       HelpRequestStatus  @default(OPEN)
+  description  String
+  latitude     Float
+  longitude    Float
+  sosExpiresAt DateTime?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
   requester   User               @relation(fields: [requesterId], references: [id], onDelete: Cascade)
   family      Family?            @relation(fields: [familyId], references: [id], onDelete: SetNull)
   assignments HelpAssignment[]

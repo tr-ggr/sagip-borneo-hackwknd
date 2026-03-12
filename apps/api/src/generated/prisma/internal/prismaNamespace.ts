@@ -2629,6 +2629,7 @@ export const HelpRequestScalarFieldEnum = {
   description: 'description',
   latitude: 'latitude',
   longitude: 'longitude',
+  sosExpiresAt: 'sosExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

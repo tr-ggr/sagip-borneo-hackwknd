@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database/database.service';
 import { RoutingService } from '../../routing/routing.service';
+import { HttpHazardRoutingProvider } from './hazard-routing.provider';
 import { SimpleRoutingProvider } from './simple-routing.provider';
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -30,6 +31,11 @@ export interface NearestEvacResult {
   source?: string | null;
   durationSeconds?: number;
   distanceMeters?: number;
+  /** Present when hazard-aware routing was used (rainfall_mm provided). */
+  geometry?: { type: 'LineString'; coordinates: [number, number][] };
+  avgRisk?: number;
+  totalRiskCost?: number;
+  hazardAware?: boolean;
 }
 
 @Injectable()
@@ -38,6 +44,7 @@ export class EvacuationService {
     private readonly prisma: PrismaService,
     private readonly routingProvider: SimpleRoutingProvider,
     private readonly routingService: RoutingService,
+    private readonly hazardRoutingProvider: HttpHazardRoutingProvider,
   ) {}
 
   async getAreas() {
@@ -52,6 +59,7 @@ export class EvacuationService {
     longitude: number,
     limit = 10,
     vehicleType = 'driving',
+    rainfallMm?: number,
   ): Promise<NearestEvacResult[]> {
     const areas = await this.prisma.evacuationArea.findMany({
       where: { isActive: true },
@@ -63,15 +71,48 @@ export class EvacuationService {
     }));
     withDistance.sort((a, b) => a.distanceKm - b.distanceKm);
     const topN = withDistance.slice(0, Math.min(limit, 5));
+    const useHazard = typeof rainfallMm === 'number';
     const withRoute: NearestEvacResult[] = [];
+
     for (const { area } of topN) {
-      const route = await this.routingService.getRoute(
-        longitude,
-        latitude,
-        area.longitude,
-        area.latitude,
-        vehicleType,
-      );
+      let durationSeconds: number | undefined;
+      let distanceMeters: number | undefined;
+      let geometry: NearestEvacResult['geometry'];
+      let avgRisk: number | undefined;
+      let totalRiskCost: number | undefined;
+      let hazardAware = false;
+
+      if (useHazard) {
+        const hazardRoute = await this.hazardRoutingProvider.getHazardAwareRoute(
+          latitude,
+          longitude,
+          area.latitude,
+          area.longitude,
+          rainfallMm,
+        );
+        if (hazardRoute) {
+          durationSeconds = hazardRoute.durationSeconds;
+          distanceMeters = hazardRoute.distanceMeters;
+          geometry = hazardRoute.geometry;
+          avgRisk = hazardRoute.avgRisk;
+          totalRiskCost = hazardRoute.totalRiskCost;
+          hazardAware = true;
+        }
+      }
+
+      if (!hazardAware) {
+        const route = await this.routingService.getRoute(
+          longitude,
+          latitude,
+          area.longitude,
+          area.latitude,
+          vehicleType,
+        );
+        durationSeconds = route?.durationSeconds;
+        distanceMeters = route?.distanceMeters;
+        if (route) geometry = route.geometry;
+      }
+
       withRoute.push({
         id: area.id,
         name: area.name,
@@ -83,11 +124,21 @@ export class EvacuationService {
         capacity: area.capacity,
         population: area.population,
         source: area.source,
-        durationSeconds: route?.durationSeconds,
-        distanceMeters: route?.distanceMeters,
+        durationSeconds,
+        distanceMeters,
+        ...(geometry && { geometry }),
+        ...(avgRisk !== undefined && { avgRisk }),
+        ...(totalRiskCost !== undefined && { totalRiskCost }),
+        ...(hazardAware && { hazardAware: true }),
       });
     }
-    withRoute.sort((a, b) => (a.durationSeconds ?? 1e9) - (b.durationSeconds ?? 1e9));
+
+    if (useHazard && withRoute.some((r) => r.avgRisk !== undefined)) {
+      withRoute.sort((a, b) => (a.avgRisk ?? 1) - (b.avgRisk ?? 1));
+    } else {
+      withRoute.sort((a, b) => (a.durationSeconds ?? 1e9) - (b.durationSeconds ?? 1e9));
+    }
+
     const rest = withDistance.slice(5, limit).map(({ area }) => ({
       id: area.id,
       name: area.name,
@@ -101,6 +152,78 @@ export class EvacuationService {
       source: area.source,
     }));
     return [...withRoute, ...rest];
+  }
+
+  async getRouteToArea(
+    latitude: number,
+    longitude: number,
+    evacuationAreaId: string,
+    vehicleType = 'driving',
+    rainfallMm?: number,
+  ): Promise<{
+    evacuationArea: { id: string; name: string; latitude: number; longitude: number; address: string | null; region: string | null };
+    geometry?: { type: 'LineString'; coordinates: [number, number][] };
+    durationSeconds?: number;
+    distanceMeters?: number;
+    avgRisk?: number;
+    totalRiskCost?: number;
+    hazardAware?: boolean;
+  } | null> {
+    const area = await this.prisma.evacuationArea.findFirst({
+      where: { id: evacuationAreaId, isActive: true },
+    });
+    if (!area) return null;
+
+    const useHazard = typeof rainfallMm === 'number';
+    if (useHazard) {
+      const hazardRoute = await this.hazardRoutingProvider.getHazardAwareRoute(
+        latitude,
+        longitude,
+        area.latitude,
+        area.longitude,
+        rainfallMm,
+      );
+      if (hazardRoute) {
+        return {
+          evacuationArea: {
+            id: area.id,
+            name: area.name,
+            latitude: area.latitude,
+            longitude: area.longitude,
+            address: area.address,
+            region: area.region,
+          },
+          geometry: hazardRoute.geometry,
+          durationSeconds: hazardRoute.durationSeconds,
+          distanceMeters: hazardRoute.distanceMeters,
+          avgRisk: hazardRoute.avgRisk,
+          totalRiskCost: hazardRoute.totalRiskCost,
+          hazardAware: true,
+        };
+      }
+    }
+
+    const route = await this.routingService.getRoute(
+      longitude,
+      latitude,
+      area.longitude,
+      area.latitude,
+      vehicleType,
+    );
+    if (!route) return null;
+    return {
+      evacuationArea: {
+        id: area.id,
+        name: area.name,
+        latitude: area.latitude,
+        longitude: area.longitude,
+        address: area.address,
+        region: area.region,
+      },
+      geometry: route.geometry,
+      durationSeconds: route.durationSeconds,
+      distanceMeters: route.distanceMeters,
+    };
   }
 
   async getSuggestedRoutes(userId: string) {

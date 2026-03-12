@@ -11,6 +11,7 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Fill, Stroke, Style } from 'ol/style';
+import CircleStyle from 'ol/style/Circle';
 import Geolocation from 'ol/Geolocation';
 import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
@@ -35,6 +36,16 @@ interface HelpRequest {
   hazardType: string;
 }
 
+export interface HazardPin {
+  id: string;
+  latitude: number;
+  longitude: number;
+  title?: string;
+  hazardType?: string;
+  reviewStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | null;
+  reporterId?: string | null;
+}
+
 export interface EvacuationSite {
   id: string;
   name: string;
@@ -46,10 +57,21 @@ export interface EvacuationSite {
   source?: string | null;
 }
 
+export interface HazardRiskPoint {
+  latitude: number;
+  longitude: number;
+  risk: number;
+  elevation?: number;
+  stagnation?: number;
+  vulnerability?: number;
+}
+
 interface MapComponentProps {
   weatherLocation?: { latitude: number; longitude: number };
   vulnerableRegions?: RiskRegion[];
   helpRequests?: HelpRequest[];
+  /** Hazard pins visible to user (approved + own); styled by reviewStatus. */
+  hazardPins?: HazardPin[];
   focusedHelpRequestId?: string | null;
   mapFocus?: { latitude: number; longitude: number } | null;
   homeLocation?: { latitude: number; longitude: number } | null;
@@ -57,9 +79,15 @@ interface MapComponentProps {
   onEvacClick?: (evac: EvacuationSite) => void;
   /** OSRM route geometry (GeoJSON [lon, lat][]). When set, drawn instead of straight line. */
   routeGeometry?: [number, number][] | null;
+  /** Hazard-aware (safest) route geometry; drawn in a different color from OSRM route. */
+  hazardRouteGeometry?: [number, number][] | null;
   routeEta?: { durationSeconds: number; distanceMeters: number } | null;
+  /** Risk points from hazard server for map layer; color by risk, hover for details. */
+  hazardRiskPoints?: HazardRiskPoint[];
   /** When set, map click returns lat/lon for location picker (e.g. hazard pin / help request). */
   onMapClick?: (latitude: number, longitude: number) => void;
+  /** When true, wrapper uses w-full h-full instead of aspect-square for embedded use (e.g. SOS page). */
+  fillContainer?: boolean;
 }
 
 /** Returns SVG markup for the evac marker based on type so not all look like churches. */
@@ -87,25 +115,45 @@ function getEvacIconSvg(type: string | null | undefined): string {
   }
 }
 
-export default function MapComponent({ 
-  weatherLocation, 
+/** Solid teardrop pin SVG (no outline); fill color for status. */
+function getHazardPinSvg(fill: string): string {
+  return `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C5.5 2 0 7.5 0 14c0 8 12 18 12 18s12-10 12-18C24 7.5 18.5 2 12 2zm0 10a4 4 0 100-8 4 4 0 000 8z" fill="${fill}"/></svg>`;
+}
+
+/** Risk value to color: green (low), yellow (mid), red (high). */
+function getRiskColor(risk: number): string {
+  if (risk <= 1 / 3) return '#22c55e';
+  if (risk <= 2 / 3) return '#eab308';
+  return '#dc2626';
+}
+
+export default function MapComponent({
+  weatherLocation,
   vulnerableRegions = [],
   helpRequests = [],
+  hazardPins = [],
   focusedHelpRequestId,
   mapFocus,
   homeLocation,
   evacuationSites = [],
   onEvacClick,
   routeGeometry,
+  hazardRouteGeometry,
+  hazardRiskPoints = [],
   onMapClick,
+  fillContainer = false,
 }: MapComponentProps) {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const regionsLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const helpLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const hazardLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const riskLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const homeLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const evacLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const routeLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const hazardRouteLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const riskHoverPopupRef = useRef<HTMLDivElement>(null);
   const userLocationRef = useRef<HTMLDivElement>(null);
   const onEvacClickRef = useRef(onEvacClick);
   onEvacClickRef.current = onEvacClick;
@@ -117,10 +165,9 @@ export default function MapComponent({
   useEffect(() => {
     if (!mapElement.current || mapRef.current) return;
 
-    // 1. Initialize Base Map
-    const initialCoords = weatherLocation 
-      ? fromLonLat([weatherLocation.longitude, weatherLocation.latitude]) 
-      : fromLonLat([110.3592, 1.5533]); // Default to Kuching
+    // 1. Initialize Base Map (created once)
+    const initial = weatherLocation ?? { latitude: 1.5533, longitude: 110.3592 };
+    const initialCoords = fromLonLat([initial.longitude, initial.latitude]); // Default to Kuching
 
     const view = new View({
       center: initialCoords,
@@ -210,6 +257,15 @@ export default function MapComponent({
     map.addLayer(helpLayer);
     helpLayerRef.current = helpLayer;
 
+    // 5b. Setup Hazard Pins Layer
+    const hazardSource = new VectorSource();
+    const hazardLayer = new VectorLayer({
+      source: hazardSource,
+      zIndex: 9,
+    });
+    map.addLayer(hazardLayer);
+    hazardLayerRef.current = hazardLayer;
+
     // 6. Setup Home Layer
     const homeSource = new VectorSource();
     const homeLayer = new VectorLayer({
@@ -228,6 +284,41 @@ export default function MapComponent({
     map.addLayer(evacLayer);
     evacLayerRef.current = evacLayer;
 
+    // 7b. Setup Hazard Risk Points Layer (graph nodes from hazard server)
+    const riskSource = new VectorSource();
+    const riskLayer = new VectorLayer({
+      source: riskSource,
+      zIndex: 6,
+    });
+    map.addLayer(riskLayer);
+    riskLayerRef.current = riskLayer;
+
+    // 7c. Hover overlay for risk point details
+    const hoverOverlay = new Overlay({
+      element: riskHoverPopupRef.current!,
+      positioning: 'bottom-center',
+      offset: [0, -8],
+      stopEvent: false,
+    });
+    map.addOverlay(hoverOverlay);
+    map.on('pointermove', (evt) => {
+      const hit = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+      const riskData = hit?.get('riskData') as HazardRiskPoint | undefined;
+      if (riskData && riskHoverPopupRef.current) {
+        riskHoverPopupRef.current.innerHTML = [
+          `Risk: ${(riskData.risk * 100).toFixed(1)}%`,
+          riskData.elevation != null ? `Elevation: ${riskData.elevation.toFixed(0)} m` : '',
+          riskData.stagnation != null ? `Stagnation: ${riskData.stagnation.toFixed(2)}` : '',
+          riskData.vulnerability != null ? `Vulnerability: ${riskData.vulnerability.toFixed(2)}` : '',
+        ].filter(Boolean).join(' · ');
+        riskHoverPopupRef.current.style.display = 'block';
+        hoverOverlay.setPosition(evt.coordinate);
+      } else if (riskHoverPopupRef.current) {
+        riskHoverPopupRef.current.style.display = 'none';
+        hoverOverlay.setPosition(undefined);
+      }
+    });
+
     map.on('click', (evt) => {
       if (onMapClickRef.current) {
         const coord = map.getCoordinateFromPixel(evt.pixel);
@@ -242,36 +333,67 @@ export default function MapComponent({
       if (evac && onEvacClickRef.current) onEvacClickRef.current(evac);
     });
 
-    // 8. Setup Route Layer
+    // 8. Setup Route Layer (OSRM – fastest)
     const routeSource = new VectorSource();
     const routeLayer = new VectorLayer({
       source: routeSource,
-      zIndex: 8,
+      zIndex: 9,
       style: [
         new Style({
           stroke: new Stroke({
-            color: 'rgba(250, 204, 21, 0.4)', // bright yellow glow
+            color: 'rgba(250, 204, 21, 0.4)',
             width: 12,
           }),
         }),
         new Style({
           stroke: new Stroke({
-            color: '#FDE047', // bright solid yellow
+            color: '#FDE047',
             width: 4,
             lineDash: [6, 6],
           }),
-        })
+        }),
       ],
     });
     map.addLayer(routeLayer);
     routeLayerRef.current = routeLayer;
+
+    // 9. Setup Hazard Route Layer (safest – different color)
+    const hazardRouteSource = new VectorSource();
+    const hazardRouteLayer = new VectorLayer({
+      source: hazardRouteSource,
+      zIndex: 8,
+      style: [
+        new Style({
+          stroke: new Stroke({
+            color: 'rgba(34, 197, 94, 0.5)',
+            width: 10,
+          }),
+        }),
+        new Style({
+          stroke: new Stroke({
+            color: '#22c55e',
+            width: 4,
+          }),
+        }),
+      ],
+    });
+    map.addLayer(hazardRouteLayer);
+    hazardRouteLayerRef.current = hazardRouteLayer;
 
     return () => {
       geolocation.setTracking(false);
       map.setTarget(undefined);
       mapRef.current = null;
     };
-  }, [weatherLocation]);
+  }, []);
+
+  // Sync map view center when weatherLocation changes, without recreating the map
+  useEffect(() => {
+    if (!mapRef.current || !weatherLocation) return;
+    const view = mapRef.current.getView();
+    const coords = fromLonLat([weatherLocation.longitude, weatherLocation.latitude]);
+    view.animate({ center: coords, duration: 300 });
+  }, [weatherLocation?.latitude, weatherLocation?.longitude]);
 
   // Update Regions Layer when data changes
   useEffect(() => {
@@ -353,6 +475,69 @@ export default function MapComponent({
     source.addFeatures(features);
   }, [helpRequests, focusedHelpRequestId]);
 
+  // Update Hazard Pins Layer
+  useEffect(() => {
+    if (!hazardLayerRef.current) return;
+    const source = hazardLayerRef.current.getSource();
+    if (!source) return;
+
+    source.clear();
+
+    const list = Array.isArray(hazardPins) ? hazardPins : [];
+
+    const features = list.map((pin) => {
+      const point = new Point(fromLonLat([pin.longitude, pin.latitude]));
+      const feature = new Feature({ geometry: point });
+
+      const fill =
+        pin.reviewStatus === 'REJECTED'
+          ? '#6B7280'
+          : pin.reviewStatus === 'PENDING'
+            ? '#EAB308'
+            : '#0D9488';
+
+      feature.setStyle(
+        new Style({
+          image: new Icon({
+            src: `data:image/svg+xml;utf8,${encodeURIComponent(getHazardPinSvg(fill))}`,
+            scale: 1,
+            anchor: [0.5, 1],
+          }),
+        }),
+      );
+
+      return feature;
+    });
+
+    source.addFeatures(features);
+  }, [hazardPins]);
+
+  // Update Hazard Risk Points Layer (color by risk: green / yellow / red)
+  useEffect(() => {
+    if (!riskLayerRef.current) return;
+    const source = riskLayerRef.current.getSource();
+    if (!source) return;
+    source.clear();
+    if (!hazardRiskPoints.length) return;
+    const features = hazardRiskPoints.map((p) => {
+      const point = new Point(fromLonLat([p.longitude, p.latitude]));
+      const feature = new Feature({ geometry: point });
+      feature.set('riskData', p);
+      const color = getRiskColor(p.risk);
+      feature.setStyle(
+        new Style({
+          image: new CircleStyle({
+            radius: 4,
+            fill: new Fill({ color }),
+            stroke: new Stroke({ color: '#fff', width: 1 }),
+          }),
+        }),
+      );
+      return feature;
+    });
+    source.addFeatures(features);
+  }, [hazardRiskPoints]);
+
   // Update Home marker
   useEffect(() => {
     if (!homeLayerRef.current || !homeLocation) return;
@@ -400,7 +585,7 @@ export default function MapComponent({
     source.addFeatures(features);
   }, [evacuationSites]);
 
-  // Update Route / Navigation Path (OSRM road route or straight line)
+  // Update Route / Navigation Path (OSRM – fastest)
   useEffect(() => {
     if (!routeLayerRef.current || !mapRef.current) return;
     const source = routeLayerRef.current.getSource();
@@ -450,10 +635,30 @@ export default function MapComponent({
     });
   }, [mapFocus, userCoords, routeGeometry]);
 
+  // Update Hazard Route Layer (safest – green)
+  useEffect(() => {
+    if (!hazardRouteLayerRef.current) return;
+    const source = hazardRouteLayerRef.current.getSource();
+    if (!source) return;
+    source.clear();
+    if (hazardRouteGeometry && hazardRouteGeometry.length >= 2) {
+      const coords = hazardRouteGeometry.map(([lon, lat]) => fromLonLat([lon, lat]));
+      source.addFeature(new Feature({ geometry: new LineString(coords) }));
+    }
+  }, [hazardRouteGeometry]);
+
+  const wrapperClass = fillContainer
+    ? 'relative w-full h-full rounded-xl overflow-hidden'
+    : 'relative w-full aspect-square rounded-3xl overflow-hidden shadow-wira border border-wira-teal/30';
+
   return (
-    <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-wira border border-wira-teal/30">
+    <div className={wrapperClass}>
         <div ref={mapElement} className="w-full h-full" />
-        
+        <div
+          ref={riskHoverPopupRef}
+          className="absolute px-2 py-1 text-xs font-body text-wira-earth bg-white/95 border border-wira-teal/30 rounded shadow-lg pointer-events-none whitespace-nowrap"
+          style={{ display: 'none' }}
+        />
         {/* 3D Person Pin Overlay */}
         <div ref={userLocationRef} className={`absolute pointer-events-none ${!userCoords ? 'hidden' : ''}`}>
           <div className="relative flex items-center justify-center -translate-y-4">

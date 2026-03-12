@@ -17,11 +17,11 @@ model User {
   helpRequests               HelpRequest[]
   helpAssignments            HelpAssignment[]
   warningsCreated            WarningEvent[]              @relation("WarningCreatedBy")
-  warningEventLogs           WarningEventLog[]           @relation("WarningEventActor")
+  warningEventLogs           WarningEventLog[]            @relation("WarningEventActor")
   volunteerDecisionLogs      VolunteerDecisionLog[]      @relation("VolunteerDecisionActor")
-  helpRequestEvents          HelpRequestEvent[]          @relation("HelpRequestEventActor")
+  helpRequestEvents          HelpRequestEvent[]           @relation("HelpRequestEventActor")
   mapPinsReported            MapPinStatus[]              @relation("MapPinReporter")
-  mapPinsReviewed            MapPinStatus[]              @relation("MapPinReviewer")
+  mapPinsReviewed            MapPinStatus[]               @relation("MapPinReviewer")
   locationSnapshot           UserLocationSnapshot?
   evacuationRouteSuggestions EvacuationRouteSuggestion[]
 

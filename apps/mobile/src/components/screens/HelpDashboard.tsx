@@ -29,14 +29,13 @@ import HelpRequestForm from '../help/HelpRequestForm';
 import HelpRequestTimeline from '../help/HelpRequestTimeline';
 import HazardPinForm from '../pin/HazardPinForm';
 
-const FALLBACK_LOCATION = { latitude: 1.5533, longitude: 110.3592 };
-
-export default function HelpDashboard({ 
+export default function HelpDashboard({
   onNavigateToRequest,
   showAllPins,
   onToggleShowAllPins,
   formLocation,
   setFormLocation,
+  pickLocationFor,
   setPickLocationFor,
   onNavigateToMap,
 }: { 
@@ -45,9 +44,6 @@ export default function HelpDashboard({
   onToggleShowAllPins: (show: boolean) => void;
   formLocation: { latitude: number; longitude: number } | null;
   setFormLocation: (loc: { latitude: number; longitude: number } | null) => void;
-  pickLocationFor: 'hazard' | 'help' | null;
-  setPickLocationFor: (v: 'hazard' | 'help' | null) => void;
-  onNavigateToMap: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<'request' | 'volunteer'>('request');
   const [volunteerSubTab, setVolunteerSubTab] = useState<'available' | 'assigned'>('available');
@@ -73,8 +69,6 @@ export default function HelpDashboard({
       { enableHighAccuracy: true }
     );
   }, [setFormLocation]);
-
-  const formLocationOrFallback = formLocation ?? FALLBACK_LOCATION;
 
   const handleFormSuccess = () => {
     setShowForm(false);
@@ -159,12 +153,9 @@ export default function HelpDashboard({
                 <div className="wira-card p-6 border-wira-teal/10">
                    <h3 className="text-xl font-display font-bold wira-card-title mb-6">Report hazard pin</h3>
                    <HazardPinForm
-                     initialLocation={formLocationOrFallback}
+                     location={formLocation}
+                     onLocationChange={(loc) => setFormLocation(loc)}
                      onSuccess={handleHazardPinSuccess}
-                     onChangeLocation={() => {
-                       setPickLocationFor('hazard');
-                       onNavigateToMap();
-                     }}
                    />
                 </div>
              </div>
@@ -180,12 +171,9 @@ export default function HelpDashboard({
                 <div className="wira-card p-6 border-wira-teal/10">
                    <h3 className="text-xl font-display font-bold wira-card-title mb-6">New Help Request</h3>
                    <HelpRequestForm
-                     initialLocation={formLocationOrFallback}
+                     location={formLocation}
+                     onLocationChange={(loc) => setFormLocation(loc)}
                      onSuccess={handleFormSuccess}
-                     onChangeLocation={() => {
-                       setPickLocationFor('help');
-                       onNavigateToMap();
-                     }}
                    />
                 </div>
              </div>

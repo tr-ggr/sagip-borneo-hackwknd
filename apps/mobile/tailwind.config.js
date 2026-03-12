@@ -40,6 +40,12 @@ module.exports = {
           'safe':         '#2E7D32',
           'offline':      '#616161',
         },
+        'asean-blue': '#00368e',
+        'asean-red': '#fd1813',
+        'asean-yellow': '#ffff00',
+        'sagip-heading': '#0f172a',
+        'sagip-muted': '#475569',
+        'sagip-border': '#e2e8f0',
         'dm': {
           'background':   '#0A1214',
           'surface':      '#122029',
@@ -53,6 +59,7 @@ module.exports = {
         'display': ['"Playfair Display"', 'Georgia', 'serif'],
         'body':    ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
         'mono':    ['"IBM Plex Mono"', 'monospace'],
+        'sagip':   ['var(--font-sagip)', '"Space Grotesk"', 'sans-serif'],
       },
       animation: {
         'pulse-slow':     'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

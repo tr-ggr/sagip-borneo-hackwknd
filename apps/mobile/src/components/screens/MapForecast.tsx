@@ -2,15 +2,18 @@
 
 import React from 'react';
 
-import { 
-  useRiskIntelligenceControllerGetForecast, 
+import {
+  useRiskIntelligenceControllerGetForecast,
   useRiskIntelligenceControllerGetVulnerableRegions,
   useHelpRequestsControllerListOpen,
+  usePinsControllerFindVisible,
   useVolunteersControllerGetStatus,
   useRoutingControllerGetRoute,
   useEvacuationControllerAreas,
+  useEvacuationControllerRoute,
+  useHazardRiskLayerControllerGetRiskLayer,
 } from '@wira-borneo/api-client';
-import MapComponent, { type EvacuationSite } from '../MapComponent';
+import MapComponent, { type EvacuationSite, type HazardRiskPoint } from '../MapComponent';
 import { X, Navigation2, MapPin, Home } from 'lucide-react';
 
 export type RouteOrigin = 'current' | 'home';
@@ -42,6 +45,7 @@ export default function MapForecast({
 }) {
   const [userLocation, setUserLocation] = React.useState<{ latitude: number, longitude: number } | null>(null);
   const [routeOrigin, setRouteOrigin] = React.useState<RouteOrigin>('current');
+  const [selectedLocationForWeather, setSelectedLocationForWeather] = React.useState<{ latitude: number; longitude: number } | null>(null);
 
   React.useEffect(() => {
     if ('geolocation' in navigator) {
@@ -53,13 +57,21 @@ export default function MapForecast({
 
   const activeLoc = mapFocus || userLocation || { latitude: 1.5533, longitude: 110.3592 };
 
+  // Base forecast for current/active location (background)
   useRiskIntelligenceControllerGetForecast({
     latitude: activeLoc.latitude,
-    longitude: activeLoc.longitude
+    longitude: activeLoc.longitude,
   });
+
+  // Forecast for user-selected point on the map (shown in panel), without reloading map
+  const { data: clickedForecast } = useRiskIntelligenceControllerGetForecast(
+    selectedLocationForWeather ?? activeLoc,
+    { query: { enabled: !!selectedLocationForWeather } },
+  );
 
   const { data: vulnerableRegions } = useRiskIntelligenceControllerGetVulnerableRegions();
   const { data: openRequests } = useHelpRequestsControllerListOpen();
+  const { data: hazardPins } = usePinsControllerFindVisible();
   const { data: volunteerStatus } = useVolunteersControllerGetStatus();
   const status = volunteerStatus as { profile?: { baseLatitude?: number; baseLongitude?: number } } | null | undefined;
   const profile = status?.profile;
@@ -92,6 +104,28 @@ export default function MapForecast({
       ? { durationSeconds: routeData.durationSeconds, distanceMeters: routeData.distanceMeters }
       : null;
 
+  const hazardRouteParams =
+    mapFocusEvac && routeFrom
+      ? {
+          latitude: routeFrom.latitude,
+          longitude: routeFrom.longitude,
+          evacuationAreaId: mapFocusEvac.id,
+          rainfall_mm: 0,
+        }
+      : undefined;
+  const { data: hazardRouteResponse } = useEvacuationControllerRoute(
+    hazardRouteParams ?? { latitude: 0, longitude: 0, evacuationAreaId: '' },
+    { query: { enabled: !!hazardRouteParams } },
+  );
+  const hazardRouteGeometry = (hazardRouteResponse as { geometry?: { coordinates?: [number, number][] } } | undefined)?.geometry?.coordinates ?? null;
+
+  const [showRiskLayer, setShowRiskLayer] = React.useState(true);
+  const { data: riskLayerData } = useHazardRiskLayerControllerGetRiskLayer(
+    { rainfall_mm: 0 },
+    { query: { enabled: showRiskLayer } },
+  );
+  const hazardRiskPoints: HazardRiskPoint[] = Array.isArray(riskLayerData) ? (riskLayerData as HazardRiskPoint[]) : [];
+
   const { data: areasData } = useEvacuationControllerAreas();
   const areasList = Array.isArray(areasData) ? areasData : [];
   type AreaItem = { id: string; name: string; latitude: number; longitude: number; type?: string | null; capacity?: string | null; population?: string | null; source?: string | null };
@@ -105,6 +139,30 @@ export default function MapForecast({
     population: a.population ?? null,
     source: a.source ?? null,
   }));
+
+  // Derive evac types for filters
+  const evacTypes = Array.from(
+    new Set(
+      evacuationSites
+        .map((e) => (e.type ?? '').trim())
+        .filter((t) => t.length > 0),
+    ),
+  );
+
+  const [evacTypeFilter, setEvacTypeFilter] = React.useState<string | 'ALL'>('ALL');
+  const [showVulnerableRegions, setShowVulnerableRegions] = React.useState(true);
+  const [showHazardPins, setShowHazardPins] = React.useState(true);
+
+  const filteredEvacuationSites =
+    evacTypeFilter === 'ALL'
+      ? evacuationSites
+      : evacuationSites.filter(
+          (e) => (e.type ?? '').trim().toLowerCase() === evacTypeFilter.toLowerCase(),
+        );
+
+  const filteredVulnerableRegions = showVulnerableRegions ? (vulnerableRegions as any) : [];
+  const filteredHazardPins =
+    showHazardPins && Array.isArray(hazardPins) ? (hazardPins as any) : [];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -128,23 +186,131 @@ export default function MapForecast({
             </div>
           </div>
         )}
+        {/* Filters */}
+        <div className="mb-3 flex flex-wrap gap-2 items-center">
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] font-display uppercase tracking-widest text-wira-earth/60">
+              Evac types
+            </span>
+            <button
+              type="button"
+              onClick={() => setEvacTypeFilter('ALL')}
+              className={`px-2 py-1 rounded-full text-[10px] font-body ${
+                evacTypeFilter === 'ALL'
+                  ? 'bg-wira-teal text-white'
+                  : 'bg-white text-wira-earth/70 border border-wira-ivory-dark'
+              }`}
+            >
+              All
+            </button>
+            {evacTypes.map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setEvacTypeFilter(t)}
+                className={`px-2 py-1 rounded-full text-[10px] font-body ${
+                  evacTypeFilter === t
+                    ? 'bg-wira-teal text-white'
+                    : 'bg-white text-wira-earth/70 border border-wira-ivory-dark'
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 ml-auto text-[10px] font-body text-wira-earth/70">
+            <label className="inline-flex items-center gap-1 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showVulnerableRegions}
+                onChange={(e) => setShowVulnerableRegions(e.target.checked)}
+                className="h-3 w-3 rounded border-wira-ivory-dark"
+              />
+              <span>Risk areas</span>
+            </label>
+            <label className="inline-flex items-center gap-1 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showHazardPins}
+                onChange={(e) => setShowHazardPins(e.target.checked)}
+                className="h-3 w-3 rounded border-wira-ivory-dark"
+              />
+              <span>Hazard pins</span>
+            </label>
+            <label className="inline-flex items-center gap-1 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showRiskLayer}
+                onChange={(e) => setShowRiskLayer(e.target.checked)}
+                className="h-3 w-3 rounded border-wira-ivory-dark"
+              />
+              <span>Risk layer</span>
+            </label>
+          </div>
+        </div>
+
         <MapComponent 
           weatherLocation={activeLoc} 
-          vulnerableRegions={vulnerableRegions as any} 
+          vulnerableRegions={filteredVulnerableRegions} 
           helpRequests={showAllPins ? (openRequests as any) : []}
+          hazardPins={filteredHazardPins}
           focusedHelpRequestId={focusedHelpRequestId}
           mapFocus={mapFocus}
           homeLocation={homeLocation}
-          evacuationSites={evacuationSites}
+          evacuationSites={filteredEvacuationSites}
           onEvacClick={(evac) => {
             setMapFocus({ latitude: evac.latitude, longitude: evac.longitude });
             setMapFocusLabel('Evacuation site');
             setMapFocusEvac(evac);
           }}
           routeGeometry={routeGeometry}
+          hazardRouteGeometry={hazardRouteGeometry}
+          hazardRiskPoints={showRiskLayer ? hazardRiskPoints : []}
           routeEta={routeEta}
-          onMapClick={pickLocationFor && onLocationPicked ? (lat, lon) => onLocationPicked(lat, lon) : undefined}
+          onMapClick={
+            pickLocationFor && onLocationPicked
+              ? (lat, lon) => onLocationPicked(lat, lon)
+              : (lat, lon) => setSelectedLocationForWeather({ latitude: lat, longitude: lon })
+          }
         />
+
+        {/* Weather for clicked point (no map reload) */}
+        {selectedLocationForWeather && !pickLocationFor && (
+          <div className="absolute bottom-4 left-4 right-4 z-10 animate-slide-up">
+            <div className="bg-white/90 backdrop-blur-md border border-wira-teal/20 rounded-2xl p-3 shadow-lg flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-display font-bold uppercase tracking-widest text-wira-teal">
+                  Weather at selected point
+                </p>
+                <p className="text-[10px] font-body text-wira-earth/60">
+                  {selectedLocationForWeather.latitude.toFixed(3)},{' '}
+                  {selectedLocationForWeather.longitude.toFixed(3)}
+                </p>
+                {/* Keep this defensive: structure of forecast may change */}
+                {(() => {
+                  const f: any = clickedForecast;
+                  const temp =
+                    f?.current?.temperature ??
+                    f?.currentTemperature ??
+                    f?.summary?.temperature ??
+                    null;
+                  return temp != null ? (
+                    <p className="text-xs font-body text-wira-earth mt-0.5">
+                      Approx. temperature: {Math.round(temp)}°
+                    </p>
+                  ) : null;
+                })()}
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedLocationForWeather(null)}
+                className="h-7 w-7 rounded-full bg-wira-earth/5 flex items-center justify-center text-wira-earth/40 hover:bg-wira-earth/10 hover:text-wira-earth transition-all"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {mapFocus && !pickLocationFor && (
           <div className="absolute top-4 left-4 right-4 animate-slide-down space-y-2">
