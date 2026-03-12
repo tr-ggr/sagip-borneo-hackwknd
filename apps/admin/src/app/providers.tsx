@@ -5,6 +5,7 @@ import { setApiClientBaseUrl } from '@wira-borneo/api-client';
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { AuthProvider } from '../lib/auth';
+import { ToastProvider } from './components/Toast';
 
 export function Providers({ children }: { children: ReactNode }) {
   const queryClient = useMemo(() => new QueryClient(), []);
@@ -17,7 +18,7 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

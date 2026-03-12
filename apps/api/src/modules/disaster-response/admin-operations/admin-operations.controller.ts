@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -12,6 +13,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiQuery,
   ApiOperation,
   ApiParam,
   ApiProperty,
@@ -274,6 +276,65 @@ class AdminAssetRegistryEntryDto {
   createdAt!: Date;
 }
 
+class AdminWarningTargetAreaDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  areaName!: string;
+
+  @ApiPropertyOptional()
+  latitude?: number;
+
+  @ApiPropertyOptional()
+  longitude?: number;
+
+  @ApiPropertyOptional()
+  radiusKm?: number;
+}
+
+class AdminWarningListItemDto {
+  @ApiProperty()
+  id!: string;
+
+  @ApiProperty()
+  title!: string;
+
+  @ApiProperty()
+  message!: string;
+
+  @ApiProperty({ enum: ['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] })
+  hazardType!: 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+
+  @ApiProperty({ enum: ['LOW', 'MODERATE', 'HIGH', 'CRITICAL'] })
+  severity!: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+
+  @ApiProperty({ enum: ['DRAFT', 'SENT', 'CANCELLED'] })
+  status!: 'DRAFT' | 'SENT' | 'CANCELLED';
+
+  @ApiProperty()
+  startsAt!: Date;
+
+  @ApiPropertyOptional()
+  endsAt?: Date | null;
+
+  @ApiProperty({
+    type: 'object',
+    nullable: true,
+    properties: {
+      id: { type: 'string' },
+      name: { type: 'string' },
+    },
+  })
+  createdBy!: { id: string; name: string } | null;
+
+  @ApiProperty({ type: [AdminWarningTargetAreaDto] })
+  targetAreas!: AdminWarningTargetAreaDto[];
+
+  @ApiProperty()
+  createdAt!: Date;
+}
+
 class MapOverviewResponseDto {
   @ApiProperty({ type: AdminRiskRegionDto, isArray: true })
   vulnerableRegions!: AdminRiskRegionDto[];
@@ -288,6 +349,7 @@ class MapOverviewResponseDto {
 const VOLUNTEER_STATUSES = ['PENDING', 'APPROVED', 'REJECTED', 'SUSPENDED'] as const;
 const HAZARD_TYPES = ['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] as const;
 const SEVERITY_LEVELS = ['LOW', 'MODERATE', 'HIGH', 'CRITICAL'] as const;
+const WARNING_STATUSES = ['DRAFT', 'SENT', 'CANCELLED'] as const;
 
 function parseVolunteerStatus(value?: string):
   | 'PENDING'
@@ -306,6 +368,20 @@ function parseVolunteerStatus(value?: string):
   }
 
   return value as 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED';
+}
+
+function parseWarningStatus(value?: string): 'DRAFT' | 'SENT' | 'CANCELLED' | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  if (!WARNING_STATUSES.includes(value as (typeof WARNING_STATUSES)[number])) {
+    throw new BadRequestException(
+      `status must be one of: ${WARNING_STATUSES.join(', ')}.`,
+    );
+  }
+
+  return value as 'DRAFT' | 'SENT' | 'CANCELLED';
 }
 
 function assertReviewVolunteerDto(input: ReviewVolunteerDto): void {
@@ -488,19 +564,22 @@ function assertReviewPinDto(input: ReviewPinDto): void {
   }
 }
 
-function assertAdminWeatherForecastDto(input: any): void {
+function assertAdminWeatherForecastDto(input: unknown): void {
   if (!input || typeof input !== 'object') {
     throw new BadRequestException('Query parameters are required.');
   }
-  if (input.latitude == null || isNaN(Number(input.latitude))) {
+
+  const candidate = input as Record<string, unknown>;
+
+  if (candidate.latitude == null || isNaN(Number(candidate.latitude))) {
     throw new BadRequestException('latitude is required and must be a number.');
   }
-  if (input.longitude == null || isNaN(Number(input.longitude))) {
+  if (candidate.longitude == null || isNaN(Number(candidate.longitude))) {
     throw new BadRequestException('longitude is required and must be a number.');
   }
 
-  if (input.forecast_days != null) {
-    const parsed = Number(input.forecast_days);
+  if (candidate.forecast_days != null) {
+    const parsed = Number(candidate.forecast_days);
     if (!Number.isInteger(parsed) || parsed < 1 || parsed > 16) {
       throw new BadRequestException(
         'forecast_days must be an integer between 1 and 16.',
@@ -508,30 +587,37 @@ function assertAdminWeatherForecastDto(input: any): void {
     }
   }
 
-  if (input.past_days != null) {
-    const parsed = Number(input.past_days);
+  if (candidate.past_days != null) {
+    const parsed = Number(candidate.past_days);
     if (parsed !== 1 && parsed !== 2) {
       throw new BadRequestException('past_days must be 1 or 2.');
     }
   }
 }
 
-function assertAdminWeatherGeocodingDto(input: any): void {
+function assertAdminWeatherGeocodingDto(input: unknown): void {
   if (!input || typeof input !== 'object') {
     throw new BadRequestException('Query parameters are required.');
   }
-  if (!input.name || typeof input.name !== 'string') {
+
+  const candidate = input as Record<string, unknown>;
+
+  if (!candidate.name || typeof candidate.name !== 'string') {
     throw new BadRequestException('name is required and must be a string.');
   }
 
-  if (input.count != null) {
-    const parsed = Number(input.count);
+  if (candidate.count != null) {
+    const parsed = Number(candidate.count);
     if (!Number.isInteger(parsed) || parsed < 1 || parsed > 100) {
       throw new BadRequestException('count must be an integer between 1 and 100.');
     }
   }
 
-  if (input.format != null && input.format !== 'json' && input.format !== 'protobuf') {
+  if (
+    candidate.format != null &&
+    candidate.format !== 'json' &&
+    candidate.format !== 'protobuf'
+  ) {
     throw new BadRequestException("format must be either 'json' or 'protobuf'.");
   }
 }
@@ -692,6 +778,21 @@ export class AdminOperationsController {
     });
   }
 
+  @Get('warnings')
+  @ApiOperation({ summary: 'List warning events for admin management' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: WARNING_STATUSES,
+    description: 'Optional warning status filter.',
+  })
+  @ApiOkResponse({ type: [AdminWarningListItemDto] })
+  async listWarnings(@Query('status') status?: string) {
+    return this.adminService.listWarnings({
+      status: parseWarningStatus(status),
+    });
+  }
+
   @Patch('warnings/:id')
   @ApiOperation({ summary: 'Update an existing warning event' })
   @ApiParam({ name: 'id', type: String })
@@ -723,6 +824,13 @@ export class AdminOperationsController {
     @AuthSessionParam() session: AuthSession,
   ) {
     return this.adminService.cancelWarning(warningId, session.user.id);
+  }
+
+  @Delete('warnings/:id')
+  @ApiOperation({ summary: 'Delete warning event (false alarm cleanup)' })
+  @ApiParam({ name: 'id', type: String })
+  async deleteWarning(@Param('id') warningId: string) {
+    return this.adminService.deleteWarning(warningId);
   }
 
   @Get('vulnerable-regions')
@@ -772,7 +880,7 @@ export class AdminOperationsController {
   @Get('map/overview')
   @ApiOperation({ summary: 'Get complete admin map datasets in one response' })
   async mapOverview(): Promise<MapOverviewResponseDto> {
-    return this.adminService.getMapOverview() as any;
+    return (await this.adminService.getMapOverview()) as MapOverviewResponseDto;
   }
 
   @Get('weather/forecast')

@@ -1314,6 +1314,43 @@
         "tags": [
           "admin-operations"
         ]
+      },
+      "get": {
+        "operationId": "AdminOperationsController_listWarnings",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminWarningListItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List warning events for admin management",
+        "tags": [
+          "admin-operations"
+        ]
       }
     },
     "/api/admin/warnings/{id}": {
@@ -1350,6 +1387,33 @@
           }
         ],
         "summary": "Update an existing warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminOperationsController_deleteWarning",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete warning event (false alarm cleanup)",
         "tags": [
           "admin-operations"
         ]
@@ -2585,6 +2649,111 @@
       "CreateWarningDto": {
         "type": "object",
         "properties": {}
+      },
+      "AdminWarningTargetAreaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "areaName": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "radiusKm": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "areaName"
+        ]
+      },
+      "AdminWarningListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MODERATE",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "SENT",
+              "CANCELLED"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endsAt": {
+            "type": "object"
+          },
+          "createdBy": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "targetAreas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminWarningTargetAreaDto"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "message",
+          "hazardType",
+          "severity",
+          "status",
+          "startsAt",
+          "createdBy",
+          "targetAreas",
+          "createdAt"
+        ]
       },
       "UpdateWarningDto": {
         "type": "object",

@@ -16,6 +16,7 @@ import {
   isLocationEmpty,
   saveLastWarningLocation,
 } from './location-prediction.utils';
+import { useToast } from '../../../components/Toast';
 
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
@@ -55,6 +56,7 @@ export function ManualWarningPage() {
 
   const promptMutation = useAdminOperationsControllerGetPromptSuggestion();
   const createWarningMutation = useAdminOperationsControllerCreateWarning();
+  const { showToast } = useToast();
 
   useEffect(() => {
     const saved = getLastWarningLocation();
@@ -525,6 +527,10 @@ export function ManualWarningPage() {
                       setMessage('');
                       saveLastWarningLocation(target);
                       setTarget(defaultTarget);
+                      showToast('Warning sent successfully.', 'success');
+                    },
+                    onError: () => {
+                      showToast('Failed to send warning.', 'error');
                     },
                   },
                 );
@@ -534,9 +540,6 @@ export function ManualWarningPage() {
               Confirm and Send / Sahkan &amp; Hantar
             </button>
           </div>
-          {createWarningMutation.error ? (
-            <p className="error-text">Unable to dispatch warning.</p>
-          ) : null}
         </article>
       )}
 

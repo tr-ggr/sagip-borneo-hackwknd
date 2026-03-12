@@ -8,7 +8,7 @@ import { useAuth } from '../lib/auth';
 const navItems = [
   { href: '/', label: 'Dashboard', icon: 'home' as const },
   { href: '/volunteers', label: 'Resources', icon: 'users' as const },
-  { href: '/warnings/new', label: 'Warnings', icon: 'alert' as const },
+  { href: '/warnings', label: 'Warnings', icon: 'alert' as const },
   { href: '/map', label: 'Map', icon: 'map' as const },
 ] as const;
 

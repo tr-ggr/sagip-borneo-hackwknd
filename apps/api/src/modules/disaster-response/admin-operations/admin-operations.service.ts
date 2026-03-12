@@ -367,6 +367,34 @@ export class AdminOperationsService {
     });
   }
 
+  async listWarnings(options?: {
+    status?: 'DRAFT' | 'SENT' | 'CANCELLED';
+  }) {
+    return this.prisma.warningEvent.findMany({
+      where: {
+        ...(options?.status ? { status: options.status } : {}),
+      },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        targetAreas: {
+          select: {
+            id: true,
+            areaName: true,
+            latitude: true,
+            longitude: true,
+            radiusKm: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async updateWarning(input: {
     warningId: string;
     title?: string;
@@ -444,6 +472,21 @@ export class AdminOperationsService {
       });
 
       return updated;
+    });
+  }
+
+  async deleteWarning(warningId: string) {
+    const existing = await this.prisma.warningEvent.findUnique({
+      where: { id: warningId },
+      select: { id: true },
+    });
+
+    if (!existing) {
+      throw new NotFoundException('Warning not found');
+    }
+
+    return this.prisma.warningEvent.delete({
+      where: { id: warningId },
     });
   }
 
