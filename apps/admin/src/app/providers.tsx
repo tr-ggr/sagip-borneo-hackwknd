@@ -5,6 +5,7 @@ import { setApiClientBaseUrl } from '@wira-borneo/api-client';
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { AuthProvider } from '../lib/auth';
+import { I18nProvider } from '../i18n/context';
 import { ToastProvider } from './components/Toast';
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -18,7 +19,9 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ToastProvider>{children}</ToastProvider>
+        <I18nProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </I18nProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

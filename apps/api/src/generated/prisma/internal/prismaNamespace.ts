@@ -390,6 +390,7 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   BuildingProfile: 'BuildingProfile',
+  DamageReport: 'DamageReport',
   Family: 'Family',
   FamilyMember: 'FamilyMember',
   UserLocationSnapshot: 'UserLocationSnapshot',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "asset" | "user" | "session" | "account" | "verification" | "buildingProfile" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus" | "trackerShipment" | "trackerStats" | "trackerReliefZone" | "trackerValidator"
+    modelProps: "asset" | "user" | "session" | "account" | "verification" | "buildingProfile" | "damageReport" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus" | "trackerShipment" | "trackerStats" | "trackerReliefZone" | "trackerValidator"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -855,6 +856,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BuildingProfileCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BuildingProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    DamageReport: {
+      payload: Prisma.$DamageReportPayload<ExtArgs>
+      fields: Prisma.DamageReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DamageReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DamageReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        findFirst: {
+          args: Prisma.DamageReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DamageReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        findMany: {
+          args: Prisma.DamageReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>[]
+        }
+        create: {
+          args: Prisma.DamageReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        createMany: {
+          args: Prisma.DamageReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DamageReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>[]
+        }
+        delete: {
+          args: Prisma.DamageReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        update: {
+          args: Prisma.DamageReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.DamageReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DamageReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DamageReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.DamageReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        aggregate: {
+          args: Prisma.DamageReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDamageReport>
+        }
+        groupBy: {
+          args: Prisma.DamageReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DamageReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DamageReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DamageReportCountAggregateOutputType> | number
         }
       }
     }
@@ -2550,6 +2625,29 @@ export const BuildingProfileScalarFieldEnum = {
 export type BuildingProfileScalarFieldEnum = (typeof BuildingProfileScalarFieldEnum)[keyof typeof BuildingProfileScalarFieldEnum]
 
 
+export const DamageReportScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  damageCategories: 'damageCategories',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  photoUrl: 'photoUrl',
+  photoKey: 'photoKey',
+  confidenceScore: 'confidenceScore',
+  confidenceThreshold: 'confidenceThreshold',
+  reporterId: 'reporterId',
+  reviewedById: 'reviewedById',
+  reviewStatus: 'reviewStatus',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DamageReportScalarFieldEnum = (typeof DamageReportScalarFieldEnum)[keyof typeof DamageReportScalarFieldEnum]
+
+
 export const FamilyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -2721,6 +2819,7 @@ export const HelpRequestScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   sosExpiresAt: 'sosExpiresAt',
+  triageCategory: 'triageCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3025,6 +3124,34 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
+ * Reference to a field of type 'DamageCategory[]'
+ */
+export type ListEnumDamageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DamageCategory'
+ */
+export type EnumDamageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'DamageReportReviewStatus'
+ */
+export type EnumDamageReportReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageReportReviewStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DamageReportReviewStatus[]'
+ */
+export type ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageReportReviewStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'HazardType'
  */
 export type EnumHazardTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HazardType'>
@@ -3105,6 +3232,20 @@ export type EnumHelpRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'HelpRequestStatus[]'
  */
 export type ListEnumHelpRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HelpRequestStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TriageCategory'
+ */
+export type EnumTriageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TriageCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'TriageCategory[]'
+ */
+export type ListEnumTriageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TriageCategory[]'>
     
 
 
@@ -3306,6 +3447,7 @@ export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
   buildingProfile?: Prisma.BuildingProfileOmit
+  damageReport?: Prisma.DamageReportOmit
   family?: Prisma.FamilyOmit
   familyMember?: Prisma.FamilyMemberOmit
   userLocationSnapshot?: Prisma.UserLocationSnapshotOmit

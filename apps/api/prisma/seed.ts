@@ -78,6 +78,354 @@ type EvacRow = {
   source: string | null;
 };
 
+type HazardTypeSeed = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+type PinStatusSeed = 'OPEN' | 'ACKNOWLEDGED' | 'IN_PROGRESS' | 'RESOLVED';
+
+type BaseHazardLocation = {
+  idPrefix: string;
+  titleBase: string;
+  hazardType: HazardTypeSeed;
+  status: PinStatusSeed;
+  priority: number;
+  latitude: number;
+  longitude: number;
+  region: string;
+  note?: string;
+};
+
+type HazardPinSeed = {
+  idSuffix: string;
+  title: string;
+  hazardType: HazardTypeSeed;
+  status: PinStatusSeed;
+  priority: number;
+  latitude: number;
+  longitude: number;
+  region: string;
+  note?: string;
+};
+
+const BASE_HAZARD_LOCATIONS: BaseHazardLocation[] = [
+  {
+    idPrefix: 'flood-manila-river',
+    titleBase: 'Urban flooding near Pasig River',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 14.6,
+    longitude: 121.0,
+    region: 'Metro Manila, Philippines',
+    note: 'Low-lying riverside communities reporting rising water.',
+  },
+  {
+    idPrefix: 'flood-jakarta-canal',
+    titleBase: 'Canal overflow in North Jakarta',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 4,
+    latitude: -6.12,
+    longitude: 106.85,
+    region: 'Jakarta, Indonesia',
+  },
+  {
+    idPrefix: 'flood-bangkok-chao-phraya',
+    titleBase: 'Chao Phraya River floodplain',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 3,
+    latitude: 13.72,
+    longitude: 100.52,
+    region: 'Bangkok, Thailand',
+  },
+  {
+    idPrefix: 'flood-mekong-delta',
+    titleBase: 'Mekong Delta inundation',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 3,
+    latitude: 10.2,
+    longitude: 105.0,
+    region: 'Mekong Delta, Vietnam',
+  },
+  {
+    idPrefix: 'flood-ganges-delta',
+    titleBase: 'Monsoon flooding near Dhaka',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 5,
+    latitude: 23.8,
+    longitude: 90.4,
+    region: 'Dhaka, Bangladesh',
+  },
+  {
+    idPrefix: 'flood-new-orleans',
+    titleBase: 'Levee stress near New Orleans',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 29.95,
+    longitude: -90.07,
+    region: 'New Orleans, USA',
+  },
+  {
+    idPrefix: 'typhoon-eastern-philippines',
+    titleBase: 'Strong winds along Eastern Samar coast',
+    hazardType: 'TYPHOON',
+    status: 'OPEN',
+    priority: 5,
+    latitude: 11.3,
+    longitude: 125.3,
+    region: 'Eastern Samar, Philippines',
+  },
+  {
+    idPrefix: 'typhoon-metro-tokyo',
+    titleBase: 'Typhoon rain bands over Tokyo Bay',
+    hazardType: 'TYPHOON',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 35.6,
+    longitude: 139.8,
+    region: 'Tokyo, Japan',
+  },
+  {
+    idPrefix: 'typhoon-okinawa',
+    titleBase: 'Coastal surge near Naha',
+    hazardType: 'TYPHOON',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 26.2,
+    longitude: 127.7,
+    region: 'Okinawa, Japan',
+  },
+  {
+    idPrefix: 'typhoon-caribbean',
+    titleBase: 'Storm surge in northern Haiti',
+    hazardType: 'TYPHOON',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 19.8,
+    longitude: -72.3,
+    region: 'Northern Haiti',
+  },
+  {
+    idPrefix: 'eq-tokyo',
+    titleBase: 'Shallow quake felt across Tokyo',
+    hazardType: 'EARTHQUAKE',
+    status: 'OPEN',
+    priority: 5,
+    latitude: 35.68,
+    longitude: 139.76,
+    region: 'Tokyo, Japan',
+  },
+  {
+    idPrefix: 'eq-san-francisco',
+    titleBase: 'Fault movement near San Andreas',
+    hazardType: 'EARTHQUAKE',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 37.77,
+    longitude: -122.42,
+    region: 'San Francisco, USA',
+  },
+  {
+    idPrefix: 'eq-istanbul',
+    titleBase: 'Strong tremor along North Anatolian Fault',
+    hazardType: 'EARTHQUAKE',
+    status: 'OPEN',
+    priority: 5,
+    latitude: 41.01,
+    longitude: 28.95,
+    region: 'Istanbul, Türkiye',
+  },
+  {
+    idPrefix: 'eq-santiago',
+    titleBase: 'Andean foothills shaking',
+    hazardType: 'EARTHQUAKE',
+    status: 'OPEN',
+    priority: 4,
+    latitude: -33.45,
+    longitude: -70.67,
+    region: 'Santiago, Chile',
+  },
+  {
+    idPrefix: 'aftershock-tokyo-bay',
+    titleBase: 'Aftershock cluster offshore Tokyo Bay',
+    hazardType: 'AFTERSHOCK',
+    status: 'OPEN',
+    priority: 3,
+    latitude: 35.3,
+    longitude: 140.0,
+    region: 'Offshore Tokyo Bay, Japan',
+  },
+  {
+    idPrefix: 'aftershock-bengkulu',
+    titleBase: 'Aftershocks southwest of Sumatra',
+    hazardType: 'AFTERSHOCK',
+    status: 'OPEN',
+    priority: 3,
+    latitude: -4.0,
+    longitude: 102.0,
+    region: 'Bengkulu offshore, Indonesia',
+  },
+  {
+    idPrefix: 'flood-kuching-bridge',
+    titleBase: 'Bridge access blocked near Kuching',
+    hazardType: 'FLOOD',
+    status: 'OPEN',
+    priority: 3,
+    latitude: 3.16,
+    longitude: 113.06,
+    region: 'Kuching, Sarawak, Malaysia',
+    note: 'Initial seeded operational pin in Sarawak.',
+  },
+  {
+    idPrefix: 'eq-kuching-road',
+    titleBase: 'Road collapse at KM 12 near Kuching',
+    hazardType: 'EARTHQUAKE',
+    status: 'OPEN',
+    priority: 4,
+    latitude: 3.18,
+    longitude: 113.1,
+    region: 'Kuching, Sarawak, Malaysia',
+    note: 'Foundations weakened by earlier aftershock.',
+  },
+];
+
+const LOCATION_OFFSETS = [
+  { idSuffix: '-a', dLat: 0, dLng: 0 },
+  { idSuffix: '-b', dLat: 0.01, dLng: -0.01 },
+  { idSuffix: '-c', dLat: -0.015, dLng: 0.008 },
+  { idSuffix: '-d', dLat: 0.02, dLng: 0.0 },
+];
+
+const HAZARD_PIN_SEEDS: HazardPinSeed[] = BASE_HAZARD_LOCATIONS.flatMap((loc) =>
+  LOCATION_OFFSETS.map((offset, index) => ({
+    idSuffix: `${loc.idPrefix}${offset.idSuffix}`,
+    title: `${loc.titleBase}${index === 0 ? '' : ` (${index + 1})`}`,
+    hazardType: loc.hazardType,
+    status: loc.status,
+    priority: loc.priority,
+    latitude: loc.latitude + offset.dLat,
+    longitude: loc.longitude + offset.dLng,
+    region: loc.region,
+    note: loc.note,
+  })),
+);
+
+type RiskRegionSeed = {
+  idSuffix: string;
+  hazardType: HazardTypeSeed;
+  severity: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+  name: string;
+  latitude: number;
+  longitude: number;
+  radiusKm: number;
+  source: string;
+};
+
+const RISK_REGION_ZONES: RiskRegionSeed[] = [
+  {
+    idSuffix: 'flood-manila-catchment',
+    hazardType: 'FLOOD',
+    severity: 'HIGH',
+    name: 'Metro Manila Flood Watch Zone',
+    latitude: 14.6,
+    longitude: 121.0,
+    radiusKm: 35,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'flood-jakarta-lowlands',
+    hazardType: 'FLOOD',
+    severity: 'HIGH',
+    name: 'North Jakarta Lowland Floodplain',
+    latitude: -6.12,
+    longitude: 106.85,
+    radiusKm: 25,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'flood-mekong-wide',
+    hazardType: 'FLOOD',
+    severity: 'MODERATE',
+    name: 'Mekong Delta Seasonal Inundation',
+    latitude: 10.2,
+    longitude: 105.0,
+    radiusKm: 60,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'typhoon-philippines-east',
+    hazardType: 'TYPHOON',
+    severity: 'CRITICAL',
+    name: 'Eastern Philippines Typhoon Corridor',
+    latitude: 12.0,
+    longitude: 127.0,
+    radiusKm: 250,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'typhoon-japan-coast',
+    hazardType: 'TYPHOON',
+    severity: 'HIGH',
+    name: 'Honshu Pacific Typhoon Corridor',
+    latitude: 35.0,
+    longitude: 141.0,
+    radiusKm: 220,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'eq-tokyo-bay',
+    hazardType: 'EARTHQUAKE',
+    severity: 'CRITICAL',
+    name: 'Tokyo Bay Seismic Risk Region',
+    latitude: 35.5,
+    longitude: 140.0,
+    radiusKm: 80,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'eq-north-anatolian',
+    hazardType: 'EARTHQUAKE',
+    severity: 'HIGH',
+    name: 'North Anatolian Fault Segment near Istanbul',
+    latitude: 41.0,
+    longitude: 29.0,
+    radiusKm: 90,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'eq-santiago-foothills',
+    hazardType: 'EARTHQUAKE',
+    severity: 'HIGH',
+    name: 'Santiago Andean Foothills',
+    latitude: -33.45,
+    longitude: -70.67,
+    radiusKm: 70,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'aftershock-sumatra-offshore',
+    hazardType: 'AFTERSHOCK',
+    severity: 'MODERATE',
+    name: 'Southwest Sumatra Aftershock Cluster',
+    latitude: -4.0,
+    longitude: 102.0,
+    radiusKm: 120,
+    source: 'seed-global',
+  },
+  {
+    idSuffix: 'flood-kuching-river',
+    hazardType: 'FLOOD',
+    severity: 'HIGH',
+    name: 'Kuching River Flood Watch',
+    latitude: 3.16,
+    longitude: 113.06,
+    radiusKm: 30,
+    source: 'seed-global',
+  },
+];
+
 function loadEvacuationGeoJson(): EvacRow[] {
   try {
     const rawLookup = buildRawLookup();

@@ -2,15 +2,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRef, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useAuth } from '../lib/auth';
+import { useI18n, LOCALES } from '../i18n/context';
+import type { Locale } from '../i18n/locales';
+import { LOCALE_DISPLAY } from '../i18n/locales';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: 'home' as const },
-  { href: '/volunteers', label: 'Resources', icon: 'users' as const },
-  { href: '/damage-reports', label: 'Damage Reports', icon: 'damage' as const },
-  { href: '/warnings', label: 'Warnings', icon: 'alert' as const },
-  { href: '/map', label: 'Map', icon: 'map' as const },
+  { href: '/', key: 'admin.nav.dashboard' as const, icon: 'home' as const },
+  { href: '/volunteers', key: 'admin.nav.resources' as const, icon: 'users' as const },
+  { href: '/damage-reports', key: 'admin.nav.damageReports' as const, icon: 'damage' as const },
+  { href: '/warnings', key: 'admin.nav.warnings' as const, icon: 'alert' as const },
+  { href: '/map', key: 'admin.nav.map' as const, icon: 'map' as const },
 ] as const;
 
 function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
@@ -114,7 +118,10 @@ function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { user, logout, isLoading } = useAuth();
-  
+  const { t, locale, setLocale, localeDisplayLabel } = useI18n();
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+  const [langOpen, setLangOpen] = useState(false);
+
   const isLoginPage = pathname === '/login';
   const isDashboardPage = pathname === '/';
   const useWhiteMainContent =
@@ -122,12 +129,23 @@ export function Shell({ children }: { children: ReactNode }) {
     pathname?.startsWith('/volunteers') ||
     pathname?.startsWith('/warnings');
 
+  useEffect(() => {
+    if (!langOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [langOpen]);
+
   if (isLoginPage) {
     return <main>{children}</main>;
   }
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading WIRA Console...</div>;
+    return <div className="flex items-center justify-center min-h-screen">{t('admin.common.loadingConsole')}</div>;
   }
 
   if (user && user.role !== 'admin') {
@@ -139,15 +157,15 @@ export function Shell({ children }: { children: ReactNode }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-neutral-900 mb-2">Access Denied</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-2">{t('admin.access.accessDenied')}</h1>
           <p className="text-neutral-600 mb-6">
-            You do not have administrative privileges to access this console. Please log in with an admin account.
+            {t('admin.access.accessDeniedMessage')}
           </p>
           <button 
             onClick={logout}
             className="w-full bg-neutral-900 text-white py-3 rounded-md font-medium hover:bg-neutral-800 transition-colors"
           >
-            Logout / Log Keluar
+            {t('admin.access.logoutButton')}
           </button>
         </div>
       </div>
@@ -179,44 +197,71 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="top-header-text">
             <div className="top-header-title">
               <span>SAGIP </span>
-              <span className="top-header-title-accent">Command Center</span>
+              <span className="top-header-title-accent">{t('admin.header.commandCenter')}</span>
             </div>
-            <p className="top-header-tagline">SAVE. AID. GUIDE. INFORM. PROTECT.</p>
+            <p className="top-header-tagline">{t('admin.header.tagline')}</p>
           </div>
           <div className="top-header-divider" aria-hidden="true" />
         </div>
         <div className="top-header-spacer" />
         <div className="top-header-right">
-          <button
-            type="button"
-            className="top-header-lang-pill"
-            aria-label="Language: English"
-          >
-            <span className="top-header-lang-icon" aria-hidden="true">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+          <div className="relative" ref={langDropdownRef}>
+            <button
+              type="button"
+              className="top-header-lang-pill"
+              aria-label={t('admin.header.languageAria')}
+              aria-expanded={langOpen}
+              onClick={() => setLangOpen((prev) => !prev)}
+            >
+              <span className="top-header-lang-icon" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 5h7" />
+                  <path d="M7.5 4v6" />
+                  <path d="M5 10h5" />
+                  <path d="M14 5l5 10" />
+                  <path d="M14 15h6" />
+                </svg>
+              </span>
+              <span className="top-header-lang-text">{localeDisplayLabel}</span>
+            </button>
+            {langOpen && (
+              <div
+                className="absolute right-0 top-full z-50 mt-1 min-w-[140px] rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+                role="listbox"
               >
-                <path d="M4 5h7" />
-                <path d="M7.5 4v6" />
-                <path d="M5 10h5" />
-                <path d="M14 5l5 10" />
-                <path d="M14 15h6" />
-              </svg>
-            </span>
-            <span className="top-header-lang-text">ENGLISH</span>
-          </button>
+                {LOCALES.map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    role="option"
+                    aria-selected={locale === loc}
+                    className={`block w-full px-3 py-2 text-left text-sm hover:bg-slate-50 ${locale === loc ? 'bg-slate-100 font-semibold' : ''}`}
+                    onClick={() => {
+                      setLocale(loc as Locale);
+                      setLangOpen(false);
+                    }}
+                  >
+                    <span aria-hidden="true">{LOCALE_DISPLAY[loc as Locale].flagEmoji}</span>{' '}
+                    {LOCALE_DISPLAY[loc as Locale].nativeLabel ?? LOCALE_DISPLAY[loc as Locale].displayLabel}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             type="button"
             className="top-header-notif-btn"
-            aria-label="Notifications"
+            aria-label={t('admin.header.notifications')}
           >
             <span className="top-header-notif-icon" aria-hidden="true">
               <svg
@@ -262,13 +307,13 @@ export function Shell({ children }: { children: ReactNode }) {
                     aria-current={isActive ? 'page' : undefined}
                   >
                     <NavIcon type={item.icon} />
-                    <span>{item.label}</span>
+                    <span>{t(item.key)}</span>
                   </Link>
                 );
               })}
 
               <button type="button" onClick={logout} className="side-nav-logout">
-                Logout / Log Keluar
+                {t('admin.common.logout')}
               </button>
             </nav>
           </div>
@@ -291,8 +336,8 @@ export function Shell({ children }: { children: ReactNode }) {
                 </svg>
               </div>
               <div className="side-nav-user-meta">
-                <p className="side-nav-user-role">{user?.name ?? 'System Administrator'}</p>
-                <p className="side-nav-user-email">{user?.email ?? 'HQ-Region VII'}</p>
+                <p className="side-nav-user-role">{user?.name ?? t('admin.common.systemAdministrator')}</p>
+                <p className="side-nav-user-email">{user?.email ?? t('admin.common.hqRegion')}</p>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   LifeBuoy, 
   HandHeart, 
@@ -32,12 +32,14 @@ import HazardPinForm from '../pin/HazardPinForm';
 import DamageReportForm from '../damage-report/DamageReportForm';
 
 export default function HelpDashboard({
+  initialMode = 'dashboard',
   onNavigateToRequest,
   showAllPins,
   onToggleShowAllPins,
   formLocation,
   setFormLocation,
 }: { 
+  initialMode?: 'dashboard' | 'request-form';
   onNavigateToRequest: (id: string, loc: { latitude: number, longitude: number }) => void;
   showAllPins: boolean;
   onToggleShowAllPins: (show: boolean) => void;
@@ -50,6 +52,7 @@ export default function HelpDashboard({
   const [showHazardPinForm, setShowHazardPinForm] = useState(false);
    const [showDamageReportForm, setShowDamageReportForm] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const initialModeAppliedRef = useRef(false);
 
   const { data: volunteerStatus, refetch: refetchVolunteerStatus } = useVolunteersControllerGetStatus();
   const { data: myRequests, refetch: refetchRequests } = useHelpRequestsControllerMe();
@@ -61,11 +64,24 @@ export default function HelpDashboard({
   const { mutate: claimRequest, isPending: isClaiming } = useHelpRequestsControllerClaim();
   const { mutate: updateStatus, isPending: isUpdating } = useHelpRequestsControllerUpdateStatus();
 
-  // Default form location to user's current position when Help dashboard mounts
+  // When opened from Pin Location confirm, auto-open the Request Help form once per mount
+  useEffect(() => {
+    if (initialModeAppliedRef.current || initialMode !== 'request-form') return;
+    initialModeAppliedRef.current = true;
+    setActiveTab('request');
+    setShowForm(true);
+    setShowHazardPinForm(false);
+    setShowDamageReportForm(false);
+    setSelectedRequest(null);
+  }, [initialMode]);
+
+  // Default form location to user's current position when Help dashboard mounts (only if not already set, e.g. from Pin Location)
   useEffect(() => {
     if (!('geolocation' in navigator)) return;
     navigator.geolocation.getCurrentPosition(
-      (pos) => setFormLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+      (pos) => {
+        setFormLocation((prev) => prev ?? { latitude: pos.coords.latitude, longitude: pos.coords.longitude });
+      },
       () => {},
       { enableHighAccuracy: true }
     );

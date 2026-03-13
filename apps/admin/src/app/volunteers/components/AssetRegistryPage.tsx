@@ -2,11 +2,12 @@
 
 import React, { useState, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { 
-  useAdminOperationsControllerGetAssetRegistry, 
+import {
+  useAdminOperationsControllerGetAssetRegistry,
   useAdminOperationsControllerReviewAsset,
   getAdminOperationsControllerGetAssetRegistryQueryKey
 } from '@wira-borneo/api-client';
+import { useI18n } from '../../../i18n/context';
 import { 
   CheckCircle2, 
   XCircle, 
@@ -25,16 +26,17 @@ import {
 
 type StatusFilter = 'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED';
 
-const STATUS_FILTERS: { value: StatusFilter; label: string; icon: any; color: string }[] = [
-  { value: 'ALL', label: 'All Assets', icon: Filter, color: 'text-slate-500' },
-  { value: 'PENDING', label: 'Pending', icon: Clock, color: 'text-amber-500' },
-  { value: 'APPROVED', label: 'Approved', icon: CheckCircle2, color: 'text-emerald-500' },
-  { value: 'REJECTED', label: 'Rejected', icon: XCircle, color: 'text-rose-500' },
-];
-
 export function AssetRegistryPage() {
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<StatusFilter>('ALL');
+  const { t } = useI18n();
+
+  const STATUS_FILTERS: { value: StatusFilter; label: string; icon: typeof Filter; color: string }[] = [
+    { value: 'ALL', label: t('admin.assets.allAssets'), icon: Filter, color: 'text-slate-500' },
+    { value: 'PENDING', label: t('admin.assets.pending'), icon: Clock, color: 'text-amber-500' },
+    { value: 'APPROVED', label: t('admin.assets.approved'), icon: CheckCircle2, color: 'text-emerald-500' },
+    { value: 'REJECTED', label: t('admin.assets.rejected'), icon: XCircle, color: 'text-rose-500' },
+  ];
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [expandingId, setExpandingId] = useState<string | null>(null);
@@ -117,7 +119,7 @@ export function AssetRegistryPage() {
     return (
       <div className="p-8 flex flex-col items-center justify-center min-h-[400px] space-y-4">
         <div className="w-12 h-12 border-4 border-slate-200 border-t-asean-blue rounded-full animate-spin" />
-        <p className="text-slate-500 font-medium">Fetching asset registry...</p>
+        <p className="text-slate-500 font-medium">{t('admin.assets.fetchingRegistry')}</p>
       </div>
     );
   }
@@ -126,7 +128,7 @@ export function AssetRegistryPage() {
     return (
       <div className="p-8 flex flex-col items-center justify-center min-h-[400px] text-rose-500 space-y-2">
         <XCircle size={48} />
-        <p className="font-bold">Failed to load registry</p>
+        <p className="font-bold">{t('admin.assets.failedToLoad')}</p>
         <p className="text-sm opacity-80">{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     );
@@ -136,8 +138,8 @@ export function AssetRegistryPage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Asset Registry</h1>
-          <p className="text-slate-500 mt-1">Review and manage volunteer vehicles and equipment</p>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('admin.assets.title')}</h1>
+          <p className="text-slate-500 mt-1">{t('admin.assets.subtitle')}</p>
         </div>
         
         <button 
@@ -146,7 +148,7 @@ export function AssetRegistryPage() {
           className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Download size={18} />
-          Export CSV
+          {t('admin.assets.exportCsv')}
         </button>
       </header>
 
@@ -157,7 +159,7 @@ export function AssetRegistryPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input 
               type="text"
-              placeholder="Search by asset name, owner, or description..."
+              placeholder={t('admin.assets.searchPlaceholder')}
               className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-asean-blue/20 focus:border-asean-blue outline-none transition-all shadow-sm"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -208,7 +210,7 @@ export function AssetRegistryPage() {
               {filteredEntries.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-slate-400 italic">
-                    No assets found matching your criteria
+                    {t('admin.assets.noAssets')}
                   </td>
                 </tr>
               ) : (
@@ -263,7 +265,7 @@ export function AssetRegistryPage() {
                                 onClick={() => handleReview(entry.id, 'APPROVE')}
                                 disabled={reviewAsset.isPending}
                                 className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-                                title="Approve"
+                                title={t('admin.assets.approve')}
                               >
                                 <CheckCircle2 size={20} />
                               </button>
@@ -271,7 +273,7 @@ export function AssetRegistryPage() {
                                 onClick={() => handleReview(entry.id, 'REJECT')}
                                 disabled={reviewAsset.isPending}
                                 className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                                title="Reject"
+                                title={t('admin.assets.reject')}
                               >
                                 <XCircle size={20} />
                               </button>

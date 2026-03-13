@@ -20,6 +20,7 @@ import SosPage from '../components/screens/SosPage';
 import BlockchainPage from '../components/screens/BlockchainPage';
 import FloodSimulation from '../components/screens/FloodSimulation';
 import HealthOutbreaks from './screens/HealthOutbreaks';
+import BuildingVulnerabilityScreen from './screens/BuildingVulnerabilityScreen';
 import PinLocationScreen from '../components/screens/PinLocationScreen';
 
 export default function MainApp() {
@@ -37,6 +38,14 @@ export default function MainApp() {
 
   // Form location (help request / hazard pin): default from geolocation in HelpDashboard, user can reselect via modal
   const [formLocation, setFormLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  // When 'request-form', Help screen opens with Request Help form auto-shown (e.g. after Pin Location confirm)
+  const [helpInitialMode, setHelpInitialMode] = useState<'dashboard' | 'request-form'>('dashboard');
+
+  const handleNavigate = (path: string) => {
+    if (path === '/help') setHelpInitialMode('dashboard');
+    setCurrentScreen(path);
+  };
 
   if (isLoading) {
     return (
@@ -86,7 +95,11 @@ export default function MainApp() {
             setMapFocusLabel(null);
             setMapFocusEvac(null);
           }}
-          onNavigateToFeature={setCurrentScreen}
+          onSelectHelpRequest={(id, location) => {
+            setFocusedHelpRequestId(id);
+            setMapFocus(location);
+            setMapFocusLabel('Help Pin');
+          }}
         />
       );
       case '/map/flood-simulation':
@@ -103,23 +116,15 @@ export default function MainApp() {
             initialLocation={formLocation}
             onConfirm={(loc) => {
               setFormLocation(loc);
-              setCurrentScreen('/map');
+              setHelpInitialMode('request-form');
+              setCurrentScreen('/help');
             }}
             onBack={() => setCurrentScreen('/map')}
           />
         );
       case '/map/building-vulnerability':
         return (
-          <div className="flex flex-col flex-1 items-center justify-center px-6 py-10 bg-wira-ivory wira-batik-bg">
-            <p className="text-wira-earth font-body text-center mb-4">Coming soon</p>
-            <button
-              type="button"
-              onClick={() => setCurrentScreen('/map')}
-              className="wira-btn-primary max-w-xs"
-            >
-              Back to Map
-            </button>
-          </div>
+          <BuildingVulnerabilityScreen onNavigateToMap={() => setCurrentScreen('/map')} />
         );
       case '/warnings': return (
         <Warnings
@@ -130,7 +135,7 @@ export default function MainApp() {
             setCurrentScreen('/map');
           }}
           onOpenMap={() => setCurrentScreen('/map')}
-          onReportIncident={() => setCurrentScreen('/help')}
+          onReportIncident={() => handleNavigate('/help')}
         />
       );
       case '/family': return <Family />;
@@ -151,6 +156,7 @@ export default function MainApp() {
       );
       case '/help': return (
         <HelpDashboard 
+          initialMode={helpInitialMode}
           onNavigateToRequest={(id, loc) => {
             setFocusedHelpRequestId(id);
             setMapFocus(loc);
@@ -181,7 +187,7 @@ export default function MainApp() {
   return (
     <LayoutWrapper
       currentPath={currentScreen}
-      onNavigate={setCurrentScreen}
+      onNavigate={handleNavigate}
       showNav={!!session?.user}
       onSignOut={() => signOut.mutate()}
     >

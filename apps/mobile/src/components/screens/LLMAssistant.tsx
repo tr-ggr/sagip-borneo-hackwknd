@@ -34,18 +34,19 @@ type ChatMessage = {
 };
 
 const sendQuickQuestion = (
-  inquire: { mutate: (opts: { data: { question: string; location: string; hazardType: string } }) => void },
+  inquire: { mutate: (opts: { data: { question: string; location: string; hazardType: string; preferredLanguage?: string } }) => void },
   question: string,
-  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  preferredLanguage?: string
 ) => {
   setMessages((prev) => [...prev, { role: 'user', content: question }]);
   inquire.mutate({
-    data: { question, location: 'Kuching', hazardType: 'FLOOD' },
+    data: { question, location: 'Kuching', hazardType: 'FLOOD', ...(preferredLanguage && { preferredLanguage }) },
   });
 };
 
 export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: 'assistant', content: t('assistant.welcome') },
@@ -90,7 +91,7 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
     setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
     setInput('');
     inquire.mutate({
-      data: { question: userMessage, location: 'Kuching', hazardType: 'FLOOD' },
+      data: { question: userMessage, location: 'Kuching', hazardType: 'FLOOD', ...(locale && locale !== 'en' && { preferredLanguage: locale }) },
     });
   };
 
@@ -118,7 +119,7 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
               icon: MapPin,
               className: 'bg-[rgba(25,60,230,0.1)] text-asean-blue',
               action: () => {
-                sendQuickQuestion(inquire, 'Where is the nearest evacuation shelter?', setMessages);
+                sendQuickQuestion(inquire, 'Where is the nearest evacuation shelter?', setMessages, locale !== 'en' ? locale : undefined);
                 onOpenMap?.();
               },
             },
@@ -126,13 +127,13 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
               label: 'Request Aid',
               icon: Siren,
               className: 'bg-asean-red/10 text-asean-red',
-              action: () => sendQuickQuestion(inquire, 'How do I request emergency aid?', setMessages),
+              action: () => sendQuickQuestion(inquire, 'How do I request emergency aid?', setMessages, locale !== 'en' ? locale : undefined),
             },
             {
               label: 'Weather Update',
               icon: CloudRain,
               className: 'bg-asean-yellow/20 text-asean-blue',
-              action: () => sendQuickQuestion(inquire, 'What is the weather and flood forecast?', setMessages),
+              action: () => sendQuickQuestion(inquire, 'What is the weather and flood forecast?', setMessages, locale !== 'en' ? locale : undefined),
             },
             {
               label: 'Medical Tips',
@@ -142,7 +143,8 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
                 sendQuickQuestion(
                   inquire,
                   'What are important medical and safety tips during a flood?',
-                  setMessages
+                  setMessages,
+                  locale !== 'en' ? locale : undefined
                 ),
             },
           ].map((item) => (

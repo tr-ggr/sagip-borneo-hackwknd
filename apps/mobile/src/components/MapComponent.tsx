@@ -7,7 +7,7 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import Feature from 'ol/Feature';
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat, transformExtent } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Fill, Stroke, Style } from 'ol/style';
@@ -114,6 +114,18 @@ interface MapComponentProps {
   fillContainer?: boolean;
   /** GeoJSON FeatureCollection for region risk choropleth (e.g. dengue). Each feature should have properties.risk_score (number) and optionally name/region_name. */
   regionRiskChoropleth?: RegionRiskChoroplethGeoJSON | null;
+  /** GeoJSON FeatureCollection for building profiles (from risk full-detail API). When set, polygons are drawn and onBuildingSelect is called on click. */
+  buildingProfiles?: BuildingProfilesGeoJSON | null;
+  /** Called when user clicks a building polygon; receives feature and pixel [x,y] in map container for positioning. */
+  onBuildingSelect?: (feature: BuildingProfileFeature, pixel: [number, number]) => void;
+  /** Called when map view extent changes with bbox string "minLng,minLat,maxLng,maxLat" (WGS84). */
+  onMapViewChange?: (bbox: string) => void;
+  /** Called when user taps map and no building (or other feature) is hit; e.g. to dismiss hover popup. */
+  onBuildingDismiss?: () => void;
+  /** Called when pointer moves over a building polygon (feature, pixel) or off (null). Only fired after user has moved pointer. */
+  onBuildingHover?: (feature: BuildingProfileFeature | null, pixel?: [number, number]) => void;
+  /** Called with user's resolved position (or cached fallback) in WGS84 lat/lon when available. */
+  onUserPosition?: (latitude: number, longitude: number) => void;
 }
 
 /** GeoJSON FeatureCollection with risk_score in feature properties. */
@@ -123,6 +135,30 @@ export interface RegionRiskChoroplethGeoJSON {
     type: 'Feature';
     geometry: unknown;
     properties?: { risk_score?: number; region_name?: string; name?: string };
+  }>;
+}
+
+/** Building profile feature payload (from API full-detail). */
+export interface BuildingProfileFeature {
+  id: string;
+  iso3: string;
+  data: {
+    total_pop?: number;
+    elderly_count?: number;
+    child_count?: number;
+    stories?: number;
+    vulnerability_score?: number;
+    risk_status?: number;
+  };
+}
+
+/** GeoJSON FeatureCollection for building profiles (API risk/full-detail/:iso3). */
+export interface BuildingProfilesGeoJSON {
+  type: 'FeatureCollection';
+  features: Array<{
+    type: 'Feature';
+    geometry: unknown;
+    properties: BuildingProfileFeature;
   }>;
 }
 
@@ -211,6 +247,16 @@ function getHazardRiskColor(risk: number): string {
   return `rgba(220, 38, 38, ${opacity.toFixed(2)})`;
 }
 
+/** Building vulnerability score to fill color (0 = green, higher = redder). Same scale as admin. */
+function getVulnerabilityColor(score: number): string {
+  if (score <= 0) return '#2E7D32';
+  if (score < 2) return '#4CAF50';
+  if (score < 4) return '#FFEB3B';
+  if (score < 7) return '#FF9800';
+  if (score < 10) return '#F44336';
+  return '#B71C1C';
+}
+
 /** Approximate distance in meters between two WGS84 points (Haversine). */
 function distanceMeters(
   a: { latitude: number; longitude: number },
@@ -245,12 +291,19 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
   selectedPoint = null,
   fillContainer = false,
   regionRiskChoropleth = null,
+  buildingProfiles = null,
+  onBuildingSelect,
+  onMapViewChange,
+  onBuildingDismiss,
+  onBuildingHover,
+  onUserPosition,
 }, ref) {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const userCoordsRef = useRef<number[] | null>(null);
   const regionsLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const choroplethLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const buildingProfilesLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const helpLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const hazardLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const selectionLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
@@ -266,10 +319,21 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
   const locationOverlayRef = useRef<Overlay | null>(null);
   const homeLocationRef = useRef<typeof homeLocation>(null);
   homeLocationRef.current = homeLocation;
+  const onUserPositionRef = useRef(onUserPosition);
+  onUserPositionRef.current = onUserPosition;
   const onEvacClickRef = useRef(onEvacClick);
   onEvacClickRef.current = onEvacClick;
   const onMapClickRef = useRef(onMapClick);
   onMapClickRef.current = onMapClick;
+  const onBuildingSelectRef = useRef(onBuildingSelect);
+  onBuildingSelectRef.current = onBuildingSelect;
+  const onMapViewChangeRef = useRef(onMapViewChange);
+  onMapViewChangeRef.current = onMapViewChange;
+  const onBuildingDismissRef = useRef(onBuildingDismiss);
+  onBuildingDismissRef.current = onBuildingDismiss;
+  const onBuildingHoverRef = useRef(onBuildingHover);
+  onBuildingHoverRef.current = onBuildingHover;
+  const hasPointerMovedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [selectedMapItem, setSelectedMapItem] = useState<
@@ -390,13 +454,14 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
         ) < AT_HOME_THRESHOLD_M;
         locationOverlay.setPosition(atHome ? undefined : coordinates);
         const lonLat = toLonLat(coordinates);
+        if (onUserPositionRef.current) {
+          onUserPositionRef.current(lonLat[1], lonLat[0]);
+        }
         cacheLocation(lonLat[1], lonLat[0]);
         setError(null);
         setInfo(null);
-        // Only auto-animate if NOT focused on something specific
-        if (!mapFocus) {
-          view.animate({ center: coordinates, zoom: 14 });
-        }
+        // Do not recenter on every position update; only initial fix and "center on me" button do that.
+        // This avoids the map jumping back to user location while panning.
       }
     });
 
@@ -409,6 +474,9 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
         setUserCoords(coords);
         locationOverlay.setPosition(coords);
         view.animate({ center: coords, zoom: 14 });
+        if (onUserPositionRef.current) {
+          onUserPositionRef.current(cached.lat, cached.lon);
+        }
         setError(null);
         setInfo(null);
       } else {
@@ -431,6 +499,9 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
           ) < AT_HOME_THRESHOLD_M;
           locationOverlay.setPosition(atHome ? undefined : coords);
           cacheLocation(pos.coords.latitude, pos.coords.longitude);
+          if (onUserPositionRef.current) {
+            onUserPositionRef.current(pos.coords.latitude, pos.coords.longitude);
+          }
           setError(null);
           setInfo(null);
           view.animate({ center: coords, zoom: 14 });
@@ -479,6 +550,25 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
     });
     map.addLayer(choroplethLayer);
     choroplethLayerRef.current = choroplethLayer;
+
+    // 3c. Setup Building Profiles Layer (vulnerability polygons, colored by score)
+    const buildingProfilesSource = new VectorSource();
+    const buildingProfilesLayer = new VectorLayer({
+      source: buildingProfilesSource,
+      zIndex: 5,
+      style: (feature) => {
+        const profile = feature.get('buildingProfile') as BuildingProfileFeature | undefined;
+        const score = profile?.data?.vulnerability_score ?? 0;
+        const color = getVulnerabilityColor(score);
+        const fillColor = `${color}40`;
+        return new Style({
+          fill: new Fill({ color: fillColor }),
+          stroke: new Stroke({ color: '#fff', width: 0.5 }),
+        });
+      },
+    });
+    map.addLayer(buildingProfilesLayer);
+    buildingProfilesLayerRef.current = buildingProfilesLayer;
 
     // 4. Setup Regions Layer
     const regionsSource = new VectorSource();
@@ -560,7 +650,25 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
     });
     map.addOverlay(hoverOverlay);
     map.on('pointermove', (evt) => {
+      if (!hasPointerMovedRef.current) {
+        hasPointerMovedRef.current = true;
+        if (onBuildingHoverRef.current) onBuildingHoverRef.current(null);
+        return;
+      }
       const hit = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+      const buildingProfile = hit?.get('buildingProfile') as BuildingProfileFeature | undefined;
+      if (onBuildingHoverRef.current) {
+        const pixel: [number, number] = [evt.pixel[0], evt.pixel[1]];
+        onBuildingHoverRef.current(buildingProfile ?? null, buildingProfile ? pixel : undefined);
+        map.getTargetElement().style.cursor = buildingProfile ? 'pointer' : '';
+      }
+      if (buildingProfile) {
+        if (riskHoverPopupRef.current) {
+          riskHoverPopupRef.current.style.display = 'none';
+          hoverOverlay.setPosition(undefined);
+        }
+        return;
+      }
       const riskData = hit?.get('riskData') as HazardRiskPoint | undefined;
       if (riskData && riskHoverPopupRef.current) {
         riskHoverPopupRef.current.innerHTML = [
@@ -587,6 +695,12 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
         return;
       }
       const hit = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+      const buildingProfile = hit?.get('buildingProfile') as BuildingProfileFeature | undefined;
+      if (buildingProfile && onBuildingSelectRef.current) {
+        const pixel: [number, number] = [evt.pixel[0], evt.pixel[1]];
+        onBuildingSelectRef.current(buildingProfile, pixel);
+        return;
+      }
       const damageReport = hit?.get('damageReport') as DamageReport | undefined;
       if (damageReport) {
         setSelectedMapItem({ kind: 'damage', report: damageReport });
@@ -612,8 +726,22 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
         return;
       }
 
+      if (onBuildingSelectRef.current) {
+        onBuildingDismissRef.current?.();
+      }
       setSelectedMapItem(null);
     });
+
+    // 7d. Report view extent for building-vulnerability (bbox refetch)
+    const reportExtent = () => {
+      const size = map.getSize();
+      if (!size) return;
+      const ext = map.getView().calculateExtent(size);
+      const wgs84 = transformExtent(ext, 'EPSG:3857', 'EPSG:4326');
+      onMapViewChangeRef.current?.(wgs84.join(','));
+    };
+    map.on('moveend', reportExtent);
+    reportExtent();
 
     // 8. Setup Route Layer (OSRM – fastest)
     const routeSource = new VectorSource();
@@ -683,10 +811,17 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
   // Sync map view center when weatherLocation changes, without recreating the map
   useEffect(() => {
     if (!mapRef.current || !weatherLocation) return;
+    if (
+      userCoords &&
+      weatherLocation.latitude === 1.5533 &&
+      weatherLocation.longitude === 110.3592
+    ) {
+      return;
+    }
     const view = mapRef.current.getView();
     const coords = fromLonLat([weatherLocation.longitude, weatherLocation.latitude]);
     view.animate({ center: coords, duration: 300 });
-  }, [weatherLocation?.latitude, weatherLocation?.longitude]);
+  }, [weatherLocation?.latitude, weatherLocation?.longitude, userCoords]);
 
   // Update Regions Layer when data changes
   useEffect(() => {
@@ -751,6 +886,32 @@ const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function 
     });
     source.addFeatures(features);
   }, [regionRiskChoropleth]);
+
+  // Update Building Profiles Layer
+  useEffect(() => {
+    const layer = buildingProfilesLayerRef.current;
+    if (!layer) return;
+    const source = layer.getSource();
+    if (!source) return;
+    source.clear();
+    if (!buildingProfiles?.features?.length) return;
+    const geoJsonFormat = new GeoJSON();
+    const features = geoJsonFormat.readFeatures(
+      buildingProfiles as Parameters<InstanceType<typeof GeoJSON>['readFeatures']>[0],
+      { dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' },
+    );
+    features.forEach((f, i) => {
+      const props = buildingProfiles.features[i]?.properties;
+      if (props) {
+        f.set('buildingProfile', {
+          id: props.id,
+          iso3: props.iso3,
+          data: props.data ?? {},
+        });
+      }
+    });
+    source.addFeatures(features);
+  }, [buildingProfiles]);
 
   // Update Help Requests Layer
   useEffect(() => {

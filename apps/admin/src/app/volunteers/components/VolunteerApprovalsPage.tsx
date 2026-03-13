@@ -10,6 +10,7 @@ import {
 } from '@wira-borneo/api-client';
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { ActionModal } from './ActionModal';
+import { useI18n } from '../../../i18n/context';
 
 interface VolunteerApplication {
   id: string;
@@ -72,6 +73,7 @@ function exportApplicationsToCsv(applications: VolunteerApplication[]) {
 
 export function VolunteerApprovalsPage() {
   const [status, setStatus] = useState<VolunteerStatusFilter>('PENDING');
+  const { t } = useI18n();
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [rejectionReason, setRejectionReason] = useState('');
@@ -202,21 +204,24 @@ export function VolunteerApprovalsPage() {
     exportApplicationsToCsv(filteredApplications);
   };
 
-  const statusLabel = status === 'ALL' ? 'All' : status.charAt(0) + status.slice(1).toLowerCase();
+  const statusLabel = status === 'ALL' ? t('admin.volunteers.all') : status.charAt(0) + status.slice(1).toLowerCase();
   const footerText = applicationsQuery.isLoading
-    ? 'Loading…'
+    ? t('admin.common.loading')
     : status === 'ALL'
-      ? `Showing ${filteredApplications.length} applicant${filteredApplications.length === 1 ? '' : 's'}`
-      : `Showing ${filteredApplications.length} of ${filteredApplications.length} ${statusLabel} applicant${filteredApplications.length === 1 ? '' : 's'}`;
+      ? (filteredApplications.length === 1 ? t('admin.volunteers.showingApplicants').replace('{count}', '1') : t('admin.volunteers.showingApplicantsPlural').replace('{count}', String(filteredApplications.length)))
+      : t('admin.volunteers.showingOf')
+          .replace('{count}', String(filteredApplications.length))
+          .replace('{total}', String(filteredApplications.length))
+          .replace('{status}', statusLabel);
 
   return (
     <section className="page-shell">
       <div className="volunteer-registry-section">
         <header className="volunteer-registry-header">
           <div>
-            <h1 className="volunteer-registry-title">Volunteer Registry</h1>
+            <h1 className="volunteer-registry-title">{t('admin.volunteers.registryTitle')}</h1>
             <p className="volunteer-registry-subtitle">
-              Review and approve incoming disaster response personnel.
+              {t('admin.volunteers.registrySubtitle')}
             </p>
           </div>
           <button
@@ -225,7 +230,7 @@ export function VolunteerApprovalsPage() {
             onClick={handleExportCsv}
             disabled={applications.length === 0}
           >
-            Export CSV
+            {t('admin.volunteers.exportCsv')}
           </button>
         </header>
 
@@ -237,13 +242,13 @@ export function VolunteerApprovalsPage() {
             <input
               type="search"
               className="input"
-              placeholder="Search name, email, or ID…"
+              placeholder={t('admin.volunteers.searchPlaceholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{ width: '100%', flex: 1 }}
             />
             <button type="submit" className="btn btn-neutral">
-              Search
+              {t('admin.volunteers.search')}
             </button>
           </form>
         </div>
@@ -284,8 +289,8 @@ export function VolunteerApprovalsPage() {
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
             >
-              <option value="desc">Newest</option>
-              <option value="asc">Oldest</option>
+              <option value="desc">{t('admin.volunteers.newest')}</option>
+              <option value="asc">{t('admin.volunteers.oldest')}</option>
             </select>
           </div>
         </div>
@@ -299,11 +304,11 @@ export function VolunteerApprovalsPage() {
               margin: '12px 16px 0',
             }}
           >
-            <p className="mono small">{selectedIds.length} applications selected</p>
+            <p className="mono small">{t('admin.volunteers.applicationsSelected').replace('{count}', String(selectedIds.length))}</p>
             <div className="action-row" style={{ marginTop: '0.5rem' }}>
               <input
                 type="text"
-                placeholder="Reason (required for rejection)…"
+                placeholder={t('admin.volunteers.reasonPlaceholder')}
                 className="input"
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
@@ -313,14 +318,14 @@ export function VolunteerApprovalsPage() {
                 onClick={() => handleBulkReview('APPROVED')}
                 disabled={bulkReviewMutation.isPending}
               >
-                Bulk Approve
+                {t('admin.volunteers.bulkApprove')}
               </button>
               <button
                 className="btn btn-critical"
                 onClick={() => handleBulkReview('REJECTED')}
                 disabled={bulkReviewMutation.isPending}
               >
-                Bulk Reject
+                {t('admin.volunteers.bulkReject')}
               </button>
             </div>
           </div>
@@ -328,12 +333,12 @@ export function VolunteerApprovalsPage() {
 
         {applicationsQuery.isLoading && (
           <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <p className="muted">Loading applications…</p>
+            <p className="muted">{t('admin.volunteers.loadingApplications')}</p>
           </div>
         )}
         {applicationsQuery.isError && (
           <div style={{ padding: '2rem', textAlign: 'center' }}>
-            <p className="error-text">Unable to load volunteer applications.</p>
+            <p className="error-text">{t('admin.volunteers.unableToLoad')}</p>
           </div>
         )}
 
@@ -349,14 +354,14 @@ export function VolunteerApprovalsPage() {
                         type="checkbox"
                         checked={filteredApplications.length > 0 && filteredApplications.every((a) => selectedIds.includes(a.id))}
                         onChange={handleSelectAll}
-                        aria-label="Select all"
+                        aria-label={t('admin.volunteers.selectAll')}
                       />
                     </th>
                   )}
-                  <th>Name</th>
-                  <th>Notes</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>{t('admin.volunteers.name')}</th>
+                  <th>{t('admin.volunteers.notes')}</th>
+                  <th>{t('admin.volunteers.status')}</th>
+                  <th>{t('admin.volunteers.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -364,7 +369,7 @@ export function VolunteerApprovalsPage() {
                   const isPending = application.status === 'PENDING';
                   const isApproved = application.status === 'APPROVED';
                   const isSuspended = application.status === 'SUSPENDED';
-                  const name = application.user?.name ?? 'Unknown Applicant';
+                  const name = application.user?.name ?? t('admin.volunteers.unknownApplicant');
 
                   return (
                     <tr key={application.id}>
@@ -374,7 +379,7 @@ export function VolunteerApprovalsPage() {
                             type="checkbox"
                             checked={selectedIds.includes(application.id)}
                             onChange={() => handleSelect(application.id)}
-                            aria-label={`Select ${name}`}
+                            aria-label={t('admin.volunteers.selectName').replace('{name}', name)}
                           />
                         </td>
                       )}
@@ -416,7 +421,7 @@ export function VolunteerApprovalsPage() {
                                   );
                                 }}
                               >
-                                Approve
+                                {t('admin.volunteers.approve')}
                               </button>
                               <button
                                 type="button"
@@ -430,7 +435,7 @@ export function VolunteerApprovalsPage() {
                                   });
                                 }}
                               >
-                                Deny
+                                {t('admin.volunteers.deny')}
                               </button>
                             </>
                           )}
@@ -448,7 +453,7 @@ export function VolunteerApprovalsPage() {
                                 });
                               }}
                             >
-                              Suspend
+                              {t('admin.volunteers.suspend')}
                             </button>
                           )}
                           {isSuspended && application.user && (
@@ -464,7 +469,7 @@ export function VolunteerApprovalsPage() {
                                 });
                               }}
                             >
-                              Reactivate
+                              {t('admin.volunteers.reactivate')}
                             </button>
                           )}
                           <button
@@ -474,7 +479,7 @@ export function VolunteerApprovalsPage() {
                               setShowHistoryId(showHistoryId === application.id ? null : application.id)
                             }
                           >
-                            {showHistoryId === application.id ? 'Hide History' : 'History'}
+                            {showHistoryId === application.id ? t('admin.volunteers.hideHistory') : t('admin.volunteers.history')}
                           </button>
                         </div>
                       </td>
@@ -498,8 +503,8 @@ export function VolunteerApprovalsPage() {
                   borderTop: '1px solid #f1f5f9',
                 }}
               >
-                <h3 className="mono small bold">Decision log for {app?.user?.name ?? 'Application'}</h3>
-                {historyQuery.isLoading && <p className="muted">Loading history…</p>}
+                <h3 className="mono small bold">{t('admin.volunteers.decisionLog').replace('{name}', app?.user?.name ?? 'Application')}</h3>
+                {historyQuery.isLoading && <p className="muted">{t('admin.volunteers.loadingHistory')}</p>}
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0.5rem 0 0' }}>
                   {(() => {
                     const raw = historyQuery.data as unknown;
@@ -541,26 +546,28 @@ export function VolunteerApprovalsPage() {
         onConfirm={handleActionConfirm}
         title={
           modalConfig.actionType === 'REJECT'
-            ? 'Reject Application'
+            ? t('admin.volunteers.rejectApplication')
             : modalConfig.actionType === 'SUSPEND'
-              ? 'Suspend Volunteer'
-              : 'Reactivate Volunteer'
+              ? t('admin.volunteers.suspendVolunteer')
+              : t('admin.volunteers.reactivateVolunteer')
         }
         description={
           modalConfig.actionType === 'REJECT'
-            ? `You are rejecting the application for ${modalConfig.application?.user?.name}. This action will notify the user.`
+            ? t('admin.volunteers.rejectModalDesc').replace('{name}', modalConfig.application?.user?.name ?? '')
             : modalConfig.actionType === 'SUSPEND'
-              ? `You are suspending ${modalConfig.application?.user?.name}. They will no longer be able to claim requests.`
-              : `You are reactivating ${modalConfig.application?.user?.name}. They will be able to claim requests again.`
+              ? t('admin.volunteers.suspendModalDesc').replace('{name}', modalConfig.application?.user?.name ?? '')
+              : t('admin.volunteers.reactivateModalDesc').replace('{name}', modalConfig.application?.user?.name ?? '')
         }
         confirmText={
           modalConfig.actionType === 'REJECT'
-            ? 'Reject Application'
+            ? t('admin.volunteers.rejectConfirm')
             : modalConfig.actionType === 'SUSPEND'
-              ? 'Suspend Account'
-              : 'Reactivate Account'
+              ? t('admin.volunteers.suspendConfirm')
+              : t('admin.volunteers.reactivateConfirm')
         }
         type={modalConfig.actionType === 'REACTIVATE' ? 'SAFE' : 'CRITICAL'}
+        placeholder={t('admin.volunteers.provideReason')}
+        required
       />
     </section>
   );

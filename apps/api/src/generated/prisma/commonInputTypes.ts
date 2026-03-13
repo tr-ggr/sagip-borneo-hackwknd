@@ -328,6 +328,13 @@ export type FloatFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
 }
 
+export type EnumDamageReportReviewStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DamageReportReviewStatus | Prisma.EnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDamageReportReviewStatusFilter<$PrismaModel> | $Enums.DamageReportReviewStatus
+}
+
 export type FloatWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
@@ -342,6 +349,16 @@ export type FloatWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatFilter<$PrismaModel>
   _min?: Prisma.NestedFloatFilter<$PrismaModel>
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type EnumDamageReportReviewStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DamageReportReviewStatus | Prisma.EnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDamageReportReviewStatusWithAggregatesFilter<$PrismaModel> | $Enums.DamageReportReviewStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDamageReportReviewStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDamageReportReviewStatusFilter<$PrismaModel>
 }
 
 export type EnumHazardTypeFilter<$PrismaModel = never> = {
@@ -453,6 +470,13 @@ export type EnumHelpRequestStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumHelpRequestStatusFilter<$PrismaModel> | $Enums.HelpRequestStatus
 }
 
+export type EnumTriageCategoryNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.TriageCategory | Prisma.EnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumTriageCategoryNullableFilter<$PrismaModel> | $Enums.TriageCategory | null
+}
+
 export type EnumHelpUrgencyWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.HelpUrgency | Prisma.EnumHelpUrgencyFieldRefInput<$PrismaModel>
   in?: $Enums.HelpUrgency[] | Prisma.ListEnumHelpUrgencyFieldRefInput<$PrismaModel>
@@ -471,6 +495,16 @@ export type EnumHelpRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumHelpRequestStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumHelpRequestStatusFilter<$PrismaModel>
+}
+
+export type EnumTriageCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TriageCategory | Prisma.EnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumTriageCategoryNullableWithAggregatesFilter<$PrismaModel> | $Enums.TriageCategory | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTriageCategoryNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTriageCategoryNullableFilter<$PrismaModel>
 }
 
 export type EnumAssignmentStatusFilter<$PrismaModel = never> = {
@@ -915,6 +949,13 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
 }
 
+export type NestedEnumDamageReportReviewStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DamageReportReviewStatus | Prisma.EnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDamageReportReviewStatusFilter<$PrismaModel> | $Enums.DamageReportReviewStatus
+}
+
 export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
   equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
@@ -929,6 +970,16 @@ export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatFilter<$PrismaModel>
   _min?: Prisma.NestedFloatFilter<$PrismaModel>
   _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type NestedEnumDamageReportReviewStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DamageReportReviewStatus | Prisma.EnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DamageReportReviewStatus[] | Prisma.ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDamageReportReviewStatusWithAggregatesFilter<$PrismaModel> | $Enums.DamageReportReviewStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDamageReportReviewStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDamageReportReviewStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumHazardTypeFilter<$PrismaModel = never> = {
@@ -1029,6 +1080,13 @@ export type NestedEnumHelpRequestStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumHelpRequestStatusFilter<$PrismaModel> | $Enums.HelpRequestStatus
 }
 
+export type NestedEnumTriageCategoryNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.TriageCategory | Prisma.EnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumTriageCategoryNullableFilter<$PrismaModel> | $Enums.TriageCategory | null
+}
+
 export type NestedEnumHelpUrgencyWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.HelpUrgency | Prisma.EnumHelpUrgencyFieldRefInput<$PrismaModel>
   in?: $Enums.HelpUrgency[] | Prisma.ListEnumHelpUrgencyFieldRefInput<$PrismaModel>
@@ -1047,6 +1105,16 @@ export type NestedEnumHelpRequestStatusWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumHelpRequestStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumHelpRequestStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumTriageCategoryNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TriageCategory | Prisma.EnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  in?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.TriageCategory[] | Prisma.ListEnumTriageCategoryFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumTriageCategoryNullableWithAggregatesFilter<$PrismaModel> | $Enums.TriageCategory | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTriageCategoryNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTriageCategoryNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumAssignmentStatusFilter<$PrismaModel = never> = {

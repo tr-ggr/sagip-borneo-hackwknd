@@ -4,12 +4,25 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database/database.service';
+import type { HelpUrgency } from '@prisma/client';
+import { TriageService } from './triage.service';
 
 const SOS_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
+const URGENCY_ORDER: HelpUrgency[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+
+function maxUrgency(a: HelpUrgency, b: HelpUrgency): HelpUrgency {
+  const ia = URGENCY_ORDER.indexOf(a);
+  const ib = URGENCY_ORDER.indexOf(b);
+  return ia >= ib ? a : b;
+}
+
 @Injectable()
 export class HelpRequestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly triageService: TriageService,
+  ) {}
 
   async create(input: {
     requesterId: string;
@@ -21,15 +34,22 @@ export class HelpRequestsService {
     longitude: number;
     sosExpiresAt?: Date;
   }) {
+    const triageResult = this.triageService.triage(
+      input.description,
+      input.hazardType,
+    );
+    const urgency = maxUrgency(input.urgency, triageResult.suggestedUrgency);
+
     return this.prisma.helpRequest.create({
       data: {
         requesterId: input.requesterId,
         familyId: input.familyId,
         hazardType: input.hazardType,
-        urgency: input.urgency,
+        urgency,
         description: input.description,
         latitude: input.latitude,
         longitude: input.longitude,
+        triageCategory: triageResult.category,
         ...(input.sosExpiresAt != null && { sosExpiresAt: input.sosExpiresAt }),
       },
     });

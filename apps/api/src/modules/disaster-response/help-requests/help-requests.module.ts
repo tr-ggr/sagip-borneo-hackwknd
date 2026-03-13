@@ -5,12 +5,14 @@ import { DisasterPolicyService } from '../shared/disaster-policy.service';
 import { ApprovedVolunteerGuard } from '../shared/approved-volunteer.guard';
 import { HelpRequestsController } from './help-requests.controller';
 import { HelpRequestsService } from './help-requests.service';
+import { TriageService } from './triage.service';
 
 @Module({
   imports: [DatabaseModule, AuthModule],
   controllers: [HelpRequestsController],
   providers: [
     HelpRequestsService,
+    TriageService,
     DisasterPolicyService,
     ApprovedVolunteerGuard,
   ],

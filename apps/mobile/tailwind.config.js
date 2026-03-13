@@ -58,7 +58,7 @@ module.exports = {
       },
       fontFamily: {
         'display': ['"Playfair Display"', 'Georgia', 'serif'],
-        'body':    ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+        'body':    ['var(--font-sagip)', '"Space Grotesk"', 'sans-serif'],
         'mono':    ['"IBM Plex Mono"', 'monospace'],
         'sagip':   ['var(--font-sagip)', '"Space Grotesk"', 'sans-serif'],
       },

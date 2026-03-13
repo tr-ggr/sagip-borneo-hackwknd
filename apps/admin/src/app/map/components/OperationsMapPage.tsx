@@ -30,6 +30,7 @@ import {
 } from 'ol/interaction';
 import { Zoom } from 'ol/control';
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useI18n } from '../../../i18n/context';
 import 'ol/ol.css';
 import {
   filterPinStatuses,
@@ -253,6 +254,7 @@ function getVulnerabilityColor(score: number): string {
 }
 
 export function OperationsMapPage() {
+  const { t } = useI18n();
   const mapTargetRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
   const mapViewRef = useRef<View | null>(null);
@@ -1052,10 +1054,10 @@ export function OperationsMapPage() {
     <section className="map-page-shell">
       <header className="map-page-header">
         <h1 className="map-page-title">
-          Hazard & Pin <span className="map-page-title-accent">Monitoring</span>
+          {t('admin.map.title')}
         </h1>
         <p className="map-page-subtitle">
-          ASEAN-focused operations · User pins, hazard layers, weather
+          {t('admin.map.subtitle')}
         </p>
       </header>
 
@@ -1065,7 +1067,7 @@ export function OperationsMapPage() {
           className="btn btn-neutral"
           onClick={() => setIsFilterDrawerOpen((current) => !current)}
         >
-          {isFilterDrawerOpen ? 'Close Filters' : 'Open Filters'}
+          {isFilterDrawerOpen ? t('admin.map.closeFilters') : t('admin.map.openFilters')}
         </button>
       </div>
 
@@ -1078,17 +1080,17 @@ export function OperationsMapPage() {
                 className="field map-card-search-input"
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="City or region"
+                placeholder={t('admin.map.searchPlaceholder')}
               />
               <button className="btn btn-warning" type="submit">
-                Find Location
+                {t('admin.map.findLocation')}
               </button>
             </form>
             {geocodeQuery ? (
               <div className="selection-list map-search-results">
-                {geocodingQuery.isLoading ? <p className="muted small">Searching...</p> : null}
+                {geocodingQuery.isLoading ? <p className="muted small">{t('admin.map.searching')}</p> : null}
                 {geocodingQuery.isError ? (
-                  <p className="error-text">Geocoding request failed.</p>
+                  <p className="error-text">{t('admin.map.geocodingFailed')}</p>
                 ) : null}
                 {geocodingResults.length > 0
                   ? geocodingResults.map((result, index) => (
@@ -1103,7 +1105,7 @@ export function OperationsMapPage() {
                     ))
                   : null}
                 {!geocodingQuery.isLoading && geocodingResults.length === 0 ? (
-                  <p className="muted small">No matching locations from Open-Meteo geocoding.</p>
+                  <p className="muted small">{t('admin.map.noMatchingLocations')}</p>
                 ) : null}
               </div>
             ) : null}
@@ -1113,30 +1115,30 @@ export function OperationsMapPage() {
             <div className={`map-card-filters card sidebar filter-sidebar ${isFilterDrawerOpen ? 'open' : ''}`}>
               <div className="filter-sidebar-sections">
                 <div className="filter-sidebar-section">
-                  <h2 className="card-title">Risk & Intelligence</h2>
+                  <h2 className="card-title">{t('admin.map.riskIntelligence')}</h2>
                   <label className="checkbox-row">
                     <input
                       type="checkbox"
                       checked={viewBuildingProfiles}
                       onChange={(event) => setViewBuildingProfiles(event.target.checked)}
                     />
-                    <span>View Building Profiles (Overlay)</span>
+                    <span>{t('admin.map.viewBuildingProfiles')}</span>
                   </label>
                   {viewBuildingProfiles && (
                     <div className="card-content-stack" style={{ marginTop: '0.5rem', paddingLeft: '1.5rem' }}>
-                      <p className="small muted">Data fetched dynamically based on map area.</p>
+                      <p className="small muted">{t('admin.map.dataFetchedDynamically')}</p>
                       <label className="field-label">
-                        Country
+                        {t('admin.map.country')}
                         <select
                           className="field"
                           value={buildingProfilingCountry}
                           onChange={(e) => setBuildingProfilingCountry(e.target.value)}
                         >
-                          <option value="brn">Brunei</option>
-                          <option value="idn">Indonesia</option>
-                          <option value="mys">Malaysia</option>
-                          <option value="phl">Philippines</option>
-                          <option value="sgp">Singapore</option>
+                          <option value="brn">{t('admin.map.brunei')}</option>
+                          <option value="idn">{t('admin.map.indonesia')}</option>
+                          <option value="mys">{t('admin.map.malaysia')}</option>
+                          <option value="phl">{t('admin.map.philippines')}</option>
+                          <option value="sgp">{t('admin.map.singapore')}</option>
                         </select>
                       </label>
                       <button
@@ -1145,15 +1147,15 @@ export function OperationsMapPage() {
                         onClick={applyBuildingProfileFilter}
                         style={{ marginTop: '0.5rem' }}
                       >
-                        Apply Filter
+                        {t('admin.map.applyFilter')}
                       </button>
-                      <p className="small muted">Showing full detail profiles</p>
+                      <p className="small muted">{t('admin.map.showingFullDetail')}</p>
                     </div>
                   )}
                 </div>
 
                 <div className="filter-sidebar-section">
-                  <h2 className="card-title">Hazard Layers</h2>
+                  <h2 className="card-title">{t('admin.map.hazardLayers')}</h2>
                   {Object.keys(hazardFilter).map((key) => (
                     <label className="checkbox-row" key={key}>
                       <input
@@ -1169,7 +1171,7 @@ export function OperationsMapPage() {
                 </div>
 
                 <div className="filter-sidebar-section">
-                  <h2 className="card-title">Pin Status Filters</h2>
+                  <h2 className="card-title">{t('admin.map.pinStatusFilters')}</h2>
                   {Object.keys(pinStatusFilter).map((key) => (
                     <label className="checkbox-row" key={key}>
                       <input
@@ -1185,7 +1187,7 @@ export function OperationsMapPage() {
                 </div>
 
                 <div className="filter-sidebar-section">
-                  <h2 className="card-title">User Location Recency</h2>
+                  <h2 className="card-title">{t('admin.map.userLocationRecency')}</h2>
                   {Object.keys(userFilter).map((key) => (
                     <label className="checkbox-row" key={key}>
                       <input
@@ -1203,8 +1205,8 @@ export function OperationsMapPage() {
             </div>
 
             <div className="map-card-map-area">
-              {overviewQuery.isLoading ? <p className="muted small">Loading map datasets...</p> : null}
-              {overviewQuery.isError ? <p className="error-text">Failed to load map datasets.</p> : null}
+              {overviewQuery.isLoading ? <p className="muted small">{t('admin.map.loadingMapDatasets')}</p> : null}
+              {overviewQuery.isError ? <p className="error-text">{t('admin.map.failedToLoadDatasets')}</p> : null}
               <div ref={mapTargetRef} className="map-canvas" />
           
           <div ref={popupRef} className="map-hover-popup card" style={{ 
@@ -1220,15 +1222,15 @@ export function OperationsMapPage() {
           }}>
             {hoveredBuilding && (
               <div className="popup-content">
-                <h3 className="small mono">Building Data</h3>
+                <h3 className="small mono">{t('admin.map.buildingData')}</h3>
                 <div className="divider" style={{ margin: '0.5rem 0' }} />
                 <dl className="summary-grid" style={{ gridTemplateColumns: '1fr 1fr', fontSize: '0.75rem' }}>
-                  <dt>Stories</dt> <dd>{hoveredBuilding.stories ?? 'N/A'}</dd>
-                  <dt>Population</dt> <dd>{hoveredBuilding.total_pop?.toFixed(2) ?? 'N/A'}</dd>
-                  <dt>Children</dt> <dd>{hoveredBuilding.child_count?.toFixed(2) ?? 'N/A'}</dd>
-                  <dt>Elderly</dt> <dd>{hoveredBuilding.elderly_count?.toFixed(2) ?? 'N/A'}</dd>
-                  <dt>Vulnerability</dt> <dd><strong>{hoveredBuilding.vulnerability_score?.toFixed(2) ?? 'N/A'}</strong></dd>
-                  <dt>Risk Status</dt> <dd>{hoveredBuilding.risk_status ?? 'N/A'}</dd>
+                  <dt>{t('admin.map.stories')}</dt> <dd>{hoveredBuilding.stories ?? 'N/A'}</dd>
+                  <dt>{t('admin.map.population')}</dt> <dd>{hoveredBuilding.total_pop?.toFixed(2) ?? 'N/A'}</dd>
+                  <dt>{t('admin.map.children')}</dt> <dd>{hoveredBuilding.child_count?.toFixed(2) ?? 'N/A'}</dd>
+                  <dt>{t('admin.map.elderly')}</dt> <dd>{hoveredBuilding.elderly_count?.toFixed(2) ?? 'N/A'}</dd>
+                  <dt>{t('admin.map.vulnerability')}</dt> <dd><strong>{hoveredBuilding.vulnerability_score?.toFixed(2) ?? 'N/A'}</strong></dd>
+                  <dt>{t('admin.map.riskStatus')}</dt> <dd>{hoveredBuilding.risk_status ?? 'N/A'}</dd>
                 </dl>
               </div>
             )}
@@ -1236,12 +1238,12 @@ export function OperationsMapPage() {
 
           {!isMapReady ? (
             <div className="map-overlay">
-              <p className="small muted">Initializing map viewport...</p>
+              <p className="small muted">{t('admin.map.initializingViewport')}</p>
             </div>
           ) : null}
           {!overviewQuery.isLoading && !overviewQuery.isError && !hasAnyMapData ? (
             <div className="map-overlay map-overlay-warning">
-              <p className="small">Map loaded with no overlays. Base map should still be visible.</p>
+              <p className="small">{t('admin.map.noOverlays')}</p>
             </div>
           ) : null}
 
@@ -1260,7 +1262,7 @@ export function OperationsMapPage() {
                   });
                 }}
               >
-                Hazards
+                {t('admin.map.hazards')}
               </button>
               <button
                 type="button"
@@ -1275,7 +1277,7 @@ export function OperationsMapPage() {
                   });
                 }}
               >
-                Ops Pins
+                {t('admin.map.opsPins')}
               </button>
               <button
                 type="button"
@@ -1288,20 +1290,20 @@ export function OperationsMapPage() {
                   });
                 }}
               >
-                User Locations
+                {t('admin.map.userLocations')}
               </button>
               <button
                 type="button"
                 className={`map-layer-btn ${viewBuildingProfiles ? 'active' : ''}`}
                 onClick={() => setViewBuildingProfiles((current) => !current)}
               >
-                Building Profiles
+                {t('admin.map.buildingProfiles')}
               </button>
               <button type="button" className="map-layer-btn" onClick={fitToData}>
-                Fit To Data
+                {t('admin.map.fitToData')}
               </button>
               <button type="button" className="map-layer-btn" onClick={refocusAsean}>
-                Recenter ASEAN
+                {t('admin.map.recenterAsean')}
               </button>
             </div>
           </div>
@@ -1312,8 +1314,8 @@ export function OperationsMapPage() {
         <aside className="map-right-panel">
           <section className="map-right-section">
             <div className="map-right-section-header">
-              <h2 className="map-right-section-title">Local Environment</h2>
-              <span className="map-right-section-synced">Synced just now</span>
+              <h2 className="map-right-section-title">{t('admin.map.localEnvironment')}</h2>
+              <span className="map-right-section-synced">{t('admin.map.syncedJustNow')}</span>
             </div>
             <div className="map-right-section-content">
               <div className="map-env-cards">
@@ -1321,26 +1323,26 @@ export function OperationsMapPage() {
                   <div className="map-env-card-value">
                     {weatherSummary ? `${fmt(weatherSummary.temperature)}°C` : '—'}
                   </div>
-                  <div className="map-env-card-label">Current Temperature</div>
+                  <div className="map-env-card-label">{t('admin.map.currentTemperature')}</div>
                 </div>
                 <div className="map-env-card accent">
                   <div className="map-env-card-value accent">
                     {weatherSummary ? fmt(weatherSummary.precipitation) : '—'}
                   </div>
-                  <div className="map-env-card-label">Precipitation (today)</div>
+                  <div className="map-env-card-label">{t('admin.map.precipitationToday')}</div>
                 </div>
               </div>
               <div className="map-parametric-card">
                 <div className="map-parametric-card-header">
-                  <span className="map-parametric-label">Parametric Trigger</span>
+                  <span className="map-parametric-label">{t('admin.map.parametricTrigger')}</span>
                   <span className="map-parametric-badge">
-                    {hasCriticalRisks ? 'Activated' : 'Monitoring'}
+                    {hasCriticalRisks ? t('admin.map.activated') : t('admin.map.monitoring')}
                   </span>
                 </div>
                 <p className="map-parametric-body">
                   {hasCriticalRisks
-                    ? 'Critical hazard regions detected in current viewport. Prioritize verification and responder assignment.'
-                    : 'No critical hazard regions in current viewport. Continuing passive monitoring of rainfall and river levels.'}
+                    ? t('admin.map.criticalRegionsDetected')
+                    : t('admin.map.noCriticalInViewport')}
                 </p>
               </div>
             </div>
@@ -1348,7 +1350,7 @@ export function OperationsMapPage() {
 
           <section className="map-needs-section">
             <div className="map-needs-section-header">
-              <h2 className="map-needs-section-title">Live Verified Needs</h2>
+              <h2 className="map-needs-section-title">{t('admin.map.liveVerifiedNeeds')}</h2>
               <span className="map-needs-live-dot" />
             </div>
             <div className="map-needs-list">
@@ -1391,7 +1393,7 @@ export function OperationsMapPage() {
                           setSelectedCoords([req.longitude, req.latitude]);
                         }}
                       >
-                        View on map
+                        {t('admin.map.viewOnMap')}
                       </button>
                     </div>
                   </article>

@@ -41,8 +41,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         maxAge: 1000 * 60 * 60 * 24,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) => {
+            // Don't persist pending queries; they can be cancelled on rehydration and cause
+            // "A query that was dehydrated as pending ended up rejecting" (CancelledError).
+            if (query.state.status === 'pending') return false;
             const [firstKey] = query.queryKey;
-
             return !(typeof firstKey === 'string' && firstKey.includes('/api/auth/session'));
           },
         },

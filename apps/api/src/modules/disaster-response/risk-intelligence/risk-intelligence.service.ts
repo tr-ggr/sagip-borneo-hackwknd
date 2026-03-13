@@ -16,7 +16,7 @@ export class RiskIntelligenceService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const requiredIso3Codes = ['brn', 'idn', 'mys', 'phl', 'sgp'];
+    const requiredIso3Codes = ['brn', 'idn', 'mys', 'sgp'];
     const missingFiles: string[] = [];
 
     for (const iso3 of requiredIso3Codes) {

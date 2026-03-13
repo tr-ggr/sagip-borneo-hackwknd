@@ -4,22 +4,17 @@ export interface SupabaseRuntimeConfig {
   supabaseBucket: string;
 }
 
-function requireEnv(name: string): string {
-  const value = process.env[name]?.trim();
-  if (!value) {
-    throw new Error(
-      `Missing required environment variable ${name}. Copy apps/api/.env.example and provide a valid value.`,
-    );
+/**
+ * Returns Supabase config when SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set.
+ * Returns null when either is missing so the API can start without Supabase (e.g. local dev).
+ */
+export function getSupabaseRuntimeConfig(): SupabaseRuntimeConfig | null {
+  const supabaseUrl = process.env.SUPABASE_URL?.trim();
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    return null;
   }
-
-  return value;
-}
-
-export function getSupabaseRuntimeConfig(): SupabaseRuntimeConfig {
-  const supabaseUrl = requireEnv('SUPABASE_URL');
-  const supabaseServiceRoleKey = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
   const supabaseBucket = process.env.SUPABASE_BUCKET?.trim() || 'wira-borneo';
-
   return {
     supabaseUrl,
     supabaseServiceRoleKey,

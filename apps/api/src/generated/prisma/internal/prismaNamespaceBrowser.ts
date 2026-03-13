@@ -57,6 +57,7 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   BuildingProfile: 'BuildingProfile',
+  DamageReport: 'DamageReport',
   Family: 'Family',
   FamilyMember: 'FamilyMember',
   UserLocationSnapshot: 'UserLocationSnapshot',
@@ -193,6 +194,29 @@ export const BuildingProfileScalarFieldEnum = {
 } as const
 
 export type BuildingProfileScalarFieldEnum = (typeof BuildingProfileScalarFieldEnum)[keyof typeof BuildingProfileScalarFieldEnum]
+
+
+export const DamageReportScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  damageCategories: 'damageCategories',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  photoUrl: 'photoUrl',
+  photoKey: 'photoKey',
+  confidenceScore: 'confidenceScore',
+  confidenceThreshold: 'confidenceThreshold',
+  reporterId: 'reporterId',
+  reviewedById: 'reviewedById',
+  reviewStatus: 'reviewStatus',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DamageReportScalarFieldEnum = (typeof DamageReportScalarFieldEnum)[keyof typeof DamageReportScalarFieldEnum]
 
 
 export const FamilyScalarFieldEnum = {
@@ -366,6 +390,7 @@ export const HelpRequestScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   sosExpiresAt: 'sosExpiresAt',
+  triageCategory: 'triageCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

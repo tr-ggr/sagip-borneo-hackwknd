@@ -17,6 +17,7 @@ import {
   saveLastWarningLocation,
 } from './location-prediction.utils';
 import { useToast } from '../../../components/Toast';
+import { useI18n } from '../../../../i18n/context';
 
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
@@ -26,12 +27,17 @@ function formatCoordinate(value: number): string {
   return value.toFixed(6);
 }
 
-function coordinateLabel(drawMode: DrawMode, index: number, total: number): string {
+function coordinateLabel(
+  drawMode: DrawMode,
+  index: number,
+  total: number,
+  t: (key: string) => string
+): string {
   if (drawMode === 'box' && total === 4) {
-    return ['Point 1', 'Point 2', 'Point 3', 'Point 4'][index] ?? `Point ${index + 1}`;
+    const keys = ['admin.warnings.point1', 'admin.warnings.point2', 'admin.warnings.point3', 'admin.warnings.point4'] as const;
+    return t(keys[index] ?? 'admin.warnings.point1');
   }
-
-  return `Pin ${index + 1}`;
+  return t('admin.warnings.pinN').replace('{n}', String(index + 1));
 }
 
 const defaultTarget = {
@@ -57,6 +63,7 @@ export function ManualWarningPage() {
   const promptMutation = useAdminOperationsControllerGetPromptSuggestion();
   const createWarningMutation = useAdminOperationsControllerCreateWarning();
   const { showToast } = useToast();
+  const { t } = useI18n();
 
   useEffect(() => {
     const saved = getLastWarningLocation();
@@ -120,8 +127,8 @@ export function ManualWarningPage() {
 
   const coordinateCountLabel =
     drawMode === 'box'
-      ? `4 corners`
-      : `${targetCoordinates.length} ${targetCoordinates.length === 1 ? 'pin' : 'pins'}`;
+      ? t('admin.warnings.fourCorners')
+      : `${targetCoordinates.length} ${targetCoordinates.length === 1 ? t('admin.warnings.pin') : t('admin.warnings.pins')}`;
 
   return (
     <section className="page-shell warning-page">
@@ -136,10 +143,10 @@ export function ManualWarningPage() {
               </div>
               <div>
                 <h2 className="warning-modal-title">
-                  ALERT DISPATCH WORKFLOW / ALIRAN KERJA PENGHANTARAN AMARAN
+                  {t('admin.warnings.alertDispatchWorkflow')}
                 </h2>
                 <p className="warning-modal-step small mono">
-                  Step 1 &amp; 2 of 4: Configuration &amp; Geofencing
+                  {t('admin.warnings.step12Config')}
                 </p>
               </div>
             </div>
@@ -150,17 +157,16 @@ export function ManualWarningPage() {
               <header className="warning-section-header">
                 <div className="step-pill step-pill-primary">1</div>
                 <div>
-                  <h3 className="card-title">Compose Message / Karang Mesej</h3>
+                  <h3 className="card-title">{t('admin.warnings.composeMessage')}</h3>
                   <p className="small muted">
-                    Provide clear, bilingual messaging so residents understand the risk and
-                    recommended actions.
+                    {t('admin.warnings.composeDesc')}
                   </p>
                 </div>
               </header>
 
               <div className="warning-field-group">
                 <label className="field-label">
-                  Hazard Type / Jenis Bahaya
+                  {t('admin.warnings.hazardType')}
                   <div className="hazard-toggle-row">
                     {(['FLOOD', 'TYPHOON', 'EARTHQUAKE', 'AFTERSHOCK'] as HazardType[]).map(
                       (type) => (
@@ -173,12 +179,12 @@ export function ManualWarningPage() {
                           onClick={() => setHazardType(type)}
                         >
                           {type === 'FLOOD'
-                            ? 'Flood'
+                            ? t('admin.warnings.flood')
                             : type === 'TYPHOON'
-                              ? 'Typhoon'
+                              ? t('admin.warnings.typhoon')
                               : type === 'EARTHQUAKE'
-                                ? 'Earthquake'
-                                : 'Aftershock'}
+                                ? t('admin.warnings.earthquake')
+                                : t('admin.warnings.aftershock')}
                         </button>
                       ),
                     )}
@@ -186,10 +192,10 @@ export function ManualWarningPage() {
                 </label>
 
                 <label className="field-label">
-                  Alert Title / Tajuk Amaran
+                  {t('admin.warnings.alertTitle')}
                   <input
                     className="field"
-                    placeholder="e.g. SEVERE FLOOD WARNING - KOTA TINGGI"
+                    placeholder={t('admin.warnings.alertTitlePlaceholder')}
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
                   />
@@ -198,7 +204,7 @@ export function ManualWarningPage() {
                 <div className="warning-message-header">
                   <div>
                     <p className="field-label-heading">
-                      Message Content / Kandungan Mesej
+                      {t('admin.warnings.messageContent')}
                     </p>
                   </div>
                   <button
@@ -226,28 +232,28 @@ export function ManualWarningPage() {
                     }}
                     disabled={promptMutation.isPending}
                   >
-                    {promptMutation.isPending ? 'Generating Prompt…' : 'Suggest Prompt (AI)'}
+                    {promptMutation.isPending ? t('admin.warnings.generatingPrompt') : t('admin.warnings.suggestPrompt')}
                   </button>
                 </div>
                 <textarea
                   className="field warning-message-input"
                   rows={6}
-                  placeholder="Write the alert details here..."
+                  placeholder={t('admin.warnings.messagePlaceholder')}
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                 />
                 <p className="small muted character-helper">
-                  Characters: {message.length}/160 (1 SMS Segment)
+                  {t('admin.warnings.charactersSms').replace('{count}', String(message.length))}
                 </p>
 
                 <div className="warning-severity-group">
-                  <p className="field-label-heading">Severity Level / Tahap Amaran</p>
+                  <p className="field-label-heading">{t('admin.warnings.severityLevel')}</p>
                   <div className="severity-row">
                     {([
-                      { value: 'LOW', label: 'Advisory' },
-                      { value: 'MODERATE', label: 'Warning' },
-                      { value: 'HIGH', label: 'Emergency (Danger)' },
-                      { value: 'CRITICAL', label: 'Critical' },
+                      { value: 'LOW', key: 'admin.warnings.advisory' as const },
+                      { value: 'MODERATE', key: 'admin.warnings.warning' as const },
+                      { value: 'HIGH', key: 'admin.warnings.emergencyDanger' as const },
+                      { value: 'CRITICAL', key: 'admin.warnings.critical' as const },
                     ] as const).map((option) => (
                       <button
                         key={option.value}
@@ -257,7 +263,7 @@ export function ManualWarningPage() {
                         }`}
                         onClick={() => setSeverity(option.value as SeverityLevel)}
                       >
-                        {option.label}
+                        {t(option.key)}
                       </button>
                     ))}
                   </div>
@@ -265,7 +271,7 @@ export function ManualWarningPage() {
 
                 <div className="row-2">
                   <label className="field-label">
-                    Start (MYT)
+                    {t('admin.warnings.startMyt')}
                     <input
                       type="datetime-local"
                       className="field"
@@ -274,7 +280,7 @@ export function ManualWarningPage() {
                     />
                   </label>
                   <label className="field-label">
-                    End (optional)
+                    {t('admin.warnings.endOptional')}
                     <input
                       type="datetime-local"
                       className="field"
@@ -290,19 +296,19 @@ export function ManualWarningPage() {
               <header className="warning-section-header">
                 <div className="step-pill step-pill-secondary">2</div>
                 <div>
-                  <h3 className="card-title">Target Area / Kawasan Sasaran</h3>
+                  <h3 className="card-title">{t('admin.warnings.targetArea')}</h3>
                   <p className="small muted">
-                    Confirm the search area, coordinates, radius, and drawn polygon for this alert.
+                    {t('admin.warnings.targetAreaDesc')}
                   </p>
                 </div>
               </header>
 
               <div className="warning-field-group">
                 <label className="field-label small">
-                  Search Area / Cari Kawasan
+                  {t('admin.warnings.searchArea')}
                   <input
                     className="field"
-                    placeholder="e.g. Sungai Johor Basin, Kota Tinggi"
+                    placeholder={t('admin.warnings.searchAreaPlaceholder')}
                     value={target.areaName}
                     onChange={(event) =>
                       setTarget((prev) => ({ ...prev, areaName: event.target.value }))
@@ -314,10 +320,10 @@ export function ManualWarningPage() {
                   {drawMode === 'pin' ? (
                     <>
                       <label className="field-label small">
-                        Lat / Long
+                        {t('admin.warnings.latLong')}
                         <input
                           className="field"
-                          placeholder="Latitude"
+                          placeholder={t('admin.warnings.latitude')}
                           value={target.latitude}
                           onChange={(event) =>
                             setTarget((prev) => ({ ...prev, latitude: event.target.value }))
@@ -328,7 +334,7 @@ export function ManualWarningPage() {
                         &nbsp;
                         <input
                           className="field"
-                          placeholder="Longitude"
+                          placeholder={t('admin.warnings.longitude')}
                           value={target.longitude}
                           onChange={(event) =>
                             setTarget((prev) => ({ ...prev, longitude: event.target.value }))
@@ -336,7 +342,7 @@ export function ManualWarningPage() {
                         />
                       </label>
                       <label className="field-label small">
-                        Radius (km)
+                        {t('admin.warnings.radiusKm')}
                         <div className="radius-row">
                           <input
                             type="number"
@@ -355,22 +361,22 @@ export function ManualWarningPage() {
                     <div className="warning-shape-info">
                       <p className="small">
                         <strong>
-                          {drawMode === 'box' ? 'Bounding Box Coordinates' : 'Polygon Vertices'}
+                          {drawMode === 'box' ? t('admin.warnings.boundingBoxCoordinates') : t('admin.warnings.polygonVertices')}
                         </strong>
                       </p>
                       <p className="small muted">
                         {targetCoordinates.length > 0
                           ? coordinateCountLabel
                           : drawMode === 'box'
-                            ? 'Draw a box to capture 4 corners.'
-                            : 'Draw a polygon to capture each pin you add.'}
+                            ? t('admin.warnings.drawBox')
+                            : t('admin.warnings.drawPolygon')}
                       </p>
                       {targetCoordinates.length > 0 ? (
                         <div className="coordinate-grid">
                           {targetCoordinates.map((point, index) => (
                             <div key={`${point.latitude}-${point.longitude}-${index}`} className="coordinate-card">
                               <p className="small muted mono coordinate-card-label">
-                                {coordinateLabel(drawMode, index, targetCoordinates.length)}
+                                {coordinateLabel(drawMode, index, targetCoordinates.length, t)}
                               </p>
                               <p className="small">Lat: {formatCoordinate(point.latitude)}</p>
                               <p className="small">Long: {formatCoordinate(point.longitude)}</p>
@@ -384,7 +390,7 @@ export function ManualWarningPage() {
 
                 <div className="warning-map-shell">
                   <div className="warning-map-header">
-                    <p className="small muted mono">HPix Vector Tiles Active</p>
+                    <p className="small muted mono">{t('admin.warnings.hpixVectorTiles')}</p>
                   </div>
                   <div className="warning-map-body">
                     <WarningMapSupport
@@ -438,14 +444,14 @@ export function ManualWarningPage() {
                     />
                     {target.polygonGeoJson && (
                       <p className="small success-text warning-map-success">
-                        ✓ Custom shape captured.
+                        {t('admin.warnings.customShapeCaptured')}
                       </p>
                     )}
                   </div>
                   <div className="warning-map-footer">
                     <p className="small mono">
-                      Estimated Population Reach:{' '}
-                      <span className="warning-map-population">~12,450 Active Subscribers</span>
+                      {t('admin.warnings.estimatedPopulationReach')}{' '}
+                      <span className="warning-map-population">{t('admin.warnings.activeSubscribers')}</span>
                     </p>
                   </div>
                 </div>
@@ -456,7 +462,7 @@ export function ManualWarningPage() {
           <footer className="warning-modal-footer">
             <div className="footer-stage-indicator small mono">
               <span className="footer-stage-dot" aria-hidden="true" />
-              Stage 1: Prep
+              {t('admin.warnings.stage1Prep')}
             </div>
             <div className="footer-actions">
               <button
@@ -469,7 +475,7 @@ export function ManualWarningPage() {
                   setTarget(defaultTarget);
                 }}
               >
-                Cancel / Batal
+                {t('admin.warnings.cancelBatal')}
               </button>
               <button
                 type="button"
@@ -485,25 +491,25 @@ export function ManualWarningPage() {
                   setStep((current) => warningFlowReducer(current, { type: 'CONTINUE' }))
                 }
               >
-                Continue to Verification / Seterusnya →
+                {t('admin.warnings.continueToVerification')}
               </button>
             </div>
           </footer>
         </div>
       ) : (
         <article className="card warning-confirm-card">
-          <h2 className="card-title">Confirm Warning Dispatch / Sahkan Amaran</h2>
+          <h2 className="card-title">{t('admin.warnings.confirmDispatch')}</h2>
           <p className="muted small">
-            Review the composed message, target area, and evacuation coverage before sending.
+            {t('admin.warnings.confirmDispatchDesc')}
           </p>
           <dl className="summary-grid warning-summary">
-            <dt>Title</dt>
+            <dt>{t('admin.warnings.summaryTitle')}</dt>
             <dd>{summary.heading}</dd>
-            <dt>Message</dt>
+            <dt>{t('admin.warnings.summaryMessage')}</dt>
             <dd>{summary.body}</dd>
-            <dt>Target</dt>
+            <dt>{t('admin.warnings.summaryTarget')}</dt>
             <dd>{summary.target}</dd>
-            <dt>Evacuation Areas</dt>
+            <dt>{t('admin.warnings.evacuationAreas')}</dt>
             <dd>{summary.evacuationCount}</dd>
           </dl>
           <div className="action-row warning-confirm-actions">
@@ -512,7 +518,7 @@ export function ManualWarningPage() {
               className="btn btn-neutral"
               onClick={() => setStep((current) => warningFlowReducer(current, { type: 'CANCEL' }))}
             >
-              Back to Editing
+              {t('admin.warnings.backToEditing')}
             </button>
             <button
               type="button"
@@ -527,17 +533,17 @@ export function ManualWarningPage() {
                       setMessage('');
                       saveLastWarningLocation(target);
                       setTarget(defaultTarget);
-                      showToast('Warning sent successfully.', 'success');
+                      showToast(t('admin.warnings.warningSentSuccess'), 'success');
                     },
                     onError: () => {
-                      showToast('Failed to send warning.', 'error');
+                      showToast(t('admin.warnings.failedToSend'), 'error');
                     },
                   },
                 );
               }}
               disabled={createWarningMutation.isPending}
             >
-              Confirm and Send / Sahkan &amp; Hantar
+              {t('admin.warnings.confirmAndSend')}
             </button>
           </div>
         </article>

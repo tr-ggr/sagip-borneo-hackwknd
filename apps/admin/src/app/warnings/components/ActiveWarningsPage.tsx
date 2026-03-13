@@ -7,6 +7,7 @@ import {
 } from '@wira-borneo/api-client';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useToast } from '../../components/Toast';
+import { useI18n } from '../../../i18n/context';
 
 type WarningStatus = 'DRAFT' | 'SENT' | 'CANCELLED';
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
@@ -46,15 +47,9 @@ function toErrorMessage(error: unknown, fallback: string): string {
   return fallback;
 }
 
-function toReadableHazard(value: HazardType): string {
-  if (value === 'TYPHOON') return 'Typhoon';
-  if (value === 'EARTHQUAKE') return 'Earthquake';
-  if (value === 'AFTERSHOCK') return 'Aftershock';
-  return 'Flood';
-}
-
 export function ActiveWarningsPage() {
   const [status, setStatus] = useState<WarningStatusFilter>('SENT');
+  const { t } = useI18n();
 
   const warningsQuery = useAdminOperationsControllerListWarnings(
     { status: status === 'ALL' ? undefined : status },
@@ -70,9 +65,9 @@ export function ActiveWarningsPage() {
 
   useEffect(() => {
     if (warningsQuery.error) {
-      showToast(toErrorMessage(warningsQuery.error, 'Failed to load warnings.'), 'error');
+      showToast(toErrorMessage(warningsQuery.error, t('admin.warnings.failedToLoad')), 'error');
     }
-  }, [warningsQuery.error, showToast]);
+  }, [warningsQuery.error, showToast, t]);
 
   const reload = useCallback(() => {
     void warningsQuery.refetch();
@@ -84,11 +79,11 @@ export function ActiveWarningsPage() {
         { id: warningId },
         {
           onSuccess: () => {
-            showToast('Warning cancelled successfully.', 'success');
+            showToast(t('admin.warnings.cancelledSuccess'), 'success');
             reload();
           },
           onError: (error) => {
-            showToast(toErrorMessage(error, 'Failed to cancel warning.'), 'error');
+            showToast(toErrorMessage(error, t('admin.warnings.failedToCancel')), 'error');
           },
         },
       );
@@ -98,9 +93,7 @@ export function ActiveWarningsPage() {
 
   const onDeleteWarning = useCallback(
     async (warningId: string) => {
-      const proceed = window.confirm(
-        'Delete this warning permanently? This should only be used for false alarms.',
-      );
+      const proceed = window.confirm(t('admin.warnings.deleteConfirm'));
       if (!proceed) {
         return;
       }
@@ -109,16 +102,16 @@ export function ActiveWarningsPage() {
         { id: warningId },
         {
           onSuccess: () => {
-            showToast('Warning deleted successfully.', 'success');
+            showToast(t('admin.warnings.deletedSuccess'), 'success');
             reload();
           },
           onError: (error) => {
-            showToast(toErrorMessage(error, 'Failed to delete warning.'), 'error');
+            showToast(toErrorMessage(error, t('admin.warnings.failedToDelete')), 'error');
           },
         },
       );
     },
-    [deleteMutation, reload, showToast],
+    [deleteMutation, reload, showToast, t],
   );
 
   const warnings = warningsQuery.data ?? [];
@@ -132,9 +125,9 @@ export function ActiveWarningsPage() {
       <div className="volunteer-registry-section">
         <header className="volunteer-registry-header">
           <div>
-            <h1 className="volunteer-registry-title">Active Warnings</h1>
+            <h1 className="volunteer-registry-title">{t('admin.warnings.activeWarnings')}</h1>
             <p className="volunteer-registry-subtitle">
-              Monitor, cancel, or delete warning broadcasts.
+              {t('admin.warnings.subtitle')}
             </p>
           </div>
         </header>
@@ -156,7 +149,7 @@ export function ActiveWarningsPage() {
               className={`chip ${status === item ? 'chip-active' : ''}`}
               onClick={() => setStatus(item)}
             >
-              {item}
+              {item === 'ALL' ? t('admin.warnings.all') : item === 'SENT' ? t('admin.warnings.sent') : item === 'DRAFT' ? t('admin.warnings.draft') : t('admin.warnings.cancelled')}
             </button>
           ))}
         </div>
@@ -165,26 +158,26 @@ export function ActiveWarningsPage() {
           <table className="volunteer-table">
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Hazard</th>
-                <th>Severity</th>
-                <th>Status</th>
-                <th>Target Areas</th>
-                <th>Created</th>
-                <th>Actions</th>
+                <th>{t('admin.warnings.title')}</th>
+                <th>{t('admin.warnings.hazard')}</th>
+                <th>{t('admin.warnings.severity')}</th>
+                <th>{t('admin.warnings.status')}</th>
+                <th>{t('admin.warnings.targetAreas')}</th>
+                <th>{t('admin.warnings.created')}</th>
+                <th>{t('admin.warnings.actions')}</th>
               </tr>
             </thead>
             <tbody>
               {warningsQuery.isLoading ? (
                 <tr>
                   <td colSpan={7} className="muted small" style={{ textAlign: 'center' }}>
-                    Loading warnings...
+                    {t('admin.warnings.loadingWarnings')}
                   </td>
                 </tr>
               ) : sortedWarnings.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="muted small" style={{ textAlign: 'center' }}>
-                    No warnings found.
+                    {t('admin.warnings.noWarningsFound')}
                   </td>
                 </tr>
               ) : (
@@ -200,7 +193,15 @@ export function ActiveWarningsPage() {
                         <div className="volunteer-table-name">{warning.title}</div>
                         <div className="volunteer-table-id">{warning.message.slice(0, 64)}</div>
                       </td>
-                      <td>{toReadableHazard(warning.hazardType)}</td>
+                      <td>
+                        {warning.hazardType === 'FLOOD'
+                          ? t('admin.warnings.flood')
+                          : warning.hazardType === 'TYPHOON'
+                            ? t('admin.warnings.typhoon')
+                            : warning.hazardType === 'EARTHQUAKE'
+                              ? t('admin.warnings.earthquake')
+                              : t('admin.warnings.aftershock')}
+                      </td>
                       <td>
                         <span className={`warning-severity-pill ${warning.severity.toLowerCase()}`}>
                           {warning.severity}
@@ -225,7 +226,7 @@ export function ActiveWarningsPage() {
                             onClick={() => onDeleteWarning(warning.id)}
                             disabled={isDeleting}
                           >
-                            {isDeleting ? 'Deleting...' : 'Delete'}
+                            {isDeleting ? t('admin.warnings.deleting') : t('admin.warnings.delete')}
                           </button>
                           <button
                             type="button"
@@ -233,7 +234,7 @@ export function ActiveWarningsPage() {
                             onClick={() => onCancelWarning(warning.id)}
                             disabled={warning.status !== 'SENT' || isCancelling}
                           >
-                            {isCancelling ? 'Cancelling...' : 'Cancel'}
+                            {isCancelling ? t('admin.warnings.cancelling') : t('admin.warnings.cancel')}
                           </button>
                         </div>
                       </td>
@@ -246,7 +247,9 @@ export function ActiveWarningsPage() {
         </div>
 
         <footer className="volunteer-registry-footer">
-          {sortedWarnings.length} warning{sortedWarnings.length === 1 ? '' : 's'}
+          {sortedWarnings.length === 1
+            ? t('admin.warnings.warningCount').replace('{count}', '1')
+            : t('admin.warnings.warningCountPlural').replace('{count}', String(sortedWarnings.length))}
         </footer>
       </div>
     </section>

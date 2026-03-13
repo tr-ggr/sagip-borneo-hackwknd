@@ -15,12 +15,14 @@ import {
   Search,
   XCircle,
 } from 'lucide-react';
+import { useI18n } from '../../../i18n/context';
 
 type StatusFilter = 'ALL' | 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export function DamageReportsPage() {
   const queryClient = useQueryClient();
   const [status, setStatus] = useState<StatusFilter>('ALL');
+  const { t } = useI18n();
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [reviewReason, setReviewReason] = useState<Record<string, string>>({});
@@ -62,16 +64,16 @@ export function DamageReportsPage() {
     if (filteredReports.length === 0) return;
 
     const headers = [
-      'Title',
-      'Reporter',
-      'Reporter Email',
-      'Categories',
-      'Confidence Score',
-      'Threshold',
-      'Status',
-      'Created At',
-      'Latitude',
-      'Longitude',
+      t('admin.damageReports.csvTitle'),
+      t('admin.damageReports.csvReporter'),
+      t('admin.damageReports.csvReporterEmail'),
+      t('admin.damageReports.csvCategories'),
+      t('admin.damageReports.csvConfidence'),
+      t('admin.damageReports.csvThreshold'),
+      t('admin.damageReports.csvStatus'),
+      t('admin.damageReports.csvCreatedAt'),
+      t('admin.damageReports.csvLatitude'),
+      t('admin.damageReports.csvLongitude'),
     ];
 
     const rows = filteredReports.map((report) => [
@@ -107,7 +109,7 @@ export function DamageReportsPage() {
       <div className="flex min-h-[400px] items-center justify-center p-8">
         <div className="space-y-3 text-center text-slate-500">
           <div className="mx-auto h-12 w-12 rounded-full border-4 border-slate-200 border-t-asean-blue animate-spin" />
-          <p>Loading damage reports...</p>
+          <p>{t('admin.damageReports.loading')}</p>
         </div>
       </div>
     );
@@ -117,7 +119,7 @@ export function DamageReportsPage() {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center gap-2 p-8 text-rose-500">
         <XCircle size={42} />
-        <p className="font-bold">Failed to load damage reports</p>
+        <p className="font-bold">{t('admin.damageReports.failedToLoad')}</p>
       </div>
     );
   }
@@ -126,9 +128,9 @@ export function DamageReportsPage() {
     <div className="mx-auto max-w-7xl space-y-6 p-6">
       <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Damage Reports</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">{t('admin.damageReports.title')}</h1>
           <p className="mt-1 text-slate-500">
-            Review geo-tagged resident submissions with mocked AI confidence scores.
+            {t('admin.damageReports.subtitle')}
           </p>
         </div>
         <button
@@ -138,7 +140,7 @@ export function DamageReportsPage() {
           className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Download size={18} />
-          Export CSV
+          {t('admin.damageReports.exportCsv')}
         </button>
       </header>
 
@@ -149,7 +151,7 @@ export function DamageReportsPage() {
             type="text"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search title, reporter, email, or category..."
+            placeholder={t('admin.damageReports.searchPlaceholder')}
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 shadow-sm outline-none transition-all focus:border-asean-blue focus:ring-2 focus:ring-asean-blue/20"
           />
         </div>
@@ -166,7 +168,7 @@ export function DamageReportsPage() {
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {value}
+              {t(`admin.damageReports.${value.toLowerCase()}` as 'admin.damageReports.all' | 'admin.damageReports.pending' | 'admin.damageReports.approved' | 'admin.damageReports.rejected')}
             </button>
           ))}
         </div>
@@ -175,7 +177,7 @@ export function DamageReportsPage() {
       <div className="space-y-4">
         {filteredReports.length === 0 ? (
           <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
-            No damage reports match the current filters.
+            {t('admin.damageReports.noReportsMatch')}
           </div>
         ) : (
           filteredReports.map((report) => {
@@ -197,7 +199,7 @@ export function DamageReportsPage() {
                       <h2 className="text-lg font-bold text-slate-900">{report.title}</h2>
                     </div>
                     <p className="text-sm text-slate-500">
-                      Submitted by {report.reporter?.name ?? 'Unknown'}
+                      {t('admin.damageReports.submittedBy')} {report.reporter?.name ?? t('admin.damageReports.unknown')}
                     </p>
                     <div className="flex flex-wrap gap-2 pt-1">
                       {(report.damageCategories ?? []).map((category) => (
@@ -209,7 +211,7 @@ export function DamageReportsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-xs font-bold uppercase tracking-wide text-slate-500">AI confidence</p>
+                    <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{t('admin.damageReports.aiConfidence')}</p>
                     <div className="h-2 overflow-hidden rounded-full bg-slate-100">
                       <div
                         className={`h-full ${
@@ -254,38 +256,38 @@ export function DamageReportsPage() {
                     <div className="space-y-4">
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Reporter</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{t('admin.damageReports.reporter')}</p>
                           <p className="text-sm text-slate-800">{report.reporter?.name}</p>
                           <p className="text-sm text-slate-500">{report.reporter?.email}</p>
                         </div>
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Coordinates</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{t('admin.damageReports.coordinates')}</p>
                           <p className="text-sm text-slate-800">
                             {report.latitude.toFixed(5)}, {report.longitude.toFixed(5)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Submitted</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{t('admin.damageReports.submitted')}</p>
                           <p className="text-sm text-slate-800">{new Date(report.createdAt).toLocaleString()}</p>
                         </div>
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Status rule</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{t('admin.damageReports.statusRule')}</p>
                           <p className="text-sm text-slate-800">
-                            {confidencePercent >= thresholdPercent ? 'Auto-accepted threshold met' : 'Below threshold, manual review required'}
+                            {confidencePercent >= thresholdPercent ? t('admin.damageReports.autoAccepted') : t('admin.damageReports.belowThreshold')}
                           </p>
                         </div>
                       </div>
 
                       {report.description ? (
                         <div>
-                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Description</p>
+                          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{t('admin.damageReports.description')}</p>
                           <p className="mt-1 text-sm text-slate-700">{report.description}</p>
                         </div>
                       ) : null}
 
                       {report.reviewStatus === 'PENDING' ? (
                         <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                          <p className="text-sm font-bold text-slate-800">Review actions</p>
+                          <p className="text-sm font-bold text-slate-800">{t('admin.damageReports.reviewActions')}</p>
                           <input
                             type="text"
                             value={reason}
@@ -295,7 +297,7 @@ export function DamageReportsPage() {
                                 [report.id]: event.target.value,
                               }))
                             }
-                            placeholder="Reason required for rejection"
+                            placeholder={t('admin.damageReports.reasonPlaceholder')}
                             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-asean-blue focus:ring-2 focus:ring-asean-blue/20"
                           />
                           <div className="flex flex-wrap gap-2">
@@ -310,7 +312,7 @@ export function DamageReportsPage() {
                               disabled={reviewMutation.isPending}
                               className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-emerald-700 disabled:opacity-50"
                             >
-                              Approve
+                              {t('admin.damageReports.approve')}
                             </button>
                             <button
                               type="button"
@@ -323,20 +325,20 @@ export function DamageReportsPage() {
                               disabled={reviewMutation.isPending || !reason.trim()}
                               className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-bold text-white transition-all hover:bg-rose-700 disabled:opacity-50"
                             >
-                              Reject
+                              {t('admin.damageReports.reject')}
                             </button>
                           </div>
                           {reviewMutation.isError ? (
                             <p className="text-sm text-rose-600">
-                              Review failed. Please try again.
+                              {t('admin.damageReports.reviewFailed')}
                             </p>
                           ) : null}
                         </div>
                       ) : (
                         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
                           {report.reviewStatus === 'APPROVED'
-                            ? 'This report is already approved and visible on the operational map.'
-                            : 'This report has been rejected.'}
+                            ? t('admin.damageReports.alreadyApproved')
+                            : t('admin.damageReports.rejectedNote')}
                           {report.reviewNote ? ` Review note: ${report.reviewNote}` : ''}
                         </div>
                       )}

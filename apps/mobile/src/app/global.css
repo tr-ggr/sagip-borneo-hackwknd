@@ -28,7 +28,6 @@
     --sagip-border: #e2e8f0;
     --sagip-heading: #0f172a;
     --bottom-nav-height: 96px;
-    --map-actions-bar-height: 56px;
     --map-actions-bar-gap: 0.5rem;
     --font-sagip: "Space Grotesk", system-ui, sans-serif;
   }
@@ -141,9 +140,9 @@
     padding-bottom: calc(var(--bottom-nav-height) + 1rem);
   }
 
-  /* Map screens: reserve nav height + gap + actions bar so map content does not scroll under the bar */
+  /* Map screens: reserve nav height so content and actions bar sit above the fixed nav */
   .mobile-nav-safe-map {
-    padding-bottom: calc(var(--bottom-nav-height) + var(--map-actions-bar-gap) + var(--map-actions-bar-height));
+    padding-bottom: var(--bottom-nav-height);
   }
 
   /* T'nalak divider (red / yellow / blue stripe) */

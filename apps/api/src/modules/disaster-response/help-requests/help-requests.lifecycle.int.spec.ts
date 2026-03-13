@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HelpRequestsController } from './help-requests.controller';
 import { HelpRequestsService } from './help-requests.service';
+import { TriageService } from './triage.service';
 import { AuthSessionGuard } from '../../auth/auth-session.guard';
 import { AuthService } from '../../auth/auth.service';
 import { ApprovedVolunteerGuard } from '../shared/approved-volunteer.guard';
@@ -31,12 +32,17 @@ describe('HelpRequests Lifecycle (Integration)', () => {
     $transaction: jest.fn((cb) => cb(mockPrisma)),
   };
 
+  const mockTriageService = {
+    triage: jest.fn().mockReturnValue({ category: 'TRAPPED', suggestedUrgency: 'CRITICAL' }),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [HelpRequestsController],
       providers: [
         HelpRequestsService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: TriageService, useValue: mockTriageService },
         { provide: AuthService, useValue: { getSession: jest.fn() } },
         { provide: AuthSessionGuard, useValue: { canActivate: jest.fn().mockResolvedValue(true) } },
         { provide: ApprovedVolunteerGuard, useValue: { canActivate: jest.fn().mockResolvedValue(true) } },
@@ -62,11 +68,19 @@ describe('HelpRequests Lifecycle (Integration)', () => {
     };
     const session = { user: { id: 'requester-1' } } as any;
 
-    mockPrisma.helpRequest.create.mockResolvedValue({ id: 'hr-1', ...dto, requesterId: 'requester-1', status: 'OPEN' });
+    mockPrisma.helpRequest.create.mockResolvedValue({ id: 'hr-1', ...dto, requesterId: 'requester-1', status: 'OPEN', triageCategory: 'TRAPPED' });
 
     const result = await controller.create(session, dto);
     expect(result.id).toBe('hr-1');
-    expect(mockPrisma.helpRequest.create).toHaveBeenCalled();
+    expect(mockPrisma.helpRequest.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          description: 'Stuck on roof',
+          triageCategory: 'TRAPPED',
+          urgency: 'CRITICAL',
+        }),
+      }),
+    );
   });
 
   it('should list open help requests', async () => {

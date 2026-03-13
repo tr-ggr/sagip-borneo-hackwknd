@@ -40,6 +40,24 @@ export const AgeGroup = {
 export type AgeGroup = (typeof AgeGroup)[keyof typeof AgeGroup]
 
 
+export const DamageCategory = {
+  FLOODED_ROAD: 'FLOODED_ROAD',
+  COLLAPSED_STRUCTURE: 'COLLAPSED_STRUCTURE',
+  DAMAGED_INFRASTRUCTURE: 'DAMAGED_INFRASTRUCTURE'
+} as const
+
+export type DamageCategory = (typeof DamageCategory)[keyof typeof DamageCategory]
+
+
+export const DamageReportReviewStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type DamageReportReviewStatus = (typeof DamageReportReviewStatus)[keyof typeof DamageReportReviewStatus]
+
+
 export const HazardType = {
   FLOOD: 'FLOOD',
   TYPHOON: 'TYPHOON',
@@ -98,6 +116,17 @@ export const HelpUrgency = {
 } as const
 
 export type HelpUrgency = (typeof HelpUrgency)[keyof typeof HelpUrgency]
+
+
+export const TriageCategory = {
+  MEDICAL: 'MEDICAL',
+  TRAPPED: 'TRAPPED',
+  FLOOD_WATER: 'FLOOD_WATER',
+  INFRASTRUCTURE_DAMAGE: 'INFRASTRUCTURE_DAMAGE',
+  OTHER: 'OTHER'
+} as const
+
+export type TriageCategory = (typeof TriageCategory)[keyof typeof TriageCategory]
 
 
 export const AssignmentStatus = {

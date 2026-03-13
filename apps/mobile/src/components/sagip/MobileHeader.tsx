@@ -3,6 +3,7 @@
 import { Globe, Menu, MessageSquare, Shield } from 'lucide-react';
 import { TnalakDivider } from './TnalakDivider';
 import { useI18n } from '../../i18n/context';
+import logoSrc from '@/assets/logo.svg';
 
 export type MobileHeaderStatus = {
   label: string;
@@ -55,7 +56,7 @@ export function MobileHeader({
               </div>
             ) : (
               <img
-                src="/logo.svg"
+                src={typeof logoSrc === 'string' ? logoSrc : (logoSrc as { src: string }).src}
                 alt=""
                 aria-hidden
                 className="size-10 object-contain"

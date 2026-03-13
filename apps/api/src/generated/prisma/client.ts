@@ -72,6 +72,11 @@ export type Verification = Prisma.VerificationModel
  */
 export type BuildingProfile = Prisma.BuildingProfileModel
 /**
+ * Model DamageReport
+ * 
+ */
+export type DamageReport = Prisma.DamageReportModel
+/**
  * Model Family
  * 
  */

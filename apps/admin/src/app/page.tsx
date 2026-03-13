@@ -8,6 +8,7 @@ import {
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useAuth } from '../lib/auth';
+import { useI18n } from '../i18n/context';
 
 type HazardType = 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
 type SeverityLevel = 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
@@ -119,24 +120,17 @@ function toPercent(part: number, total: number): number {
   return Math.round((part / total) * 100);
 }
 
-function getWeatherLabel(code?: number | null): string {
-  if (code == null) {
-    return 'No weather code';
-  }
-  if (code <= 1) {
-    return 'Clear to partly cloudy';
-  }
-  if (code <= 3) {
-    return 'Cloudy';
-  }
-  if (code <= 67) {
-    return 'Rain activity';
-  }
-  return 'Severe weather signal';
+function getWeatherLabelKey(code?: number | null): string {
+  if (code == null) return 'admin.dashboard.noWeatherCode';
+  if (code <= 1) return 'admin.dashboard.clearToPartlyCloudy';
+  if (code <= 3) return 'admin.dashboard.cloudy';
+  if (code <= 67) return 'admin.dashboard.rainActivity';
+  return 'admin.dashboard.severeWeatherSignal';
 }
 
 export default function HomePage() {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   const mapOverviewQuery = useAdminOperationsControllerMapOverview({
     query: {
@@ -289,42 +283,41 @@ export default function HomePage() {
         <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
-              Live Operations
+              {t('admin.dashboard.liveOps')}
             </p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
-              Operational Overview
+              {t('admin.dashboard.operationalOverview')}
             </h1>
             <p className="mt-1 text-sm text-slate-600">
-              Manual command dashboard for risk, warnings, and volunteer
-              readiness.
+              {t('admin.dashboard.overviewSubtitle')}
             </p>
           </div>
           <div className="flex items-center gap-3">
             <div className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600">
-              Duty Officer: {user?.name ?? 'Admin'}
+              {t('admin.dashboard.dutyOfficer')}: {user?.name ?? t('admin.dashboard.admin')}
             </div>
             <Link
               href="/warnings/new"
               className="rounded-lg bg-[#193ce6] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#132fb4]"
             >
-              Create Incident
+              {t('admin.dashboard.createIncident')}
             </Link>
           </div>
         </div>
 
         {loadingDashboard ? (
           <div className="rounded-xl border border-slate-200 bg-white p-8 text-sm font-medium text-slate-600">
-            Loading dashboard intelligence...
+            {t('admin.dashboard.loadingIntelligence')}
           </div>
         ) : (
           <div className="space-y-8">
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-slate-800">
-                  Live Intelligence
+                  {t('admin.dashboard.liveIntelligence')}
                 </h2>
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                  Real-time Feed
+                  {t('admin.dashboard.realTimeFeed')}
                 </span>
               </div>
 
@@ -332,16 +325,16 @@ export default function HomePage() {
                 <article className="col-span-12 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:col-span-4">
                   <div className="flex items-center justify-between bg-[#e73c08] px-4 py-3 text-white">
                     <p className="text-xs font-black uppercase tracking-[0.15em]">
-                      Weather Warning
+                      {t('admin.dashboard.weatherWarning')}
                     </p>
                     <span className="rounded bg-white px-2 py-0.5 text-[10px] font-black text-[#e73c08]">
-                      MANUAL WATCH
+                      {t('admin.dashboard.manualWatch')}
                     </span>
                   </div>
                   <div className="space-y-5 p-5">
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                        Precipitation Forecast
+                        {t('admin.dashboard.precipitationForecast')}
                       </p>
                       <div className="mt-1 flex items-end gap-2">
                         <p className="text-2xl font-black text-slate-900">
@@ -351,24 +344,22 @@ export default function HomePage() {
                           {precipitationUnit}
                         </p>
                         <span className="pb-1 text-xs font-semibold text-[#e73c08]">
-                          today
+                          {t('admin.dashboard.today')}
                         </span>
                       </div>
                     </div>
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                        Weather Signal
+                        {t('admin.dashboard.weatherSignal')}
                       </p>
                       <p className="mt-1 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-700">
-                        {getWeatherLabel(
-                          Number.isFinite(currentCode) ? currentCode : null,
-                        )}
+                        {t(getWeatherLabelKey(Number.isFinite(currentCode) ? currentCode : null))}
                       </p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                          Wind Speed
+                          {t('admin.dashboard.windSpeed')}
                         </p>
                         <p className="text-xl font-black text-slate-900">
                           {Number.isFinite(windSpeed)
@@ -379,7 +370,7 @@ export default function HomePage() {
                       </div>
                       <div className="text-right">
                         <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                          Elevated Regions
+                          {t('admin.dashboard.elevatedRegions')}
                         </p>
                         <p className="text-xl font-black text-[#e73c08]">
                           {criticalRegions.length}
@@ -393,26 +384,26 @@ export default function HomePage() {
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,#dbeafe,transparent_35%),radial-gradient(circle_at_80%_80%,#fee2e2,transparent_40%),linear-gradient(120deg,#f8fafc_0%,#eef2ff_100%)]" />
                   <div className="relative flex h-full flex-col justify-between p-6">
                     <div className="ml-auto w-fit rounded-lg border border-slate-200 bg-white/90 px-3 py-2 text-xs font-semibold text-slate-700">
-                      <p className="mb-1">Legend</p>
+                      <p className="mb-1">{t('admin.dashboard.legend')}</p>
                       <div className="flex items-center gap-2">
                         <span className="inline-block size-2 rounded-full bg-[#e73c08]" />{' '}
-                        Critical
+                        {t('admin.dashboard.critical')}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="inline-block size-2 rounded-full bg-[#193ce6]" />{' '}
-                        Active Response
+                        {t('admin.dashboard.activeResponse')}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="inline-block size-2 rounded-full bg-[#ffcc00]" />{' '}
-                        Monitoring
+                        {t('admin.dashboard.monitoring')}
                       </div>
                     </div>
                     <div>
                       <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                        Operations Map Summary
+                        {t('admin.dashboard.operationsMapSummary')}
                       </p>
                       <h3 className="mt-2 text-2xl font-black text-slate-900">
-                        Map Command View
+                        {t('admin.dashboard.mapCommandView')}
                       </h3>
                       <p className="mt-2 max-w-xl text-sm text-slate-600">
 
@@ -422,7 +413,7 @@ export default function HomePage() {
                     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                       <div className="rounded-lg border border-slate-200 bg-white/90 p-3">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-                          Open or In Progress Pins
+                          {t('admin.dashboard.openPins')}
                         </p>
                         <p className="mt-1 text-2xl font-black text-slate-900">
                           {openPins}
@@ -430,7 +421,7 @@ export default function HomePage() {
                       </div>
                       <div className="rounded-lg border border-slate-200 bg-white/90 p-3">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-                          Urgent Help Requests
+                          {t('admin.dashboard.urgentHelpRequests')}
                         </p>
                         <p className="mt-1 text-2xl font-black text-[#e73c08]">
                           {urgentHelpRequests}
@@ -438,7 +429,7 @@ export default function HomePage() {
                       </div>
                       <div className="rounded-lg border border-slate-200 bg-white/90 p-3">
                         <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-                          Active Location Snapshots
+                          {t('admin.dashboard.activeLocationSnapshots')}
                         </p>
                         <p className="mt-1 text-2xl font-black text-slate-900">
                           {overview.userLocations.length}
@@ -453,7 +444,7 @@ export default function HomePage() {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-slate-800">
-                  Flood Risk Analytics
+                  {t('admin.dashboard.floodRiskAnalytics')}
                 </h2>
               </div>
 
@@ -461,7 +452,7 @@ export default function HomePage() {
                 <div className="col-span-12 grid grid-cols-1 gap-6 md:grid-cols-3 lg:col-span-8">
                   <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                      Alert Status Gauge
+                      {t('admin.dashboard.alertStatusGauge')}
                     </p>
                     <div className="mt-5">
                       <div className="flex h-3 overflow-hidden rounded-full bg-slate-100">
@@ -471,23 +462,23 @@ export default function HomePage() {
                       </div>
                       <p className="mt-3 text-xl font-black text-[#e73c08]">
                         {criticalRegions.length > 0
-                          ? 'Critical State'
-                          : 'Monitoring State'}
+                          ? t('admin.dashboard.criticalState')
+                          : t('admin.dashboard.monitoringState')}
                       </p>
                     </div>
                   </article>
 
                   <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                      Probability Index
+                      {t('admin.dashboard.probabilityIndex')}
                     </p>
                     <h3 className="mt-3 text-lg font-bold text-slate-900">
                       {criticalRegions.length > 0
-                        ? `High risk in ${criticalRegions[0]?.name ?? 'priority region'}`
-                        : 'No critical region currently'}
+                        ? `${t('admin.dashboard.highRiskIn')} ${criticalRegions[0]?.name ?? t('admin.dashboard.priorityRegion')}`
+                        : t('admin.dashboard.noCriticalRegion')}
                     </h3>
                     <p className="mt-2 text-xs text-slate-500">
-                      Based on critical/high entries in RiskRegionSnapshot.
+                      {t('admin.dashboard.basedOnCritical')}
                     </p>
                     <div className="mt-4 flex gap-1">
                       <div className="h-1 flex-1 rounded-full bg-[#e73c08]" />
@@ -499,16 +490,16 @@ export default function HomePage() {
 
                   <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                      Predicted Inundation
+                      {t('admin.dashboard.predictedInundation')}
                     </p>
                     <p className="mt-2 text-2xl font-black text-slate-900">
                       {Math.max(criticalRegions.length * 0.2, 0.2).toFixed(1)}m
                     </p>
                     <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
-                      Estimated depth proxy from critical region density
+                      {t('admin.dashboard.estimatedDepthProxy')}
                     </p>
                     <p className="mt-5 text-xs font-semibold text-[#193ce6]">
-                      Action: Evacuation Stage{' '}
+                      {t('admin.dashboard.actionEvacuationStage')}{' '}
                       {criticalRegions.length > 2 ? '2' : '1'}
                     </p>
                   </article>
@@ -517,19 +508,19 @@ export default function HomePage() {
                 <div className="col-span-12 lg:col-span-4">
                   <article className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#e73c08] to-red-700 p-6 text-white shadow-lg">
                     <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/80">
-                      Urgent Dispatch
+                      {t('admin.dashboard.urgentDispatch')}
                     </p>
-                    <h3 className="mt-3 text-2xl font-bold">SOS Alert Pulse</h3>
+                    <h3 className="mt-3 text-2xl font-bold">{t('admin.dashboard.sosAlertPulse')}</h3>
                     <p className="mt-2 text-sm text-white/80">
                       {urgentHelpRequests > 0
-                        ? `${urgentHelpRequests} high-priority help request(s) need immediate verification.`
-                        : 'No high-priority SOS requests at this moment.'}
+                        ? t('admin.dashboard.urgentHelpMessage').replace('{count}', String(urgentHelpRequests))
+                        : t('admin.dashboard.noUrgentSos')}
                     </p>
                     <Link
                       href="/map"
                       className="mt-5 inline-flex rounded-lg bg-white/95 px-3 py-2 text-xs font-bold text-red-700"
                     >
-                      Open Map Analytics
+                      {t('admin.dashboard.openMapAnalytics')}
                     </Link>
                   </article>
                 </div>
@@ -539,20 +530,20 @@ export default function HomePage() {
             <section>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-bold text-slate-800">
-                  Volunteer Force
+                  {t('admin.dashboard.volunteerForce')}
                 </h2>
               </div>
 
               <div className="grid grid-cols-12 gap-6">
                 <article className="col-span-12 rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-4">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                    Deployment Status
+                    {t('admin.dashboard.deploymentStatus')}
                   </p>
                   <div className="mt-6 space-y-5">
                     <div>
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-bold text-slate-700">
-                          Active Duty
+                          {t('admin.dashboard.activeDuty')}
                         </p>
                         <p className="text-2xl font-black text-slate-900">
                           {activeDeployments}
@@ -568,7 +559,7 @@ export default function HomePage() {
                     <div>
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-bold text-slate-700">
-                          On Standby
+                          {t('admin.dashboard.onStandby')}
                         </p>
                         <p className="text-2xl font-black text-slate-900">
                           {standbyVolunteers}
@@ -586,7 +577,7 @@ export default function HomePage() {
 
                 <article className="col-span-12 rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-4">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                    Hazard Load Distribution
+                    {t('admin.dashboard.hazardLoadDistribution')}
                   </p>
                   <div className="mt-6 grid grid-cols-[120px_1fr] items-center gap-4">
                     <div className="relative size-28 rounded-full border-[14px] border-slate-100">
@@ -603,14 +594,14 @@ export default function HomePage() {
                           {totalHazards}
                         </p>
                         <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400">
-                          total
+                          {t('admin.dashboard.total')}
                         </p>
                       </div>
                     </div>
                     <div className="space-y-2 text-[11px] font-bold text-slate-700">
-                      <p>Flood ({floodPct}%)</p>
-                      <p>Typhoon ({typhoonPct}%)</p>
-                      <p>Quake/Aftershock ({quakePct}%)</p>
+                      <p>{t('admin.dashboard.flood')} ({floodPct}%)</p>
+                      <p>{t('admin.dashboard.typhoon')} ({typhoonPct}%)</p>
+                      <p>{t('admin.dashboard.quakeAftershock')} ({quakePct}%)</p>
                     </div>
                   </div>
                 </article>
@@ -618,10 +609,10 @@ export default function HomePage() {
                 <article className="col-span-12 rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-4">
                   <div className="mb-4 flex items-center justify-between">
                     <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                      Pending Approvals
+                      {t('admin.dashboard.pendingApprovals')}
                     </p>
                     <span className="rounded-lg bg-[#e73c08] px-2 py-0.5 text-[10px] font-black text-white">
-                      {pendingApplications.length} NEW
+                      {pendingApplications.length} {t('admin.dashboard.new')}
                     </span>
                   </div>
                   <div className="ops-scrollbar max-h-[220px] space-y-3 overflow-y-auto pr-2">
@@ -632,20 +623,20 @@ export default function HomePage() {
                       >
                         <div>
                           <p className="text-xs font-bold text-slate-900">
-                            {application.user?.name ?? 'Unnamed volunteer'}
+                            {application.user?.name ?? t('admin.dashboard.unnamedVolunteer')}
                           </p>
                           <p className="text-[10px] text-slate-500">
-                            {application.user?.email ?? 'No email'}
+                            {application.user?.email ?? t('admin.dashboard.noEmail')}
                           </p>
                         </div>
                         <span className="text-xs font-black text-[#193ce6]">
-                          PENDING
+                          {t('admin.dashboard.pending')}
                         </span>
                       </div>
                     ))}
                     {pendingApplications.length === 0 ? (
                       <p className="text-xs font-medium text-slate-500">
-                        No pending applications right now.
+                        {t('admin.dashboard.noPendingApplications')}
                       </p>
                     ) : null}
                   </div>
@@ -653,7 +644,7 @@ export default function HomePage() {
                     href="/volunteers"
                     className="mt-4 block rounded-lg bg-slate-900 py-2 text-center text-xs font-bold text-white transition hover:bg-slate-800"
                   >
-                    Review Queue
+                    {t('admin.dashboard.reviewQueue')}
                   </Link>
                 </article>
               </div>

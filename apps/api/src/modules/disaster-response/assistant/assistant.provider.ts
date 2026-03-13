@@ -6,13 +6,20 @@ export interface AssistantAnswerInput {
     userId?: string;
     demographics?: {
       age?: number | null;
+      ageGroup?: string | null;
       housingType?: string | null;
-      personalInfo?: any;
-      vulnerabilities?: any;
-      householdComposition?: any;
-      emergencySkills?: any;
-      assets?: any;
+      pregnantStatus?: boolean | null;
+      isPWD?: boolean | null;
+      personalInfo?: unknown;
+      vulnerabilities?: unknown;
+      householdComposition?: unknown;
+      emergencySkills?: unknown;
+      assets?: unknown;
     };
+    /** Incoming weather summary for preparedness (e.g. from forecast API). */
+    weather?: string | { summary?: string; temperature?: number; precipitation?: number };
+    /** Preferred language for response (SEA-Guard language inclusivity). */
+    preferredLanguage?: string;
   };
 }
 

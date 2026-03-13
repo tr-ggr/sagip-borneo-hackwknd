@@ -754,6 +754,62 @@
         ]
       }
     },
+    "/api/evacuation/hazard-route": {
+      "get": {
+        "operationId": "EvacuationController_hazardRoute",
+        "parameters": [
+          {
+            "name": "fromLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fromLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "rainfall_mm",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Hazard-aware route between two coordinates; uses hazard server with rainfall_mm",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
     "/api/evacuation/route": {
       "get": {
         "operationId": "EvacuationController_route",
@@ -2136,6 +2192,21 @@
         ]
       }
     },
+    "/api/health-outbreak/dengue/regions": {
+      "get": {
+        "operationId": "HealthOutbreakController_getDengueRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get Philippine regions GeoJSON with dengue risk scores per region",
+        "tags": [
+          "health-outbreak"
+        ]
+      }
+    },
     "/api/tracker/shipments": {
       "get": {
         "operationId": "TrackerController_getShipments",
@@ -2655,6 +2726,11 @@
             "type": "string",
             "example": "FLOOD",
             "description": "Type of hazard relevant to the inquiry"
+          },
+          "preferredLanguage": {
+            "type": "string",
+            "example": "en",
+            "description": "Preferred language for the response (e.g. en, ms, tl). SEA-Guard language inclusivity."
           }
         },
         "required": [

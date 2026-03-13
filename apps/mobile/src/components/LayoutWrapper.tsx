@@ -81,7 +81,44 @@ export default function LayoutWrapper({
       />
 
       <main className={`flex-1 flex flex-col min-h-0 min-w-0 overflow-x-hidden ${showNav ? (isMapScreen ? 'mobile-nav-safe-map' : 'mobile-nav-safe') : 'pb-4'} ${isHome || isAssistant ? '' : isMapScreen ? 'px-0' : 'px-4'} pt-0 ${isAssistant ? 'overflow-hidden min-h-0' : isMapScreen ? 'overflow-hidden' : 'overflow-y-auto'} w-full ${isMapScreen ? 'max-w-none' : 'max-w-md mx-auto'} scroll-smooth`}>
-        {children}
+        {isMapScreen ? (
+          <>
+            <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden relative">
+              {children}
+            </div>
+            {showNav && (
+              <div
+                className="shrink-0 px-3 py-1.5 bg-white/95 backdrop-blur-md border-t border-wira-earth/10 shadow-[0_-2px_8px_rgba(0,0,0,0.06)]"
+                role="group"
+                aria-label={t('map.mapLayers')}
+              >
+                <div className="flex gap-2 overflow-x-auto overflow-y-visible py-0.5 items-center [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb]:bg-wira-earth/20">
+                  {mapActions.map(({ path, labelKey, icon: Icon }) => {
+                    const isActive = currentPath === path;
+                    return (
+                      <button
+                        key={path}
+                        type="button"
+                        onClick={() => onNavigate(path)}
+                        className={`shrink-0 flex items-center gap-2 rounded-full px-3 py-3 font-sagip text-sm font-medium transition-colors border ${
+                          isActive
+                            ? 'bg-orange-500 text-white border-orange-500 shadow-md'
+                            : 'bg-white/95 backdrop-blur-md border-wira-earth/20 text-wira-earth hover:bg-wira-earth/5'
+                        }`}
+                        title={t(labelKey)}
+                      >
+                        <Icon size={18} className={isActive ? 'text-white' : 'text-wira-teal'} />
+                        <span>{t(labelKey)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          children
+        )}
       </main>
 
       <MenuDrawer
@@ -95,37 +132,6 @@ export default function LayoutWrapper({
         open={languageOpen}
         onClose={() => setLanguageOpen(false)}
       />
-
-      {showNav && isMapScreen && (
-        <div
-          className="fixed left-0 right-0 z-40 px-4 py-2 bg-white/95 backdrop-blur-md border-t border-wira-earth/10 shadow-[0_-2px_8px_rgba(0,0,0,0.06)]"
-          style={{ bottom: 'calc(var(--bottom-nav-height) + var(--map-actions-bar-gap, 0.5rem))', height: 'var(--map-actions-bar-height, 56px)' }}
-          role="group"
-          aria-label={t('map.mapLayers')}
-        >
-          <div className="flex gap-2 overflow-x-auto overflow-y-hidden py-1 min-h-0 h-full items-center [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb]:bg-wira-earth/20">
-            {mapActions.map(({ path, labelKey, icon: Icon }) => {
-              const isActive = currentPath === path;
-              return (
-                <button
-                  key={path}
-                  type="button"
-                  onClick={() => onNavigate(path)}
-                  className={`shrink-0 flex items-center gap-2 rounded-full px-4 py-2.5 font-sagip text-sm font-medium transition-colors min-h-[44px] border ${
-                    isActive
-                      ? 'bg-orange-500 text-white border-orange-500 shadow-md'
-                      : 'bg-white/95 backdrop-blur-md border-wira-earth/20 text-wira-earth hover:bg-wira-earth/5'
-                  }`}
-                  title={t(labelKey)}
-                >
-                  <Icon size={18} className={isActive ? 'text-white' : 'text-wira-teal'} />
-                  <span>{t(labelKey)}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {showNav && (
         <nav className="sagip-bottom-nav">
