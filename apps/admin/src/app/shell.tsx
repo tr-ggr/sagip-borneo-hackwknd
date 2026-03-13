@@ -10,11 +10,12 @@ import type { Locale } from '../i18n/locales';
 import { LOCALE_DISPLAY } from '../i18n/locales';
 
 const navItems = [
-  { href: '/', key: 'admin.nav.dashboard' as const, icon: 'home' as const },
-  { href: '/volunteers', key: 'admin.nav.resources' as const, icon: 'users' as const },
-  { href: '/damage-reports', key: 'admin.nav.damageReports' as const, icon: 'damage' as const },
-  { href: '/warnings', key: 'admin.nav.warnings' as const, icon: 'alert' as const },
-  { href: '/map', key: 'admin.nav.map' as const, icon: 'map' as const },
+  { href: '/', label: 'Dashboard', icon: 'home' as const },
+  { href: '/volunteers', label: 'Resources', icon: 'users' as const },
+  { href: '/help-requests', label: 'Help Requests', icon: 'pin' as const },
+  { href: '/damage-reports', label: 'Damage Reports', icon: 'damage' as const },
+  { href: '/warnings', label: 'Warnings', icon: 'alert' as const },
+  { href: '/map', label: 'Map', icon: 'map' as const },
 ] as const;
 
 function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
@@ -110,6 +111,23 @@ function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
           <path d="M15 6.5v13.5" />
         </svg>
       );
+    case 'pin':
+      return (
+        <svg
+          aria-hidden="true"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M14 3v6l4 4-2 2-4-4H6l-3 3v-4l3-3V3z" />
+          <path d="m9 15-6 6" />
+        </svg>
+      );
     default:
       return null;
   }
@@ -126,6 +144,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const isDashboardPage = pathname === '/';
   const useWhiteMainContent =
     isDashboardPage ||
+    pathname?.startsWith('/help-requests') ||
     pathname?.startsWith('/volunteers') ||
     pathname?.startsWith('/warnings');
 
