@@ -36,6 +36,17 @@ describe('AdminOperationsService', () => {
     warningEventLog: {
       create: jest.fn(),
     },
+    helpRequest: {
+      findMany: jest.fn(),
+      findUnique: jest.fn(),
+      update: jest.fn(),
+    },
+    helpAssignment: {
+      update: jest.fn(),
+    },
+    helpRequestEvent: {
+      create: jest.fn(),
+    },
     $transaction: jest.fn((cb) => cb(mockPrisma)),
   };
 
@@ -202,6 +213,122 @@ describe('AdminOperationsService', () => {
       mockPrisma.warningEvent.findUnique.mockResolvedValue(null);
 
       await expect(service.deleteWarning('missing-warning')).rejects.toThrow();
+    });
+  });
+
+  describe('updateHelpRequestStatusByAdmin', () => {
+    it('should throw when note is missing', async () => {
+      await expect(
+        service.updateHelpRequestStatusByAdmin({
+          helpRequestId: 'req-1',
+          actorId: 'admin-1',
+          nextStatus: 'RESOLVED',
+          note: '  ',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should update help request status and create an event log', async () => {
+      mockPrisma.helpRequest.findUnique.mockResolvedValue({
+        id: 'req-1',
+        status: 'CLAIMED',
+        assignments: [{ id: 'assign-1' }],
+      });
+      mockPrisma.helpRequest.update.mockResolvedValue({
+        id: 'req-1',
+        status: 'RESOLVED',
+      });
+      mockPrisma.helpRequest.findUnique.mockResolvedValueOnce({
+        id: 'req-1',
+        status: 'CLAIMED',
+        assignments: [{ id: 'assign-1' }],
+      });
+      mockPrisma.helpRequest.findUnique.mockResolvedValueOnce({
+        id: 'req-1',
+        status: 'RESOLVED',
+      });
+
+      await service.updateHelpRequestStatusByAdmin({
+        helpRequestId: 'req-1',
+        actorId: 'admin-1',
+        nextStatus: 'RESOLVED',
+        note: 'Resolved after field verification',
+      });
+
+      expect(mockPrisma.helpAssignment.update).toHaveBeenCalledWith({
+        where: { id: 'assign-1' },
+        data: { status: 'COMPLETED' },
+      });
+      expect(mockPrisma.helpRequestEvent.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          helpRequestId: 'req-1',
+          actorId: 'admin-1',
+          previousStatus: 'CLAIMED',
+          nextStatus: 'RESOLVED',
+        }),
+      });
+    });
+
+    it('should reject terminal help requests', async () => {
+      mockPrisma.helpRequest.findUnique.mockResolvedValue({
+        id: 'req-1',
+        status: 'RESOLVED',
+        assignments: [],
+      });
+
+      await expect(
+        service.updateHelpRequestStatusByAdmin({
+          helpRequestId: 'req-1',
+          actorId: 'admin-1',
+          nextStatus: 'CANCELLED',
+          note: 'Administrative cancellation',
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('listHelpRequestsForAdmin', () => {
+    it('returns admin queue items including AI urgency fields and latest assignment', async () => {
+      mockPrisma.helpRequest.findMany.mockResolvedValue([
+        {
+          id: 'req-1',
+          requesterId: 'user-1',
+          familyId: null,
+          hazardType: 'FLOOD',
+          urgency: 'HIGH',
+          predictedUrgency: 'CRITICAL',
+          urgencyConfidence: 0.87,
+          status: 'OPEN',
+          description: 'Need rescue',
+          latitude: 1.1,
+          longitude: 110.1,
+          sosExpiresAt: null,
+          createdAt: new Date('2026-03-13T00:00:00.000Z'),
+          updatedAt: new Date('2026-03-13T00:00:00.000Z'),
+          requester: { id: 'user-1', name: 'Requester', email: 'req@example.com' },
+          assignments: [
+            {
+              id: 'assign-2',
+              status: 'ON_SITE',
+              assignedAt: new Date('2026-03-13T00:10:00.000Z'),
+              volunteer: { id: 'vol-2', name: 'V2', email: 'v2@example.com' },
+            },
+            {
+              id: 'assign-1',
+              status: 'CLAIMED',
+              assignedAt: new Date('2026-03-13T00:05:00.000Z'),
+              volunteer: { id: 'vol-1', name: 'V1', email: 'v1@example.com' },
+            },
+          ],
+          events: [],
+        },
+      ]);
+
+      const result = await service.listHelpRequestsForAdmin();
+
+      expect(result[0].predictedUrgency).toBe('CRITICAL');
+      expect(result[0].urgencyConfidence).toBe(0.87);
+      expect(result[0].latestAssignment?.id).toBe('assign-2');
     });
   });
 });

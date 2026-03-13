@@ -1,6 +1,7 @@
 {
   "admin.nav.dashboard": "Dashboard",
   "admin.nav.resources": "Resources",
+  "admin.nav.helpRequests": "Help Requests",
   "admin.nav.damageReports": "Damage Reports",
   "admin.nav.warnings": "Warnings",
   "admin.nav.map": "Map",

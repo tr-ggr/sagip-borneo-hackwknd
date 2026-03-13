@@ -1,6 +1,7 @@
 {
   "admin.nav.dashboard": "Bảng điều khiển",
   "admin.nav.resources": "Tài nguyên",
+  "admin.nav.helpRequests": "Yêu cầu trợ giúp",
   "admin.nav.damageReports": "Báo cáo thiệt hại",
   "admin.nav.warnings": "Cảnh báo",
   "admin.nav.map": "Bản đồ",

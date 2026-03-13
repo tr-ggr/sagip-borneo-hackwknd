@@ -1,6 +1,7 @@
 {
   "admin.nav.dashboard": "Dashboard",
   "admin.nav.resources": "Mga Kapanguhaan",
+  "admin.nav.helpRequests": "Mga Hangyo sa Tabang",
   "admin.nav.damageReports": "Mga Report sa Kadaot",
   "admin.nav.warnings": "Mga Pasidaan",
   "admin.nav.map": "Mapa",

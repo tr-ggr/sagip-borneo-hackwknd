@@ -6,8 +6,14 @@ import {
 import { PrismaService } from '../../../core/database/database.service';
 import type { HelpUrgency } from '@prisma/client';
 import { TriageService } from './triage.service';
+import { HelpRequestTriageService } from './help-request-triage.service';
 
 const SOS_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+const SOS_TRIAGE_TEXT = [
+  'Hazard Type: FLOOD',
+  'Description: SOS emergency request submitted via one-tap trigger.',
+  'User Context: Immediate assistance needed. Location attached from live device coordinates.',
+].join('\n');
 
 const URGENCY_ORDER: HelpUrgency[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 
@@ -22,6 +28,7 @@ export class HelpRequestsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly triageService: TriageService,
+    private readonly helpRequestTriageService: HelpRequestTriageService,
   ) {}
 
   async create(input: {
@@ -39,6 +46,8 @@ export class HelpRequestsService {
       input.hazardType,
     );
     const urgency = maxUrgency(input.urgency, triageResult.suggestedUrgency);
+    const triageText = input.sosExpiresAt ? SOS_TRIAGE_TEXT : this.buildTriageText(input);
+    const aiTriage = await this.helpRequestTriageService.triage(triageText);
 
     return this.prisma.helpRequest.create({
       data: {
@@ -46,6 +55,8 @@ export class HelpRequestsService {
         familyId: input.familyId,
         hazardType: input.hazardType,
         urgency,
+        predictedUrgency: aiTriage?.predictedUrgency ?? null,
+        urgencyConfidence: aiTriage?.urgencyConfidence ?? null,
         description: input.description,
         latitude: input.latitude,
         longitude: input.longitude,
@@ -53,6 +64,16 @@ export class HelpRequestsService {
         ...(input.sosExpiresAt != null && { sosExpiresAt: input.sosExpiresAt }),
       },
     });
+  }
+
+  private buildTriageText(input: {
+    hazardType: 'FLOOD' | 'TYPHOON' | 'EARTHQUAKE' | 'AFTERSHOCK';
+    description: string;
+  }): string {
+    return [
+      `Hazard Type: ${input.hazardType}`,
+      `Description: ${input.description.trim() || 'N/A'}`,
+    ].join('\n');
   }
 
   async listMine(userId: string) {

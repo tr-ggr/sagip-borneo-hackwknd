@@ -1,6 +1,7 @@
 {
   "admin.nav.dashboard": "แดชบอร์ด",
   "admin.nav.resources": "ทรัพยากร",
+  "admin.nav.helpRequests": "คำขอความช่วยเหลือ",
   "admin.nav.damageReports": "รายงานความเสียหาย",
   "admin.nav.warnings": "การแจ้งเตือน",
   "admin.nav.map": "แผนที่",
