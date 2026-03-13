@@ -1,0 +1,29 @@
+{
+  "name": "@wira-borneo/tracker",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "dev": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "next dev --port 4444",
+          "cwd": "apps/tracker"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "next": "~16.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@wira-borneo/api-client": "*",
+    "@tanstack/react-query": "^5.90.2",
+    "ethers": "^6.13.0",
+    "wagmi": "^2.12.0",
+    "viem": "^2.21.0",
+    "@rainbow-me/rainbowkit": "^2.1.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "@supabase/ssr": "^0.5.0"
+  }
+}

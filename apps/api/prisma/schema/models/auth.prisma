@@ -1,0 +1,110 @@
+model User {
+  id                         String                      @id @default(cuid())
+  name                       String
+  email                      String                      @unique
+  emailVerified              Boolean                     @default(false)
+  image                      String?
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  sessions                   Session[]
+  accounts                   Account[]
+  familiesCreated            Family[]
+  familyMemberships          FamilyMember[]
+  volunteerProfile           VolunteerProfile?
+  volunteerApplications      VolunteerApplication[]      @relation("VolunteerApplicationApplicant")
+  volunteerReviewsGiven      VolunteerApplication[]      @relation("VolunteerApplicationReviewer")
+  volunteerApprovalsGiven    VolunteerProfile[]          @relation("VolunteerProfileApprover")
+  helpRequests               HelpRequest[]
+  helpAssignments            HelpAssignment[]
+  warningsCreated            WarningEvent[]              @relation("WarningCreatedBy")
+  warningEventLogs           WarningEventLog[]            @relation("WarningEventActor")
+  volunteerDecisionLogs      VolunteerDecisionLog[]      @relation("VolunteerDecisionActor")
+  helpRequestEvents          HelpRequestEvent[]           @relation("HelpRequestEventActor")
+  mapPinsReported            MapPinStatus[]              @relation("MapPinReporter")
+  mapPinsReviewed            MapPinStatus[]               @relation("MapPinReviewer")
+  damageReportsSubmitted     DamageReport[]               @relation("DamageReportReporter")
+  damageReportsReviewed      DamageReport[]               @relation("DamageReportReviewer")
+  locationSnapshot           UserLocationSnapshot?
+  evacuationRouteSuggestions EvacuationRouteSuggestion[]
+
+  role       String?   @default("user")
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
+  // Demographic & Vulnerability data
+  age                  Int?
+  ageGroup             AgeGroup?
+  pregnantStatus       Boolean?
+  isPWD                Boolean?
+  housingType          HousingType?
+  personalInfo         Json?
+  vulnerabilities      Json?
+  householdComposition Json?
+  emergencySkills      Json?
+  assets               Json?
+  assetRecords         Asset[]
+}
+
+enum HousingType {
+  LONGHOUSE
+  DETACHED
+  SEMI_DETACHED
+  TERRACE
+  APARTMENT
+  OTHER
+}
+
+enum AgeGroup {
+  UNDER_12
+  AGE_12_17
+  AGE_18_59
+  AGE_60_PLUS
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}

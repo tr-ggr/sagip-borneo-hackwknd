@@ -1,0 +1,4520 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/sign-up": {
+      "post": {
+        "operationId": "AuthController_signUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignUpResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/sign-in": {
+      "post": {
+        "operationId": "AuthController_signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResult"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/sign-out": {
+      "post": {
+        "operationId": "AuthController_signOut",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/session": {
+      "get": {
+        "operationId": "AuthController_getSession",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSession"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/profile": {
+      "patch": {
+        "operationId": "AuthController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfilePayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticatedUser"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/location": {
+      "patch": {
+        "operationId": "AuthController_updateLocation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLocationPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/risk/forecast": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getForecast",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "forecastDays",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get weather-driven risk forecast for a location",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/risk/user-impact": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getUserImpact",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get impact summary for current user and family",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/risk/regions": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getVulnerableRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all active risk regions",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/risk/full-detail/{iso3}": {
+      "get": {
+        "operationId": "RiskIntelligenceController_getFullDetail",
+        "parameters": [
+          {
+            "name": "iso3",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bbox",
+            "required": true,
+            "in": "query",
+            "description": "minLng,minLat,maxLng,maxLat",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns GeoJSON FeatureCollection"
+          }
+        },
+        "summary": "Get full detail building profiles for a country and bbox",
+        "tags": [
+          "risk-intelligence"
+        ]
+      }
+    },
+    "/api/families": {
+      "post": {
+        "operationId": "FamiliesController_createFamily",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFamilyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a family with permanent join code",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/families/join": {
+      "post": {
+        "operationId": "FamiliesController_joinFamily",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinFamilyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Join an existing family using code",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/families/me": {
+      "get": {
+        "operationId": "FamiliesController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get authenticated user family memberships",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/families/me/map": {
+      "get": {
+        "operationId": "FamiliesController_getMyFamilyMap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get map-focused family member visibility",
+        "tags": [
+          "families"
+        ]
+      }
+    },
+    "/api/volunteers/applications": {
+      "post": {
+        "operationId": "VolunteersController_apply",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolunteerApplicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit volunteer application",
+        "tags": [
+          "volunteers"
+        ]
+      }
+    },
+    "/api/volunteers/me/status": {
+      "get": {
+        "operationId": "VolunteersController_getStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get volunteer profile/application status",
+        "tags": [
+          "volunteers"
+        ]
+      }
+    },
+    "/api/volunteers/me/home": {
+      "patch": {
+        "operationId": "VolunteersController_setHome",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VolunteerHomeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Set volunteer home location",
+        "tags": [
+          "volunteers"
+        ]
+      }
+    },
+    "/api/help-requests": {
+      "post": {
+        "operationId": "HelpRequestsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateHelpRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelpRequestResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create emergency help request",
+        "tags": [
+          "help-requests"
+        ]
+      },
+      "get": {
+        "operationId": "HelpRequestsController_listOpen",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OpenHelpRequestResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all open help requests for volunteers",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/sos": {
+      "post": {
+        "operationId": "HelpRequestsController_createSos",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSosDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelpRequestResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "One-tap SOS: create help request with current location only (time-limited)",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/me": {
+      "get": {
+        "operationId": "HelpRequestsController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HelpRequestWithHistoryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List my help requests and status history",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/assignments": {
+      "get": {
+        "operationId": "HelpRequestsController_assignments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VolunteerAssignmentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List help requests assigned to the current volunteer",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/{id}/claim": {
+      "post": {
+        "operationId": "HelpRequestsController_claim",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelpAssignmentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Claim help request as approved volunteer",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/help-requests/{id}/status": {
+      "patch": {
+        "operationId": "HelpRequestsController_updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHelpRequestStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HelpRequestResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update claimed help request status",
+        "tags": [
+          "help-requests"
+        ]
+      }
+    },
+    "/api/warnings/me": {
+      "get": {
+        "operationId": "WarningsController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get active warnings affecting current user",
+        "tags": [
+          "warnings"
+        ]
+      }
+    },
+    "/api/warnings/family": {
+      "get": {
+        "operationId": "WarningsController_family",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get active warnings affecting current family group",
+        "tags": [
+          "warnings"
+        ]
+      }
+    },
+    "/api/evacuation/areas": {
+      "get": {
+        "operationId": "EvacuationController_areas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List active evacuation areas (public)",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/nearest": {
+      "get": {
+        "operationId": "EvacuationController_nearest",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "rainfall_mm",
+            "required": false,
+            "in": "query",
+            "description": "Rainfall in mm; when provided and hazard server configured, returns hazard-aware safest routes",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of nearest evacuation areas with optional route and risk metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NearestEvacResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Nearest evacuation sites; with rainfall_mm uses hazard-aware routing (safest first)",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/hazard-route": {
+      "get": {
+        "operationId": "EvacuationController_hazardRoute",
+        "parameters": [
+          {
+            "name": "fromLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fromLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "rainfall_mm",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Hazard-aware route between two coordinates; uses hazard server with rainfall_mm",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/route": {
+      "get": {
+        "operationId": "EvacuationController_route",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "evacuationAreaId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "rainfall_mm",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route to the evacuation area with optional hazard metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteToAreaResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Route to a specific evacuation area; optional hazard-aware when rainfall_mm provided",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/evacuation/routes/suggested": {
+      "get": {
+        "operationId": "EvacuationController_suggested",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get warning-context route suggestions to shelters",
+        "tags": [
+          "evacuation"
+        ]
+      }
+    },
+    "/api/hazard-risk-layer": {
+      "get": {
+        "operationId": "HazardRiskLayerController_getRiskLayer",
+        "parameters": [
+          {
+            "name": "rainfall_mm",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of risk points (latitude, longitude, risk, elevation, etc.)"
+          }
+        },
+        "summary": "Risk points for map layer (from hazard routing server); color by risk, hover for details",
+        "tags": [
+          "hazard-risk-layer"
+        ]
+      }
+    },
+    "/api/routing/route": {
+      "get": {
+        "operationId": "RoutingController_getRoute",
+        "parameters": [
+          {
+            "name": "fromLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fromLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLon",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "toLat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "vehicleType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "driving",
+                "walking",
+                "cycling"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get road route between two points (OSRM)",
+        "tags": [
+          "routing"
+        ]
+      }
+    },
+    "/api/assistant/inquiries": {
+      "post": {
+        "operationId": "AssistantController_inquire",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssistantInquiryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantInquiryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ask disaster preparedness assistant",
+        "tags": [
+          "assistant"
+        ]
+      }
+    },
+    "/api/assistant/internal/demographics/{userId}": {
+      "get": {
+        "operationId": "AssistantInternalController_getDemographics",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-llm-internal-secret",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Internal: fetch user demographics for tool calling",
+        "tags": [
+          "assistant-internal"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications": {
+      "get": {
+        "operationId": "AdminOperationsController_listVolunteerApplications",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List volunteer applications for admin review",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewVolunteer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject volunteer application",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/bulk-review": {
+      "post": {
+        "operationId": "AdminOperationsController_bulkReviewVolunteers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkReviewVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Bulk approve or reject volunteer applications",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/{userId}/suspend": {
+      "post": {
+        "operationId": "AdminOperationsController_suspendVolunteer",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendReactivateVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Suspend volunteer profile",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/{userId}/reactivate": {
+      "post": {
+        "operationId": "AdminOperationsController_reactivateVolunteer",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendReactivateVolunteerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reactivate volunteer profile",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/volunteers/applications/{id}/history": {
+      "get": {
+        "operationId": "AdminOperationsController_getApplicationHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get decision history for an application",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/assets/registry": {
+      "get": {
+        "operationId": "AdminOperationsController_getAssetRegistry",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminAssetRegistryEntryDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List volunteered assets (users who registered assets for disaster use)",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/assets/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewAssetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject a volunteered asset",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings": {
+      "post": {
+        "operationId": "AdminOperationsController_createWarning",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWarningDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Manually create and dispatch warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      },
+      "get": {
+        "operationId": "AdminOperationsController_listWarnings",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Optional warning status filter.",
+            "schema": {
+              "enum": [
+                "DRAFT",
+                "SENT",
+                "CANCELLED"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminWarningListItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List warning events for admin management",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings/{id}": {
+      "patch": {
+        "operationId": "AdminOperationsController_updateWarning",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWarningDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update an existing warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminOperationsController_deleteWarning",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete warning event (false alarm cleanup)",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings/{id}/cancel": {
+      "post": {
+        "operationId": "AdminOperationsController_cancelWarning",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel an active warning event",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/vulnerable-regions": {
+      "get": {
+        "operationId": "AdminOperationsController_vulnerableRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get vulnerable region dashboard data",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/pins/statuses": {
+      "get": {
+        "operationId": "AdminOperationsController_pinStatuses",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get operational pin statuses",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/damage-reports": {
+      "get": {
+        "operationId": "AdminOperationsController_damageReports",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminDamageReportDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List submitted damage reports for admin review",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/pins/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewPin",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewPinDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject a hazard pin (admin only)",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/damage-reports/{id}/review": {
+      "post": {
+        "operationId": "AdminOperationsController_reviewDamageReport",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDamageReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve or reject a submitted damage report (admin only)",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/help-requests": {
+      "get": {
+        "operationId": "AdminOperationsController_helpRequests",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminHelpRequestQueueItemDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all user help requests for admin operations",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/help-requests/{id}/status": {
+      "patch": {
+        "operationId": "AdminOperationsController_updateHelpRequestStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminHelpRequestStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminHelpRequestQueueItemDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update help request status as admin",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/warnings/prompt-suggestion": {
+      "post": {
+        "operationId": "AdminOperationsController_getPromptSuggestion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarningPromptSuggestionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get suggested warning prompt template",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/users/locations": {
+      "get": {
+        "operationId": "AdminOperationsController_userLocations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get all user location snapshots for the map",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/map/overview": {
+      "get": {
+        "operationId": "AdminOperationsController_mapOverview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get complete admin map datasets in one response",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/weather/forecast": {
+      "get": {
+        "operationId": "AdminOperationsController_weatherForecast",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "hourly",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "daily",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "models",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "current_weather",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "temperature_unit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "wind_speed_unit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "precipitation_unit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Object"
+            }
+          },
+          {
+            "name": "past_days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "forecast_days",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get weather forecast from Open-Meteo for the map",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/admin/weather/geocoding": {
+      "get": {
+        "operationId": "AdminOperationsController_weatherGeocoding",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "language",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "countryCode",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Search locations using Open-Meteo geocoding",
+        "tags": [
+          "admin-operations"
+        ]
+      }
+    },
+    "/api/pins": {
+      "get": {
+        "operationId": "PinsController_findVisible",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of pins",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VisiblePinDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List hazard pins visible to the current user (approved + own)",
+        "tags": [
+          "pins"
+        ]
+      },
+      "post": {
+        "operationId": "PinsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePinDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit a hazard pin with location and optional photo",
+        "tags": [
+          "pins"
+        ]
+      }
+    },
+    "/api/assets": {
+      "post": {
+        "operationId": "AssetsController_createAsset",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Register a new asset (e.g. vehicle, equipment)",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/assets/my": {
+      "get": {
+        "operationId": "AssetsController_listMyAssets",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List assets registered by the current user",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/assets/registry": {
+      "get": {
+        "operationId": "AssetsController_listApprovedAssets",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List all approved assets for disaster response",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/assets/{id}": {
+      "get": {
+        "operationId": "AssetsController_getAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get asset details",
+        "tags": [
+          "Assets"
+        ]
+      },
+      "delete": {
+        "operationId": "AssetsController_deleteAsset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Delete an asset",
+        "tags": [
+          "Assets"
+        ]
+      }
+    },
+    "/api/damage-reports": {
+      "post": {
+        "operationId": "DamageReportsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDamageReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DamageReportDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit a geo-tagged damage report with photo and mocked AI analysis",
+        "tags": [
+          "damage-reports"
+        ]
+      },
+      "get": {
+        "operationId": "DamageReportsController_findVisible",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DamageReportDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List visible damage reports (approved + own submissions)",
+        "tags": [
+          "damage-reports"
+        ]
+      }
+    },
+    "/api/damage-reports/{id}": {
+      "get": {
+        "operationId": "DamageReportsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DamageReportDetailDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get one damage report with reporter and review details",
+        "tags": [
+          "damage-reports"
+        ]
+      }
+    },
+    "/api/health-outbreak/dengue/regions": {
+      "get": {
+        "operationId": "HealthOutbreakController_getDengueRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get Philippine regions GeoJSON with dengue risk scores per region",
+        "tags": [
+          "health-outbreak"
+        ]
+      }
+    },
+    "/api/tracker/shipments": {
+      "get": {
+        "operationId": "TrackerController_getShipments",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrackerShipmentDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all shipments",
+        "tags": [
+          "tracker"
+        ]
+      }
+    },
+    "/api/tracker/shipments/{id}": {
+      "get": {
+        "operationId": "TrackerController_getShipmentById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackerShipmentDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get shipment by ID",
+        "tags": [
+          "tracker"
+        ]
+      }
+    },
+    "/api/tracker/stats": {
+      "get": {
+        "operationId": "TrackerController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackerStatsDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get tracker statistics",
+        "tags": [
+          "tracker"
+        ]
+      }
+    },
+    "/api/tracker/relief-zones": {
+      "get": {
+        "operationId": "TrackerController_getReliefZones",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrackerReliefZoneDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get relief zones",
+        "tags": [
+          "tracker"
+        ]
+      }
+    },
+    "/api/tracker/validators": {
+      "get": {
+        "operationId": "TrackerController_getValidators",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrackerValidatorDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get validators",
+        "tags": [
+          "tracker"
+        ]
+      }
+    },
+    "/api/tracker/donation-distribution": {
+      "get": {
+        "operationId": "TrackerController_getDonationDistribution",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Map of category names to percentages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get donation distribution",
+        "tags": [
+          "tracker"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Wira Borneo API",
+    "description": "API documentation for local development and client generation",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "SignUpPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "pregnantStatus": {
+            "type": "object",
+            "nullable": true
+          },
+          "ageGroup": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "UNDER_12",
+              "AGE_12_17",
+              "AGE_18_59",
+              "AGE_60_PLUS"
+            ]
+          },
+          "isPWD": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "AuthenticatedUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "emailVerified": {
+            "type": "boolean"
+          },
+          "image": {
+            "type": "object",
+            "nullable": true
+          },
+          "role": {
+            "type": "object",
+            "nullable": true
+          },
+          "pregnantStatus": {
+            "type": "object",
+            "nullable": true
+          },
+          "ageGroup": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "UNDER_12",
+              "AGE_12_17",
+              "AGE_18_59",
+              "AGE_60_PLUS"
+            ]
+          },
+          "isPWD": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "emailVerified"
+        ]
+      },
+      "SignUpResult": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "object",
+            "nullable": true
+          },
+          "user": {
+            "$ref": "#/components/schemas/AuthenticatedUser"
+          }
+        },
+        "required": [
+          "user"
+        ]
+      },
+      "SignInPayload": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "SignInResult": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/AuthenticatedUser"
+          }
+        },
+        "required": [
+          "token",
+          "user"
+        ]
+      },
+      "AuthSession": {
+        "type": "object",
+        "properties": {
+          "session": {
+            "type": "object"
+          },
+          "user": {
+            "$ref": "#/components/schemas/AuthenticatedUser"
+          }
+        },
+        "required": [
+          "session",
+          "user"
+        ]
+      },
+      "UpdateProfilePayload": {
+        "type": "object",
+        "properties": {
+          "pregnantStatus": {
+            "type": "object",
+            "nullable": true
+          },
+          "ageGroup": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "UNDER_12",
+              "AGE_12_17",
+              "AGE_18_59",
+              "AGE_60_PLUS"
+            ]
+          },
+          "isPWD": {
+            "type": "object",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateLocationPayload": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "region": {
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      },
+      "CreateFamilyDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "JoinFamilyDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "VolunteerApplicationDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "VolunteerHomeDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateHelpRequestDto": {
+        "type": "object",
+        "properties": {
+          "familyId": {
+            "type": "string"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "hazardType",
+          "urgency",
+          "description",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "HelpRequestResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "requesterId": {
+            "type": "string"
+          },
+          "familyId": {
+            "type": "object",
+            "nullable": true
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "sosExpiresAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "requesterId",
+          "hazardType",
+          "urgency",
+          "status",
+          "description",
+          "latitude",
+          "longitude",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateSosDto": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude"
+        ]
+      },
+      "HelpAssignmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "CLAIMED",
+              "EN_ROUTE",
+              "ON_SITE",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          },
+          "assignedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "helpRequestId": {
+            "type": "string"
+          },
+          "volunteerId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "assignedAt",
+          "updatedAt",
+          "helpRequestId",
+          "volunteerId"
+        ]
+      },
+      "HelpRequestEventResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "previousStatus": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ],
+            "nullable": true
+          },
+          "nextStatus": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "note": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "nextStatus",
+          "createdAt"
+        ]
+      },
+      "HelpRequestWithHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "requesterId": {
+            "type": "string"
+          },
+          "familyId": {
+            "type": "object",
+            "nullable": true
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "sosExpiresAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "assignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HelpAssignmentResponseDto"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HelpRequestEventResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "requesterId",
+          "hazardType",
+          "urgency",
+          "status",
+          "description",
+          "latitude",
+          "longitude",
+          "createdAt",
+          "updatedAt",
+          "assignments",
+          "events"
+        ]
+      },
+      "HelpRequestRequesterSummaryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "OpenHelpRequestResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "requesterId": {
+            "type": "string"
+          },
+          "familyId": {
+            "type": "object",
+            "nullable": true
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "sosExpiresAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "requester": {
+            "$ref": "#/components/schemas/HelpRequestRequesterSummaryDto"
+          }
+        },
+        "required": [
+          "id",
+          "requesterId",
+          "hazardType",
+          "urgency",
+          "status",
+          "description",
+          "latitude",
+          "longitude",
+          "createdAt",
+          "updatedAt",
+          "requester"
+        ]
+      },
+      "HelpRequestForAssignmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "requesterId": {
+            "type": "string"
+          },
+          "familyId": {
+            "type": "object",
+            "nullable": true
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "sosExpiresAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "requester": {
+            "$ref": "#/components/schemas/HelpRequestRequesterSummaryDto"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HelpRequestEventResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "requesterId",
+          "hazardType",
+          "urgency",
+          "status",
+          "description",
+          "latitude",
+          "longitude",
+          "createdAt",
+          "updatedAt",
+          "requester",
+          "events"
+        ]
+      },
+      "VolunteerAssignmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "helpRequestId": {
+            "type": "string"
+          },
+          "volunteerId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "CLAIMED",
+              "EN_ROUTE",
+              "ON_SITE",
+              "COMPLETED",
+              "CANCELLED"
+            ]
+          },
+          "assignedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "helpRequest": {
+            "$ref": "#/components/schemas/HelpRequestForAssignmentResponseDto"
+          }
+        },
+        "required": [
+          "id",
+          "helpRequestId",
+          "volunteerId",
+          "status",
+          "assignedAt",
+          "updatedAt",
+          "helpRequest"
+        ]
+      },
+      "UpdateHelpRequestStatusDto": {
+        "type": "object",
+        "properties": {
+          "nextStatus": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          }
+        },
+        "required": [
+          "nextStatus"
+        ]
+      },
+      "NearestEvacResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "address": {
+            "type": "object",
+            "nullable": true
+          },
+          "region": {
+            "type": "object",
+            "nullable": true
+          },
+          "type": {
+            "type": "object",
+            "nullable": true
+          },
+          "capacity": {
+            "type": "object",
+            "nullable": true
+          },
+          "population": {
+            "type": "object",
+            "nullable": true
+          },
+          "source": {
+            "type": "object",
+            "nullable": true
+          },
+          "durationSeconds": {
+            "type": "number"
+          },
+          "distanceMeters": {
+            "type": "number"
+          },
+          "geometry": {
+            "type": "object",
+            "description": "Route geometry when hazard-aware or OSRM route is available",
+            "example": {
+              "type": "LineString",
+              "coordinates": [
+                [
+                  123.9,
+                  10.3
+                ],
+                [
+                  123.91,
+                  10.31
+                ]
+              ]
+            }
+          },
+          "avgRisk": {
+            "type": "number",
+            "description": "Average risk (0–1) along the path; present when hazard-aware routing was used"
+          },
+          "totalRiskCost": {
+            "type": "number",
+            "description": "Total risk cost; present when hazard-aware routing was used"
+          },
+          "hazardAware": {
+            "type": "boolean",
+            "description": "True when route was computed by the hazard-aware routing service"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "RouteToAreaResponseDto": {
+        "type": "object",
+        "properties": {
+          "evacuationArea": {
+            "type": "object",
+            "description": "Evacuation area summary"
+          },
+          "geometry": {
+            "type": "object",
+            "description": "Route geometry (LineString)"
+          },
+          "durationSeconds": {
+            "type": "number"
+          },
+          "distanceMeters": {
+            "type": "number"
+          },
+          "avgRisk": {
+            "type": "number",
+            "description": "Average risk when hazard-aware"
+          },
+          "totalRiskCost": {
+            "type": "number",
+            "description": "Total risk cost when hazard-aware"
+          },
+          "hazardAware": {
+            "type": "boolean",
+            "description": "True when hazard-aware routing was used"
+          }
+        },
+        "required": [
+          "evacuationArea"
+        ]
+      },
+      "AssistantInquiryDto": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "example": "What should I do during a flood?",
+            "description": "User question (max 500 chars)"
+          },
+          "location": {
+            "type": "string",
+            "example": "Kuching",
+            "description": "Current location of the user"
+          },
+          "hazardType": {
+            "type": "string",
+            "example": "FLOOD",
+            "description": "Type of hazard relevant to the inquiry"
+          },
+          "preferredLanguage": {
+            "type": "string",
+            "example": "en",
+            "description": "Preferred language for the response (e.g. en, ms, tl). SEA-Guard language inclusivity."
+          }
+        },
+        "required": [
+          "question"
+        ]
+      },
+      "AssistantStructuredDataDto": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "example": "Move to higher ground immediately.",
+            "description": "Brief summary of advice"
+          },
+          "steps": {
+            "example": [
+              "Pack a go bag",
+              "Listen to radio"
+            ],
+            "description": "Actionable steps",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "safetyReminder": {
+            "type": "string",
+            "example": "Stay clear of power lines.",
+            "description": "Safety reminder"
+          }
+        },
+        "required": [
+          "summary",
+          "steps",
+          "safetyReminder"
+        ]
+      },
+      "AssistantInquiryResponseDto": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string",
+            "example": "Move to higher ground immediately.",
+            "description": "AI-generated answer to the inquiry"
+          },
+          "disclaimer": {
+            "type": "string",
+            "example": "This is general guidance only. Always follow local authorities.",
+            "description": "Disclaimer regarding AI-generated content"
+          },
+          "provider": {
+            "type": "string",
+            "example": "sea-lion",
+            "description": "The LLM provider that generated the response"
+          },
+          "structuredData": {
+            "description": "Structured formulation of the advice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssistantStructuredDataDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "answer",
+          "disclaimer",
+          "provider"
+        ]
+      },
+      "ReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "BulkReviewVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SuspendReactivateVolunteerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AdminAssetRegistryEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "ownerName": {
+            "type": "string"
+          },
+          "ownerEmail": {
+            "type": "string"
+          },
+          "ownerCreatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "volunteerStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED",
+              "SUSPENDED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "status",
+          "ownerId",
+          "ownerName",
+          "ownerEmail",
+          "ownerCreatedAt",
+          "createdAt"
+        ]
+      },
+      "ReviewAssetDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "CreateWarningDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AdminWarningTargetAreaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "areaName": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "radiusKm": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "areaName"
+        ]
+      },
+      "AdminWarningListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MODERATE",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "SENT",
+              "CANCELLED"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endsAt": {
+            "type": "object"
+          },
+          "createdBy": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "targetAreas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminWarningTargetAreaDto"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "message",
+          "hazardType",
+          "severity",
+          "status",
+          "startsAt",
+          "createdBy",
+          "targetAreas",
+          "createdAt"
+        ]
+      },
+      "UpdateWarningDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AdminDamageReportDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number"
+          },
+          "confidenceThreshold": {
+            "type": "number"
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "reviewNote": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reporter": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "reviewedBy": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "damageCategories",
+          "latitude",
+          "longitude",
+          "photoUrl",
+          "confidenceScore",
+          "confidenceThreshold",
+          "reviewStatus",
+          "createdAt",
+          "reporter"
+        ]
+      },
+      "ReviewPinDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "ReviewDamageReportDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "AdminHelpRequestActorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "AdminHelpAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "assignedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "volunteer": {
+            "$ref": "#/components/schemas/AdminHelpRequestActorDto"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "assignedAt",
+          "volunteer"
+        ]
+      },
+      "AdminHelpRequestEventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "previousStatus": {
+            "type": "object"
+          },
+          "nextStatus": {
+            "type": "string"
+          },
+          "note": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "actor": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminHelpRequestActorDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "nextStatus",
+          "createdAt"
+        ]
+      },
+      "AdminHelpRequestQueueItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "requesterId": {
+            "type": "string"
+          },
+          "familyId": {
+            "type": "object"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "predictedUrgency": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ],
+            "nullable": true
+          },
+          "urgencyConfidence": {
+            "type": "object",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLAIMED",
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "sosExpiresAt": {
+            "type": "object"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "requester": {
+            "$ref": "#/components/schemas/AdminHelpRequestActorDto"
+          },
+          "assignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminHelpAssignmentDto"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminHelpRequestEventDto"
+            }
+          },
+          "latestAssignment": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdminHelpAssignmentDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "requesterId",
+          "hazardType",
+          "urgency",
+          "status",
+          "description",
+          "latitude",
+          "longitude",
+          "createdAt",
+          "updatedAt",
+          "requester",
+          "assignments",
+          "events"
+        ]
+      },
+      "UpdateAdminHelpRequestStatusDto": {
+        "type": "object",
+        "properties": {
+          "nextStatus": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "RESOLVED",
+              "CANCELLED"
+            ]
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nextStatus",
+          "note"
+        ]
+      },
+      "WarningPromptSuggestionDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "Object": {
+        "type": "object",
+        "properties": {}
+      },
+      "VisiblePinDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "reporterId": {
+            "type": "object",
+            "description": "Set when the pin was reported by the current user"
+          }
+        },
+        "required": [
+          "id",
+          "latitude",
+          "longitude",
+          "title",
+          "hazardType"
+        ]
+      },
+      "CreatePinDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Short title for the hazard pin"
+          },
+          "hazardType": {
+            "type": "string",
+            "enum": [
+              "FLOOD",
+              "TYPHOON",
+              "EARTHQUAKE",
+              "AFTERSHOCK"
+            ]
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "photoKey": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "hazardType",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "CreateAssetDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateDamageReportDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "photo": {
+            "type": "string",
+            "format": "binary"
+          }
+        },
+        "required": [
+          "title",
+          "latitude",
+          "longitude",
+          "photo"
+        ]
+      },
+      "ReporterDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "DamageReportDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number"
+          },
+          "confidenceThreshold": {
+            "type": "number"
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reporter": {
+            "$ref": "#/components/schemas/ReporterDto"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "damageCategories",
+          "latitude",
+          "longitude",
+          "photoUrl",
+          "confidenceScore",
+          "confidenceThreshold",
+          "reviewStatus",
+          "createdAt",
+          "reporter"
+        ]
+      },
+      "ReviewedByDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
+      },
+      "DamageReportDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "damageCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "FLOODED_ROAD",
+                "COLLAPSED_STRUCTURE",
+                "DAMAGED_INFRASTRUCTURE"
+              ]
+            }
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "photoUrl": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number"
+          },
+          "confidenceThreshold": {
+            "type": "number"
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reporter": {
+            "$ref": "#/components/schemas/ReporterDto"
+          },
+          "reviewNote": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reviewedBy": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ReviewedByDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "damageCategories",
+          "latitude",
+          "longitude",
+          "photoUrl",
+          "confidenceScore",
+          "confidenceThreshold",
+          "reviewStatus",
+          "createdAt",
+          "reporter"
+        ]
+      },
+      "TrackerShipmentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "shipmentId": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "class": {
+            "type": "string"
+          },
+          "blockchainHash": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DISPATCHED",
+              "IN_TRANSIT",
+              "DELIVERED"
+            ]
+          },
+          "verificationStatus": {
+            "type": "string",
+            "enum": [
+              "VERIFIED",
+              "PENDING",
+              "FAILED"
+            ]
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "shipmentId",
+          "origin",
+          "destination",
+          "class",
+          "status",
+          "verificationStatus",
+          "timestamp"
+        ]
+      },
+      "TrackerStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalAidDisbursed": {
+            "type": "number"
+          },
+          "verifiedPayouts": {
+            "type": "number"
+          },
+          "networkTrustIndex": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "totalAidDisbursed",
+          "verifiedPayouts",
+          "networkTrustIndex"
+        ]
+      },
+      "TrackerReliefZoneDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          },
+          "familyCount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          },
+          "zoneType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "lat",
+          "lng",
+          "familyCount",
+          "status",
+          "zoneType"
+        ]
+      },
+      "TrackerValidatorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nodeId": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "latencyMs": {
+            "type": "number"
+          },
+          "uptimePercentage": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ONLINE",
+              "OFFLINE",
+              "DEGRADED"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "nodeId",
+          "location",
+          "latencyMs",
+          "uptimePercentage",
+          "status"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-wira-deep-teal: #0D4F5C;
+    --color-wira-batik-gold: #C8922A;
+    --color-wira-earth-brown: #5C3D2E;
+    --color-wira-ivory-cream: #F5F0E8;
+    --color-wira-night-black: #0F1A1C;
+    
+    --color-status-critical: #D72B2B;
+    --color-status-warning: #E8A020;
+    --color-status-advisory: #1B5FA8;
+    --color-status-safe: #2E7D32;
+    --color-status-offline: #616161;
+
+    /* SAGIP / ASEAN design tokens */
+    --asean-blue: #00368e;
+    --asean-red: #fd1813;
+    --asean-yellow: #ffff00;
+    --sagip-bg: #f6f6f8;
+    --sagip-card: #fff;
+    --sagip-muted: #475569;
+    --sagip-slate: #64748b;
+    --sagip-border: #e2e8f0;
+    --sagip-heading: #0f172a;
+    --bottom-nav-height: 96px;
+    --map-actions-bar-gap: 0.5rem;
+    --font-sagip: "Space Grotesk", system-ui, sans-serif;
+  }
+
+  html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+    font-family: var(--font-sagip);
+    line-height: 1.5;
+    tab-size: 4;
+    scroll-behavior: smooth;
+    background-color: var(--color-wira-ivory-cream);
+    color: var(--color-wira-night-black);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    height: 100%;
+    @apply font-body;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .wira-batik-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M30 10 Q45 20 30 30 Q15 40 30 50 Q45 40 30 30 Q15 20 30 10Z' stroke='%230D4F5C' stroke-width='1' fill='none' opacity='0.06'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 60px 60px;
+  }
+
+  .wira-card {
+    @apply bg-white dark:bg-dm-surface rounded-2xl border border-wira-ivory-dark dark:border-dm-border p-4 shadow-sm;
+  }
+
+  .wira-card-title {
+    @apply text-wira-night dark:text-dm-text-primary;
+  }
+
+  .wira-card-body {
+    @apply text-wira-earth/70 dark:text-dm-text-muted;
+  }
+
+  .wira-btn-primary {
+    @apply w-full bg-wira-gold hover:bg-wira-gold-dark active:scale-95 text-white font-body font-semibold text-base px-6 py-3.5 rounded-xl transition-all duration-150 min-h-[52px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-wira-gold focus-visible:ring-offset-2;
+  }
+
+  .wira-btn-emergency {
+    @apply w-full bg-status-critical hover:bg-red-700 active:scale-95 text-white font-body font-bold text-lg uppercase tracking-wide px-6 py-4 rounded-xl transition-all duration-150 min-h-[56px] shadow-lg shadow-status-critical/30;
+  }
+
+  /* Form and nav contrast: readable on light backgrounds */
+  .form-back-link {
+    color: var(--color-wira-earth-brown);
+    @apply text-xs font-display font-bold uppercase tracking-widest;
+  }
+  .form-back-link:hover {
+    color: var(--color-wira-deep-teal);
+  }
+
+  .form-label {
+    color: var(--color-wira-earth-brown);
+    @apply text-xs font-display font-bold uppercase tracking-widest;
+  }
+
+  .form-hint {
+    color: var(--color-wira-earth-brown);
+    opacity: 0.88;
+    @apply text-[10px] font-body;
+  }
+
+  .form-input-placeholder::placeholder {
+    color: var(--color-wira-earth-brown);
+    opacity: 0.9;
+  }
+
+  /* Location block: high-contrast text on any card background */
+  .form-location-block {
+    color: var(--color-wira-night-black);
+  }
+  .form-location-block .form-label,
+  .form-location-block .form-hint {
+    color: var(--color-wira-night-black);
+    opacity: 0.9;
+  }
+
+  /* Change location link: high-contrast, meets WCAG */
+  .form-change-location-link {
+    color: var(--color-wira-deep-teal);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .form-change-location-link:hover {
+    color: var(--color-wira-night-black);
+  }
+
+  .nav-inactive {
+    color: var(--color-wira-earth-brown);
+    @apply font-body font-bold;
+  }
+  .nav-inactive:hover {
+    color: var(--color-wira-deep-teal);
+  }
+
+  /* SAGIP mobile: safe area for fixed bottom nav */
+  .mobile-nav-safe {
+    padding-bottom: calc(var(--bottom-nav-height) + 1rem);
+  }
+
+  /* Map screens: reserve nav height so content and actions bar sit above the fixed nav */
+  .mobile-nav-safe-map {
+    padding-bottom: var(--bottom-nav-height);
+  }
+
+  /* T'nalak divider (red / yellow / blue stripe) */
+  .tnalak-stripe {
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      var(--asean-red) 0%,
+      var(--asean-red) 25%,
+      var(--asean-yellow) 25%,
+      var(--asean-yellow) 50%,
+      var(--asean-blue) 50%,
+      var(--asean-blue) 75%,
+      var(--asean-red) 75%,
+      var(--asean-red) 100%
+    );
+  }
+
+  .sagip-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: var(--sagip-card);
+    border-top: 1px solid rgba(0, 54, 142, 0.1);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 8px;
+    z-index: 50;
+    overflow: visible;
+  }
+}
+
