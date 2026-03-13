@@ -1,6 +1,7 @@
 {
   "admin.nav.dashboard": "டாஷ்போர்டு",
   "admin.nav.resources": "வளங்கள்",
+  "admin.nav.helpRequests": "உதவி கோரிக்கைகள்",
   "admin.nav.damageReports": "சேத அறிக்கைகள்",
   "admin.nav.warnings": "எச்சரிக்கைகள்",
   "admin.nav.map": "வரைபடம்",

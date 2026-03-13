@@ -1,6 +1,7 @@
 {
   "admin.nav.dashboard": "Dasbor",
   "admin.nav.resources": "Sumber Daya",
+  "admin.nav.helpRequests": "Permintaan Bantuan",
   "admin.nav.damageReports": "Laporan Kerusakan",
   "admin.nav.warnings": "Peringatan",
   "admin.nav.map": "Peta",

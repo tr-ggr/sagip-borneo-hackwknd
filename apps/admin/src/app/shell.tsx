@@ -10,12 +10,12 @@ import type { Locale } from '../i18n/locales';
 import { LOCALE_DISPLAY } from '../i18n/locales';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: 'home' as const },
-  { href: '/volunteers', label: 'Resources', icon: 'users' as const },
-  { href: '/help-requests', label: 'Help Requests', icon: 'pin' as const },
-  { href: '/damage-reports', label: 'Damage Reports', icon: 'damage' as const },
-  { href: '/warnings', label: 'Warnings', icon: 'alert' as const },
-  { href: '/map', label: 'Map', icon: 'map' as const },
+  { href: '/', key: 'admin.nav.dashboard' as const, icon: 'home' as const },
+  { href: '/volunteers', key: 'admin.nav.resources' as const, icon: 'users' as const },
+  { href: '/help-requests', key: 'admin.nav.helpRequests' as const, icon: 'pin' as const },
+  { href: '/damage-reports', key: 'admin.nav.damageReports' as const, icon: 'damage' as const },
+  { href: '/warnings', key: 'admin.nav.warnings' as const, icon: 'alert' as const },
+  { href: '/map', key: 'admin.nav.map' as const, icon: 'map' as const },
 ] as const;
 
 function NavIcon({ type }: { type: (typeof navItems)[number]['icon'] }) {
