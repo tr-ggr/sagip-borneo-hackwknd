@@ -40,6 +40,14 @@ enum HelpUrgency {
   CRITICAL
 }
 
+enum TriageCategory {
+  MEDICAL
+  TRAPPED
+  FLOOD_WATER
+  INFRASTRUCTURE_DAMAGE
+  OTHER
+}
+
 enum AssignmentStatus {
   CLAIMED
   EN_ROUTE
@@ -244,6 +252,7 @@ model HelpRequest {
   familyId     String?
   hazardType   HazardType
   urgency      HelpUrgency
+  triageCategory    TriageCategory?
   predictedUrgency  HelpUrgency?
   urgencyConfidence Float?
   status       HelpRequestStatus  @default(OPEN)

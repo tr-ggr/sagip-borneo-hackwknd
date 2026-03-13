@@ -8,11 +8,13 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Asset.js'
 export type * from './models/User.js'
 export type * from './models/Session.js'
 export type * from './models/Account.js'
 export type * from './models/Verification.js'
 export type * from './models/BuildingProfile.js'
+export type * from './models/DamageReport.js'
 export type * from './models/Family.js'
 export type * from './models/FamilyMember.js'
 export type * from './models/UserLocationSnapshot.js'

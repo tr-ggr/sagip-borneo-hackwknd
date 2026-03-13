@@ -38,6 +38,8 @@ def build_contextual_prompt(
     location: Optional[str] = None,
     demographics: Optional[dict] = None,
     user_id: Optional[str] = None,
+    weather: Optional[str] = None,
+    preferred_language: Optional[str] = None,
 ) -> tuple[str, str]:
     """Build system and user parts for the prompt."""
     if user_id == "system-admin":
@@ -75,7 +77,15 @@ def build_contextual_prompt(
         context_lines.append(f"Hazard type: {hazard_type}")
     if location:
         context_lines.append(f"Location: {location}")
-    
+    if weather:
+        context_lines.append(f"Weather: {weather}")
+    if demographics and isinstance(demographics, dict) and any(demographics.values()):
+        demo_parts = [f"{k}={v}" for k, v in demographics.items() if v is not None]
+        if demo_parts:
+            context_lines.append(f"User demographics: {', '.join(demo_parts)}")
+    if preferred_language:
+        context_lines.append(f"Preferred response language: {preferred_language}. Respond in this language when possible (SEA-Guard language inclusivity).")
+
     if context_lines:
         user_parts.append(f"Context: {', '.join(context_lines)}")
 

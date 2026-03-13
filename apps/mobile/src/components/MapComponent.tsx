@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import Feature from 'ol/Feature';
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat, transformExtent } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import { Fill, Stroke, Style } from 'ol/style';
@@ -17,7 +18,9 @@ import Point from 'ol/geom/Point';
 import Icon from 'ol/style/Icon';
 import Polygon, { circular } from 'ol/geom/Polygon';
 import Overlay from 'ol/Overlay';
+import { defaults } from 'ol/control/defaults';
 import { boundingExtent } from 'ol/extent';
+import GeoJSON from 'ol/format/GeoJSON';
 
 interface RiskRegion {
   id: string;
@@ -105,8 +108,64 @@ interface MapComponentProps {
   hazardRiskPoints?: HazardRiskPoint[];
   /** When set, map click returns lat/lon for location picker (e.g. hazard pin / help request). */
   onMapClick?: (latitude: number, longitude: number) => void;
+  /** When set, a pin is shown on the map at this point (e.g. weather-at-selected-point). */
+  selectedPoint?: { latitude: number; longitude: number } | null;
   /** When true, wrapper uses w-full h-full instead of aspect-square for embedded use (e.g. SOS page). */
   fillContainer?: boolean;
+  /** GeoJSON FeatureCollection for region risk choropleth (e.g. dengue). Each feature should have properties.risk_score (number) and optionally name/region_name. */
+  regionRiskChoropleth?: RegionRiskChoroplethGeoJSON | null;
+  /** GeoJSON FeatureCollection for building profiles (from risk full-detail API). When set, polygons are drawn and onBuildingSelect is called on click. */
+  buildingProfiles?: BuildingProfilesGeoJSON | null;
+  /** Called when user clicks a building polygon; receives feature and pixel [x,y] in map container for positioning. */
+  onBuildingSelect?: (feature: BuildingProfileFeature, pixel: [number, number]) => void;
+  /** Called when map view extent changes with bbox string "minLng,minLat,maxLng,maxLat" (WGS84). */
+  onMapViewChange?: (bbox: string) => void;
+  /** Called when user taps map and no building (or other feature) is hit; e.g. to dismiss hover popup. */
+  onBuildingDismiss?: () => void;
+  /** Called when pointer moves over a building polygon (feature, pixel) or off (null). Only fired after user has moved pointer. */
+  onBuildingHover?: (feature: BuildingProfileFeature | null, pixel?: [number, number]) => void;
+  /** Called with user's resolved position (or cached fallback) in WGS84 lat/lon when available. */
+  onUserPosition?: (latitude: number, longitude: number) => void;
+}
+
+/** GeoJSON FeatureCollection with risk_score in feature properties. */
+export interface RegionRiskChoroplethGeoJSON {
+  type: 'FeatureCollection';
+  features: Array<{
+    type: 'Feature';
+    geometry: unknown;
+    properties?: { risk_score?: number; region_name?: string; name?: string };
+  }>;
+}
+
+/** Building profile feature payload (from API full-detail). */
+export interface BuildingProfileFeature {
+  id: string;
+  iso3: string;
+  data: {
+    total_pop?: number;
+    elderly_count?: number;
+    child_count?: number;
+    stories?: number;
+    vulnerability_score?: number;
+    risk_status?: number;
+  };
+}
+
+/** GeoJSON FeatureCollection for building profiles (API risk/full-detail/:iso3). */
+export interface BuildingProfilesGeoJSON {
+  type: 'FeatureCollection';
+  features: Array<{
+    type: 'Feature';
+    geometry: unknown;
+    properties: BuildingProfileFeature;
+  }>;
+}
+
+export interface MapComponentHandle {
+  zoomIn: () => void;
+  zoomOut: () => void;
+  centerOnUser: () => void;
 }
 
 /** Returns SVG markup for the evac marker based on type so not all look like churches. */
@@ -134,23 +193,87 @@ function getEvacIconSvg(type: string | null | undefined): string {
   }
 }
 
-/** Solid teardrop pin SVG (no outline); fill color for status. */
-function getHazardPinSvg(fill: string): string {
-  return `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C5.5 2 0 7.5 0 14c0 8 12 18 12 18s12-10 12-18C24 7.5 18.5 2 12 2zm0 10a4 4 0 100-8 4 4 0 000 8z" fill="${fill}"/></svg>`;
+/** Hazard pin: red equilateral warning triangle with bold white exclamation mark. Anchor [0.5,1] = tip on point. */
+function getHazardPinSvg(_fill: string): string {
+  const red = '#DC2626';
+  const white = '#ffffff';
+  // Equilateral triangle: tip at (14,28), base at y≈3.75 so sides are equal; viewBox 0 0 28 28
+  const triangle = 'M14 28L0 3.75L28 3.75Z';
+  // Exclamation: bold vertical bar + circle dot (path so ! is not slim)
+  const exclamationBar = 'M14 8v9';
+  return `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="${triangle}" fill="${red}" stroke="${white}" stroke-width="1.5"/>
+  <path d="${exclamationBar}" stroke="${white}" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="14" cy="21.5" r="1.75" fill="${white}"/>
+</svg>`;
 }
 
+/** Selection pin (weather-at-selected-point): wider teardrop with stroke and center dot. */
+function getSelectionPinSvg(): string {
+  const fill = '#0D9488';
+  const stroke = '#ffffff';
+  const strokeWidth = 2;
+  // Wider teardrop: tip at (12,32); body bulges to x=2..22 so pin is less slim; anchor [0.5,1]
+  const teardrop =
+    'M12 32C5 26 2 18 2 11C2 4 6.5 2 12 2C17.5 2 22 4 22 11C22 18 19 26 12 32Z';
+  return `<svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs><filter id="pinShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.25"/></filter></defs>
+  <path d="${teardrop}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" filter="url(#pinShadow)"/>
+  <circle cx="12" cy="10.5" r="3" fill="${stroke}" stroke="${stroke}" stroke-width="1"/>
+</svg>`;
+}
+
+/** House icon for volunteer home location (teal, distinct from pins). Tight viewBox so anchor [0.5,1] places bottom on map point. */
+function getHomeIconSvg(): string {
+  const fill = '#0D9488';
+  const stroke = 'white';
+  return `<svg width="32" height="32" viewBox="0 0 24 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" fill="${fill}" stroke="${stroke}" stroke-width="2"/><polygon points="9 22 9 12 15 12 15 22" fill="${stroke}" opacity="0.9"/></svg>`;
+}
+
+/** Risk value to color: green (low), yellow (mid), red (high) – e.g. choropleth. */
 function getDamageReportSvg(fill: string): string {
   return `<svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 1C8.20101 1 3.5 5.70101 3.5 11.5C3.5 19.25 14 33 14 33C14 33 24.5 19.25 24.5 11.5C24.5 5.70101 19.799 1 14 1Z" fill="${fill}" stroke="white" stroke-width="2"/><rect x="8.5" y="8" width="11" height="7.5" rx="1.5" fill="white"/><circle cx="11.5" cy="11.75" r="1.25" fill="${fill}"/><path d="M18.5 14.5L15.7 11.7L13.2 14.2L11.8 12.8L8.5 16H19.5C19.5 15.3 19.1 14.8 18.5 14.5Z" fill="${fill}"/></svg>`;
 }
 
-/** Risk value to color: green (low), yellow (mid), red (high). */
 function getRiskColor(risk: number): string {
   if (risk <= 1 / 3) return '#22c55e';
   if (risk <= 2 / 3) return '#eab308';
   return '#dc2626';
 }
 
-export default function MapComponent({
+/** Hazard risk points: red with opacity (low risk = faint, high risk = solid). */
+function getHazardRiskColor(risk: number): string {
+  const opacity = 0.15 + 0.85 * Math.min(1, Math.max(0, risk));
+  return `rgba(220, 38, 38, ${opacity.toFixed(2)})`;
+}
+
+/** Building vulnerability score to fill color (0 = green, higher = redder). Same scale as admin. */
+function getVulnerabilityColor(score: number): string {
+  if (score <= 0) return '#2E7D32';
+  if (score < 2) return '#4CAF50';
+  if (score < 4) return '#FFEB3B';
+  if (score < 7) return '#FF9800';
+  if (score < 10) return '#F44336';
+  return '#B71C1C';
+}
+
+/** Approximate distance in meters between two WGS84 points (Haversine). */
+function distanceMeters(
+  a: { latitude: number; longitude: number },
+  b: { latitude: number; longitude: number },
+): number {
+  const R = 6371000;
+  const dLat = ((b.latitude - a.latitude) * Math.PI) / 180;
+  const dLon = ((b.longitude - a.longitude) * Math.PI) / 180;
+  const lat1 = (a.latitude * Math.PI) / 180;
+  const lat2 = (b.latitude * Math.PI) / 180;
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+
+const AT_HOME_THRESHOLD_M = 50;
+
+const MapComponent = forwardRef<MapComponentHandle, MapComponentProps>(function MapComponent({
   weatherLocation,
   vulnerableRegions = [],
   helpRequests = [],
@@ -165,13 +288,25 @@ export default function MapComponent({
   hazardRouteGeometry,
   hazardRiskPoints = [],
   onMapClick,
+  selectedPoint = null,
   fillContainer = false,
-}: MapComponentProps) {
+  regionRiskChoropleth = null,
+  buildingProfiles = null,
+  onBuildingSelect,
+  onMapViewChange,
+  onBuildingDismiss,
+  onBuildingHover,
+  onUserPosition,
+}, ref) {
   const mapElement = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
+  const userCoordsRef = useRef<number[] | null>(null);
   const regionsLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const choroplethLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const buildingProfilesLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const helpLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const hazardLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
+  const selectionLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const damageLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const riskLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const homeLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
@@ -180,10 +315,25 @@ export default function MapComponent({
   const hazardRouteLayerRef = useRef<VectorLayer<VectorSource> | null>(null);
   const riskHoverPopupRef = useRef<HTMLDivElement>(null);
   const userLocationRef = useRef<HTMLDivElement>(null);
+  const lastFittedMapFocusRef = useRef<string | null>(null);
+  const locationOverlayRef = useRef<Overlay | null>(null);
+  const homeLocationRef = useRef<typeof homeLocation>(null);
+  homeLocationRef.current = homeLocation;
+  const onUserPositionRef = useRef(onUserPosition);
+  onUserPositionRef.current = onUserPosition;
   const onEvacClickRef = useRef(onEvacClick);
   onEvacClickRef.current = onEvacClick;
   const onMapClickRef = useRef(onMapClick);
   onMapClickRef.current = onMapClick;
+  const onBuildingSelectRef = useRef(onBuildingSelect);
+  onBuildingSelectRef.current = onBuildingSelect;
+  const onMapViewChangeRef = useRef(onMapViewChange);
+  onMapViewChangeRef.current = onMapViewChange;
+  const onBuildingDismissRef = useRef(onBuildingDismiss);
+  onBuildingDismissRef.current = onBuildingDismiss;
+  const onBuildingHoverRef = useRef(onBuildingHover);
+  onBuildingHoverRef.current = onBuildingHover;
+  const hasPointerMovedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [selectedMapItem, setSelectedMapItem] = useState<
@@ -194,7 +344,8 @@ export default function MapComponent({
   >(null);
   const [userCoords, setUserCoords] = useState<number[] | null>(null);
 
-  // Location cache helpers
+  userCoordsRef.current = userCoords;
+
   const LOCATION_CACHE_KEY = 'wira-mobile-last-known-location';
 
   const getCachedLocation = (): { lat: number; lon: number } | null => {
@@ -203,7 +354,6 @@ export default function MapComponent({
       const cached = localStorage.getItem(LOCATION_CACHE_KEY);
       if (!cached) return null;
       const { lat, lon } = JSON.parse(cached);
-      // Validate coordinates are in valid range
       if (
         typeof lat === 'number' &&
         typeof lon === 'number' &&
@@ -229,6 +379,29 @@ export default function MapComponent({
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    zoomIn() {
+      const m = mapRef.current;
+      if (!m) return;
+      const view = m.getView();
+      const z = view.getZoom();
+      if (z != null) view.animate({ zoom: z + 1 });
+    },
+    zoomOut() {
+      const m = mapRef.current;
+      if (!m) return;
+      const view = m.getView();
+      const z = view.getZoom();
+      if (z != null) view.animate({ zoom: z - 1 });
+    },
+    centerOnUser() {
+      const m = mapRef.current;
+      const coords = userCoordsRef.current;
+      if (!m || !coords) return;
+      m.getView().animate({ center: coords, zoom: 14 });
+    },
+  }), []);
+
   useEffect(() => {
     if (!mapElement.current || mapRef.current) return;
 
@@ -243,6 +416,7 @@ export default function MapComponent({
 
     const map = new Map({
       target: mapElement.current,
+      controls: defaults({ zoom: false }),
       layers: [
         new TileLayer({
           source: new OSM(),
@@ -259,6 +433,7 @@ export default function MapComponent({
       stopEvent: false,
     });
     map.addOverlay(locationOverlay);
+    locationOverlayRef.current = locationOverlay;
 
     // 3. Setup Geolocation
     const geolocation = new Geolocation({
@@ -272,16 +447,21 @@ export default function MapComponent({
       const coordinates = geolocation.getPosition();
       if (coordinates) {
         setUserCoords(coordinates);
-        locationOverlay.setPosition(coordinates);
-        // Cache the location when it updates
+        const home = homeLocationRef.current;
+        const atHome = home && distanceMeters(
+          { latitude: toLonLat(coordinates)[1], longitude: toLonLat(coordinates)[0] },
+          home,
+        ) < AT_HOME_THRESHOLD_M;
+        locationOverlay.setPosition(atHome ? undefined : coordinates);
         const lonLat = toLonLat(coordinates);
+        if (onUserPositionRef.current) {
+          onUserPositionRef.current(lonLat[1], lonLat[0]);
+        }
         cacheLocation(lonLat[1], lonLat[0]);
         setError(null);
         setInfo(null);
-        // Only auto-animate if NOT focused on something specific
-        if (!mapFocus) {
-          view.animate({ center: coordinates, zoom: 14 });
-        }
+        // Do not recenter on every position update; only initial fix and "center on me" button do that.
+        // This avoids the map jumping back to user location while panning.
       }
     });
 
@@ -294,6 +474,9 @@ export default function MapComponent({
         setUserCoords(coords);
         locationOverlay.setPosition(coords);
         view.animate({ center: coords, zoom: 14 });
+        if (onUserPositionRef.current) {
+          onUserPositionRef.current(cached.lat, cached.lon);
+        }
         setError(null);
         setInfo(null);
       } else {
@@ -309,10 +492,16 @@ export default function MapComponent({
           // Once permission is granted and position found, enable tracking on the map
           const coords = fromLonLat([pos.coords.longitude, pos.coords.latitude]);
           setUserCoords(coords);
-          locationOverlay.setPosition(coords);
-          // Cache successful location
+          const home = homeLocationRef.current;
+          const atHome = home && distanceMeters(
+            { latitude: pos.coords.latitude, longitude: pos.coords.longitude },
+            home,
+          ) < AT_HOME_THRESHOLD_M;
+          locationOverlay.setPosition(atHome ? undefined : coords);
           cacheLocation(pos.coords.latitude, pos.coords.longitude);
-          // Clear any previous error/info messages on successful location
+          if (onUserPositionRef.current) {
+            onUserPositionRef.current(pos.coords.latitude, pos.coords.longitude);
+          }
           setError(null);
           setInfo(null);
           view.animate({ center: coords, zoom: 14 });
@@ -342,6 +531,45 @@ export default function MapComponent({
         setError("Geolocation is not supported by this browser.");
     }
 
+    // 3b. Setup Choropleth Layer (region risk e.g. dengue) — below other overlays, above base
+    const choroplethSource = new VectorSource();
+    const RISK_SCALE_MAX = 150;
+    const choroplethLayer = new VectorLayer({
+      source: choroplethSource,
+      zIndex: 4,
+      style: (feature) => {
+        const riskScore = feature.get('risk_score') as number | undefined;
+        const normalized = typeof riskScore === 'number' ? Math.min(1, riskScore / RISK_SCALE_MAX) : 0;
+        const color = getRiskColor(normalized);
+        const fillColor = `${color}40`;
+        return new Style({
+          fill: new Fill({ color: fillColor }),
+          stroke: new Stroke({ color, width: 1.5 }),
+        });
+      },
+    });
+    map.addLayer(choroplethLayer);
+    choroplethLayerRef.current = choroplethLayer;
+
+    // 3c. Setup Building Profiles Layer (vulnerability polygons, colored by score)
+    const buildingProfilesSource = new VectorSource();
+    const buildingProfilesLayer = new VectorLayer({
+      source: buildingProfilesSource,
+      zIndex: 5,
+      style: (feature) => {
+        const profile = feature.get('buildingProfile') as BuildingProfileFeature | undefined;
+        const score = profile?.data?.vulnerability_score ?? 0;
+        const color = getVulnerabilityColor(score);
+        const fillColor = `${color}40`;
+        return new Style({
+          fill: new Fill({ color: fillColor }),
+          stroke: new Stroke({ color: '#fff', width: 0.5 }),
+        });
+      },
+    });
+    map.addLayer(buildingProfilesLayer);
+    buildingProfilesLayerRef.current = buildingProfilesLayer;
+
     // 4. Setup Regions Layer
     const regionsSource = new VectorSource();
     const regionsLayer = new VectorLayer({
@@ -368,6 +596,15 @@ export default function MapComponent({
     });
     map.addLayer(hazardLayer);
     hazardLayerRef.current = hazardLayer;
+
+    // 5c. Setup selection pin layer (weather-at-selected-point)
+    const selectionSource = new VectorSource();
+    const selectionLayer = new VectorLayer({
+      source: selectionSource,
+      zIndex: 11,
+    });
+    map.addLayer(selectionLayer);
+    selectionLayerRef.current = selectionLayer;
 
     const damageSource = new VectorSource();
     const damageLayer = new VectorLayer({
@@ -413,7 +650,25 @@ export default function MapComponent({
     });
     map.addOverlay(hoverOverlay);
     map.on('pointermove', (evt) => {
+      if (!hasPointerMovedRef.current) {
+        hasPointerMovedRef.current = true;
+        if (onBuildingHoverRef.current) onBuildingHoverRef.current(null);
+        return;
+      }
       const hit = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+      const buildingProfile = hit?.get('buildingProfile') as BuildingProfileFeature | undefined;
+      if (onBuildingHoverRef.current) {
+        const pixel: [number, number] = [evt.pixel[0], evt.pixel[1]];
+        onBuildingHoverRef.current(buildingProfile ?? null, buildingProfile ? pixel : undefined);
+        map.getTargetElement().style.cursor = buildingProfile ? 'pointer' : '';
+      }
+      if (buildingProfile) {
+        if (riskHoverPopupRef.current) {
+          riskHoverPopupRef.current.style.display = 'none';
+          hoverOverlay.setPosition(undefined);
+        }
+        return;
+      }
       const riskData = hit?.get('riskData') as HazardRiskPoint | undefined;
       if (riskData && riskHoverPopupRef.current) {
         riskHoverPopupRef.current.innerHTML = [
@@ -440,6 +695,12 @@ export default function MapComponent({
         return;
       }
       const hit = map.forEachFeatureAtPixel(evt.pixel, (f) => f);
+      const buildingProfile = hit?.get('buildingProfile') as BuildingProfileFeature | undefined;
+      if (buildingProfile && onBuildingSelectRef.current) {
+        const pixel: [number, number] = [evt.pixel[0], evt.pixel[1]];
+        onBuildingSelectRef.current(buildingProfile, pixel);
+        return;
+      }
       const damageReport = hit?.get('damageReport') as DamageReport | undefined;
       if (damageReport) {
         setSelectedMapItem({ kind: 'damage', report: damageReport });
@@ -465,8 +726,22 @@ export default function MapComponent({
         return;
       }
 
+      if (onBuildingSelectRef.current) {
+        onBuildingDismissRef.current?.();
+      }
       setSelectedMapItem(null);
     });
+
+    // 7d. Report view extent for building-vulnerability (bbox refetch)
+    const reportExtent = () => {
+      const size = map.getSize();
+      if (!size) return;
+      const ext = map.getView().calculateExtent(size);
+      const wgs84 = transformExtent(ext, 'EPSG:3857', 'EPSG:4326');
+      onMapViewChangeRef.current?.(wgs84.join(','));
+    };
+    map.on('moveend', reportExtent);
+    reportExtent();
 
     // 8. Setup Route Layer (OSRM – fastest)
     const routeSource = new VectorSource();
@@ -519,16 +794,34 @@ export default function MapComponent({
       geolocation.setTracking(false);
       map.setTarget(undefined);
       mapRef.current = null;
+      locationOverlayRef.current = null;
     };
   }, []);
+
+  // When userCoords or homeLocation change, show "you are here" overlay only when not at home
+  useEffect(() => {
+    const overlay = locationOverlayRef.current;
+    if (!overlay || !userCoords) return;
+    const [lon, lat] = toLonLat(userCoords);
+    const home = homeLocation ?? null;
+    const atHome = home && distanceMeters({ latitude: lat, longitude: lon }, home) < AT_HOME_THRESHOLD_M;
+    overlay.setPosition(atHome ? undefined : userCoords);
+  }, [userCoords, homeLocation]);
 
   // Sync map view center when weatherLocation changes, without recreating the map
   useEffect(() => {
     if (!mapRef.current || !weatherLocation) return;
+    if (
+      userCoords &&
+      weatherLocation.latitude === 1.5533 &&
+      weatherLocation.longitude === 110.3592
+    ) {
+      return;
+    }
     const view = mapRef.current.getView();
     const coords = fromLonLat([weatherLocation.longitude, weatherLocation.latitude]);
     view.animate({ center: coords, duration: 300 });
-  }, [weatherLocation?.latitude, weatherLocation?.longitude]);
+  }, [weatherLocation?.latitude, weatherLocation?.longitude, userCoords]);
 
   // Update Regions Layer when data changes
   useEffect(() => {
@@ -572,6 +865,53 @@ export default function MapComponent({
 
     source.addFeatures(features);
   }, [vulnerableRegions]);
+
+  // Update Choropleth Layer (region risk e.g. dengue)
+  useEffect(() => {
+    const layer = choroplethLayerRef.current;
+    if (!layer) return;
+    const source = layer.getSource();
+    if (!source) return;
+    source.clear();
+    if (!regionRiskChoropleth?.features?.length) return;
+    const geoJsonFormat = new GeoJSON();
+    const features = geoJsonFormat.readFeatures(regionRiskChoropleth as Parameters<InstanceType<typeof GeoJSON>['readFeatures']>[0], {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857',
+    });
+    features.forEach((f, i) => {
+      const geojsonFeature = regionRiskChoropleth.features[i];
+      const riskScore = geojsonFeature?.properties?.risk_score;
+      if (typeof riskScore === 'number') f.set('risk_score', riskScore);
+    });
+    source.addFeatures(features);
+  }, [regionRiskChoropleth]);
+
+  // Update Building Profiles Layer
+  useEffect(() => {
+    const layer = buildingProfilesLayerRef.current;
+    if (!layer) return;
+    const source = layer.getSource();
+    if (!source) return;
+    source.clear();
+    if (!buildingProfiles?.features?.length) return;
+    const geoJsonFormat = new GeoJSON();
+    const features = geoJsonFormat.readFeatures(
+      buildingProfiles as Parameters<InstanceType<typeof GeoJSON>['readFeatures']>[0],
+      { dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' },
+    );
+    features.forEach((f, i) => {
+      const props = buildingProfiles.features[i]?.properties;
+      if (props) {
+        f.set('buildingProfile', {
+          id: props.id,
+          iso3: props.iso3,
+          data: props.data ?? {},
+        });
+      }
+    });
+    source.addFeatures(features);
+  }, [buildingProfiles]);
 
   // Update Help Requests Layer
   useEffect(() => {
@@ -649,6 +989,27 @@ export default function MapComponent({
     source.addFeatures(features);
   }, [hazardPins]);
 
+  // Update selection pin (weather-at-selected-point)
+  useEffect(() => {
+    if (!selectionLayerRef.current) return;
+    const source = selectionLayerRef.current.getSource();
+    if (!source) return;
+    source.clear();
+    if (!selectedPoint) return;
+    const point = new Point(fromLonLat([selectedPoint.longitude, selectedPoint.latitude]));
+    const feature = new Feature({ geometry: point });
+    feature.setStyle(
+      new Style({
+        image: new Icon({
+          src: `data:image/svg+xml;utf8,${encodeURIComponent(getSelectionPinSvg())}`,
+          scale: 1,
+          anchor: [0.5, 1],
+        }),
+      }),
+    );
+    source.addFeature(feature);
+  }, [selectedPoint]);
+
   // Update Damage Reports Layer
   useEffect(() => {
     if (!damageLayerRef.current) return;
@@ -685,7 +1046,7 @@ export default function MapComponent({
     source.addFeatures(features);
   }, [damageReports]);
 
-  // Update Hazard Risk Points Layer (color by risk: green / yellow / red)
+  // Update Hazard Risk Points Layer (red with opacity by risk level)
   useEffect(() => {
     if (!riskLayerRef.current) return;
     const source = riskLayerRef.current.getSource();
@@ -696,13 +1057,13 @@ export default function MapComponent({
       const point = new Point(fromLonLat([p.longitude, p.latitude]));
       const feature = new Feature({ geometry: point });
       feature.set('riskData', p);
-      const color = getRiskColor(p.risk);
+      const color = getHazardRiskColor(p.risk);
       feature.setStyle(
         new Style({
           image: new CircleStyle({
-            radius: 4,
+            radius: 6,
             fill: new Fill({ color }),
-            stroke: new Stroke({ color: '#fff', width: 1 }),
+            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 1 }),
           }),
         }),
       );
@@ -721,15 +1082,10 @@ export default function MapComponent({
     const feature = new Feature({ geometry: point });
     feature.setStyle(new Style({
       image: new Icon({
-        src: `data:image/svg+xml;utf8,${encodeURIComponent(`
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" fill="#0D9488" stroke="white" stroke-width="2"/>
-            <polygon points="9 22 9 12 15 12 15 22" fill="white" opacity="0.9"/>
-          </svg>
-        `)}`,
-        scale: 1,
+        src: `data:image/svg+xml;utf8,${encodeURIComponent(getHomeIconSvg())}`,
+        scale: 1.1,
         anchor: [0.5, 1],
-      })
+      }),
     }));
     source.addFeature(feature);
   }, [homeLocation]);
@@ -758,7 +1114,7 @@ export default function MapComponent({
     source.addFeatures(features);
   }, [evacuationSites]);
 
-  // Update Route / Navigation Path (OSRM – fastest)
+  // Update Route / Navigation Path (OSRM or hazard path; when hazard path exists, draw only the pin here so the green line is not duplicated)
   useEffect(() => {
     if (!routeLayerRef.current || !mapRef.current) return;
     const source = routeLayerRef.current.getSource();
@@ -766,12 +1122,18 @@ export default function MapComponent({
 
     source.clear();
 
-    if (!mapFocus) return;
+    if (!mapFocus) {
+      lastFittedMapFocusRef.current = null;
+      return;
+    }
 
     const targetCoords = fromLonLat([mapFocus.longitude, mapFocus.latitude]);
     let routeCoords: number[][];
+    const useHazardPath = hazardRouteGeometry && hazardRouteGeometry.length >= 2;
 
-    if (routeGeometry && routeGeometry.length >= 2) {
+    if (useHazardPath) {
+      routeCoords = hazardRouteGeometry!.map(([lon, lat]) => fromLonLat([lon, lat]));
+    } else if (routeGeometry && routeGeometry.length >= 2) {
       routeCoords = routeGeometry.map(([lon, lat]) => fromLonLat([lon, lat]));
     } else if (userCoords) {
       routeCoords = [userCoords, targetCoords];
@@ -779,10 +1141,12 @@ export default function MapComponent({
       return;
     }
 
-    const line = new Feature({
-      geometry: new LineString(routeCoords),
-    });
-    source.addFeature(line);
+    if (!useHazardPath) {
+      const line = new Feature({
+        geometry: new LineString(routeCoords),
+      });
+      source.addFeature(line);
+    }
 
     const pin = new Feature({
       geometry: new Point(targetCoords),
@@ -800,13 +1164,18 @@ export default function MapComponent({
     }));
     source.addFeature(pin);
 
-    const extent = boundingExtent(routeCoords);
-    mapRef.current.getView().fit(extent, {
-      padding: [120, 80, 250, 80],
-      duration: 1000,
-      maxZoom: 16,
-    });
-  }, [mapFocus, userCoords, routeGeometry]);
+    const mapFocusKey = `${mapFocus.latitude},${mapFocus.longitude}`;
+    const shouldFit = lastFittedMapFocusRef.current !== mapFocusKey;
+    if (shouldFit) {
+      lastFittedMapFocusRef.current = mapFocusKey;
+      const extent = boundingExtent(routeCoords);
+      mapRef.current.getView().fit(extent, {
+        padding: [120, 80, 250, 80],
+        duration: 1000,
+        maxZoom: 16,
+      });
+    }
+  }, [mapFocus, userCoords, routeGeometry, hazardRouteGeometry]);
 
   // Update Hazard Route Layer (safest – green)
   useEffect(() => {
@@ -832,20 +1201,13 @@ export default function MapComponent({
           className="absolute px-2 py-1 text-xs font-body text-wira-earth bg-white/95 border border-wira-teal/30 rounded shadow-lg pointer-events-none whitespace-nowrap"
           style={{ display: 'none' }}
         />
-        {/* 3D Person Pin Overlay */}
+        {/* You are here: pulsing person marker (bottom-center = feet on map point) */}
         <div ref={userLocationRef} className={`absolute pointer-events-none ${!userCoords ? 'hidden' : ''}`}>
-          <div className="relative flex items-center justify-center -translate-y-4">
-            {/* Ping effect */}
-            <div className="absolute w-12 h-12 bg-wira-gold/40 rounded-full animate-ping"></div>
-            {/* 3D pin wrapper */}
-            <div className="relative z-10 flex flex-col items-center drop-shadow-lg">
-              {/* Head */}
-              <div className="w-4 h-4 rounded-full bg-wira-gold border-2 border-white shadow-md z-20"></div>
-              {/* Body */}
-              <div className="w-5 h-6 bg-wira-gold rounded-t-[10px] border-2 border-white shadow-md z-10 -mt-1"></div>
-              {/* Shadow */}
-              <div className="w-4 h-1.5 bg-black/40 rounded-full blur-[2px] mt-1 relative z-0"></div>
-            </div>
+          <div className="relative flex flex-col items-center drop-shadow-md animate-pulse-slow">
+            <svg width="28" height="36" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10" aria-hidden>
+              <circle cx="12" cy="8" r="5" fill="#2563eb" stroke="white" strokeWidth="1.5"/>
+              <path d="M4 32V20c0-4.4 3.6-8 8-8s8 3.6 8 8v12" fill="#2563eb" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
           </div>
         </div>
 
@@ -957,4 +1319,6 @@ export default function MapComponent({
         ) : null}
     </div>
   );
-}
+});
+
+export default MapComponent;

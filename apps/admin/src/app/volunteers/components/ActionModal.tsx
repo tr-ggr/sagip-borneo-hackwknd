@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useI18n } from '../../../i18n/context';
 
 interface ActionModalProps {
   isOpen: boolean;
@@ -22,16 +23,17 @@ export function ActionModal({
   description,
   confirmText,
   type,
-  placeholder = 'Provide a reason...',
+  placeholder,
   required = true,
 }: ActionModalProps) {
   const [reason, setReason] = useState('');
+  const { t } = useI18n();
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
     if (required && !reason.trim()) {
-      alert('A reason is required.');
+      alert(t('admin.volunteers.reasonRequired'));
       return;
     }
     onConfirm(reason);
@@ -50,13 +52,13 @@ export function ActionModal({
           <textarea
             className="field"
             style={{ minHeight: '120px', resize: 'vertical' }}
-            placeholder={placeholder}
+            placeholder={placeholder ?? t('admin.volunteers.provideReason')}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />
         </div>
         <footer className="modal-footer" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-          <button className="btn btn-neutral" onClick={onClose}>Cancel</button>
+          <button className="btn btn-neutral" onClick={onClose}>{t('admin.volunteers.cancel')}</button>
           <button 
             className={`btn ${type === 'CRITICAL' ? 'btn-critical' : type === 'WARNING' ? 'btn-warning' : 'btn-safe'}`}
             onClick={handleConfirm}

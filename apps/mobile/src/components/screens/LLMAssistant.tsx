@@ -12,6 +12,7 @@ import {
   Maximize2,
 } from 'lucide-react';
 import { useAssistantControllerInquire } from '@wira-borneo/api-client';
+import { useI18n } from '../../i18n/context';
 
 type LLMAssistantProps = {
   onOpenMap?: () => void;
@@ -33,24 +34,22 @@ type ChatMessage = {
 };
 
 const sendQuickQuestion = (
-  inquire: { mutate: (opts: { data: { question: string; location: string; hazardType: string } }) => void },
+  inquire: { mutate: (opts: { data: { question: string; location: string; hazardType: string; preferredLanguage?: string } }) => void },
   question: string,
-  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
+  preferredLanguage?: string
 ) => {
   setMessages((prev) => [...prev, { role: 'user', content: question }]);
   inquire.mutate({
-    data: { question, location: 'Kuching', hazardType: 'FLOOD' },
+    data: { question, location: 'Kuching', hazardType: 'FLOOD', ...(preferredLanguage && { preferredLanguage }) },
   });
 };
 
 export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
+  const { t, locale } = useI18n();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: 'assistant',
-      content:
-        'Welcome to SEA-LION SAGIP. I am here to help you with evacuations, aid, or status. How can I help you today with your safety?',
-    },
+    { role: 'assistant', content: t('assistant.welcome') },
   ]);
 
   const inquire = useAssistantControllerInquire({
@@ -71,10 +70,7 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
       onError: () => {
         setMessages((prev) => [
           ...prev,
-          {
-            role: 'assistant',
-            content: 'Sorry, the system is experiencing some issues. Please try again in a moment.',
-          },
+          { role: 'assistant', content: t('assistant.error') },
         ]);
       },
     },
@@ -95,7 +91,7 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
     setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
     setInput('');
     inquire.mutate({
-      data: { question: userMessage, location: 'Kuching', hazardType: 'FLOOD' },
+      data: { question: userMessage, location: 'Kuching', hazardType: 'FLOOD', ...(locale && locale !== 'en' && { preferredLanguage: locale }) },
     });
   };
 
@@ -105,13 +101,13 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
         {/* Greeting */}
         <div className="flex flex-col gap-2 items-center py-4 shrink-0">
           <p className="font-sagip font-medium text-[#64748b] text-xs tracking-widest uppercase text-center">
-            Karon nga adlaw
+            {t('assistant.today')}
           </p>
           <h2 className="font-sagip font-bold text-sagip-heading text-xl text-center leading-7">
-            Maayong adlaw!
+            {t('assistant.greeting')}
           </h2>
           <p className="font-sagip font-normal text-sagip-muted text-sm text-center leading-5 max-w-[260px]">
-            Unsaon nako pagtabang nimo karon sa imong kaluwasan?
+            {t('assistant.helpPrompt')}
           </p>
         </div>
 
@@ -123,7 +119,7 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
               icon: MapPin,
               className: 'bg-[rgba(25,60,230,0.1)] text-asean-blue',
               action: () => {
-                sendQuickQuestion(inquire, 'Where is the nearest evacuation shelter?', setMessages);
+                sendQuickQuestion(inquire, 'Where is the nearest evacuation shelter?', setMessages, locale !== 'en' ? locale : undefined);
                 onOpenMap?.();
               },
             },
@@ -131,13 +127,13 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
               label: 'Request Aid',
               icon: Siren,
               className: 'bg-asean-red/10 text-asean-red',
-              action: () => sendQuickQuestion(inquire, 'How do I request emergency aid?', setMessages),
+              action: () => sendQuickQuestion(inquire, 'How do I request emergency aid?', setMessages, locale !== 'en' ? locale : undefined),
             },
             {
               label: 'Weather Update',
               icon: CloudRain,
               className: 'bg-asean-yellow/20 text-asean-blue',
-              action: () => sendQuickQuestion(inquire, 'What is the weather and flood forecast?', setMessages),
+              action: () => sendQuickQuestion(inquire, 'What is the weather and flood forecast?', setMessages, locale !== 'en' ? locale : undefined),
             },
             {
               label: 'Medical Tips',
@@ -147,7 +143,8 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
                 sendQuickQuestion(
                   inquire,
                   'What are important medical and safety tips during a flood?',
-                  setMessages
+                  setMessages,
+                  locale !== 'en' ? locale : undefined
                 ),
             },
           ].map((item) => (
@@ -281,7 +278,7 @@ export default function LLMAssistant({ onOpenMap }: LLMAssistantProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={inquire.isPending}
-              placeholder="I-type imong pangutana..."
+              placeholder={t('assistant.placeholder')}
               className="w-full bg-white rounded-full pl-5 pr-12 py-3 text-sm font-sagip text-sagip-heading placeholder:text-slate-400 outline-none border border-[#f1f5f9]"
             />
             <button

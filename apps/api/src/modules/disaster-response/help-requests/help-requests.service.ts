@@ -4,6 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../core/database/database.service';
+import type { HelpUrgency } from '@prisma/client';
+import { TriageService } from './triage.service';
 import { HelpRequestTriageService } from './help-request-triage.service';
 
 const SOS_DURATION_MS = 15 * 60 * 1000; // 15 minutes
@@ -13,11 +15,20 @@ const SOS_TRIAGE_TEXT = [
   'User Context: Immediate assistance needed. Location attached from live device coordinates.',
 ].join('\n');
 
+const URGENCY_ORDER: HelpUrgency[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+
+function maxUrgency(a: HelpUrgency, b: HelpUrgency): HelpUrgency {
+  const ia = URGENCY_ORDER.indexOf(a);
+  const ib = URGENCY_ORDER.indexOf(b);
+  return ia >= ib ? a : b;
+}
+
 @Injectable()
 export class HelpRequestsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly triageService: HelpRequestTriageService,
+    private readonly triageService: TriageService,
+    private readonly helpRequestTriageService: HelpRequestTriageService,
   ) {}
 
   async create(input: {
@@ -30,20 +41,26 @@ export class HelpRequestsService {
     longitude: number;
     sosExpiresAt?: Date;
   }) {
+    const triageResult = this.triageService.triage(
+      input.description,
+      input.hazardType,
+    );
+    const urgency = maxUrgency(input.urgency, triageResult.suggestedUrgency);
     const triageText = input.sosExpiresAt ? SOS_TRIAGE_TEXT : this.buildTriageText(input);
-    const triage = await this.triageService.triage(triageText);
+    const aiTriage = await this.helpRequestTriageService.triage(triageText);
 
     return this.prisma.helpRequest.create({
       data: {
         requesterId: input.requesterId,
         familyId: input.familyId,
         hazardType: input.hazardType,
-        urgency: input.urgency,
-        predictedUrgency: triage?.predictedUrgency ?? null,
-        urgencyConfidence: triage?.urgencyConfidence ?? null,
+        urgency,
+        predictedUrgency: aiTriage?.predictedUrgency ?? null,
+        urgencyConfidence: aiTriage?.urgencyConfidence ?? null,
         description: input.description,
         latitude: input.latitude,
         longitude: input.longitude,
+        triageCategory: triageResult.category,
         ...(input.sosExpiresAt != null && { sosExpiresAt: input.sosExpiresAt }),
       },
     });

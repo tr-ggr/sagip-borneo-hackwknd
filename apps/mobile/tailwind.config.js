@@ -45,6 +45,7 @@ module.exports = {
         'asean-yellow': '#ffff00',
         'sagip-heading': '#0f172a',
         'sagip-muted': '#475569',
+        'sagip-slate': '#64748b',
         'sagip-border': '#e2e8f0',
         'dm': {
           'background':   '#0A1214',
@@ -57,7 +58,7 @@ module.exports = {
       },
       fontFamily: {
         'display': ['"Playfair Display"', 'Georgia', 'serif'],
-        'body':    ['"IBM Plex Sans"', 'system-ui', 'sans-serif'],
+        'body':    ['var(--font-sagip)', '"Space Grotesk"', 'sans-serif'],
         'mono':    ['"IBM Plex Mono"', 'monospace'],
         'sagip':   ['var(--font-sagip)', '"Space Grotesk"', 'sans-serif'],
       },

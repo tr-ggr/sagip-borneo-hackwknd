@@ -265,6 +265,7 @@ export default function WarningMapSupport({
         map.removeInteraction(snap);
       };
     }
+    return undefined;
   }, [drawMode, radiusKm, onTargetChange]);
 
   const handleModeChange = (mode: DrawMode) => {
@@ -323,7 +324,6 @@ export default function WarningMapSupport({
         {drawMode === 'box' && 'Click and drag to draw a box.'}
         {drawMode === 'polygon' &&
           'Click points to draw a polygon (double-click to finish).'}
-        {drawMode === 'none' && 'Select a draw mode above.'}
       </p>
     </div>
   );

@@ -51,11 +51,13 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Asset: 'Asset',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
   BuildingProfile: 'BuildingProfile',
+  DamageReport: 'DamageReport',
   Family: 'Family',
   FamilyMember: 'FamilyMember',
   UserLocationSnapshot: 'UserLocationSnapshot',
@@ -93,6 +95,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AssetScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  photoUrl: 'photoUrl',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -176,6 +194,29 @@ export const BuildingProfileScalarFieldEnum = {
 } as const
 
 export type BuildingProfileScalarFieldEnum = (typeof BuildingProfileScalarFieldEnum)[keyof typeof BuildingProfileScalarFieldEnum]
+
+
+export const DamageReportScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  damageCategories: 'damageCategories',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  photoUrl: 'photoUrl',
+  photoKey: 'photoKey',
+  confidenceScore: 'confidenceScore',
+  confidenceThreshold: 'confidenceThreshold',
+  reporterId: 'reporterId',
+  reviewedById: 'reviewedById',
+  reviewStatus: 'reviewStatus',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DamageReportScalarFieldEnum = (typeof DamageReportScalarFieldEnum)[keyof typeof DamageReportScalarFieldEnum]
 
 
 export const FamilyScalarFieldEnum = {
@@ -349,6 +390,7 @@ export const HelpRequestScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   sosExpiresAt: 'sosExpiresAt',
+  triageCategory: 'triageCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -510,6 +552,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -517,12 +567,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

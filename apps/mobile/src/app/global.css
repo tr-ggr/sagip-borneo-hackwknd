@@ -28,12 +28,14 @@
     --sagip-border: #e2e8f0;
     --sagip-heading: #0f172a;
     --bottom-nav-height: 96px;
+    --map-actions-bar-gap: 0.5rem;
     --font-sagip: "Space Grotesk", system-ui, sans-serif;
   }
 
   html {
+    height: 100%;
     -webkit-text-size-adjust: 100%;
-    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    font-family: var(--font-sagip);
     line-height: 1.5;
     tab-size: 4;
     scroll-behavior: smooth;
@@ -44,6 +46,7 @@
   body {
     margin: 0;
     min-height: 100vh;
+    height: 100%;
     @apply font-body;
   }
 
@@ -137,6 +140,11 @@
     padding-bottom: calc(var(--bottom-nav-height) + 1rem);
   }
 
+  /* Map screens: reserve nav height so content and actions bar sit above the fixed nav */
+  .mobile-nav-safe-map {
+    padding-bottom: var(--bottom-nav-height);
+  }
+
   /* T'nalak divider (red / yellow / blue stripe) */
   .tnalak-stripe {
     height: 4px;
@@ -164,8 +172,8 @@
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px 24px;
+    justify-content: space-around;
+    padding: 8px;
     z-index: 50;
     overflow: visible;
   }

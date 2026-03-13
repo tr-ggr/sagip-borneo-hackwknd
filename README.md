@@ -237,3 +237,43 @@ Ownership notes:
 
 - Edit API behavior and Swagger metadata in `apps/api`.
 - Do not hand-edit `packages/api-client/src/generated/api-client.ts`; regenerate instead.
+
+## SAGIP Demo Screen Recording Plan
+
+### Goal
+
+Map each major section of the 8-minute SAGIP pitch to specific screen recordings from the existing admin, mobile, and tracker apps, and clearly mark which beats will rely on future functionality or static slides for now.
+
+### Key Files / Surfaces
+
+- Admin web app (dashboards, maps, registries, logs)
+- Mobile app (map/forecast views, pin-location/report flows)
+- Tracker page (candidate for command center / live-ops visualization)
+
+### High-Level Flow
+
+- **Hook / Problem (0:00–1:00)**: Use B-roll and slides; no product recording required.
+- **Infrastructure Reality (1:15–1:45)**: Short admin or tracker map view over ASEAN region, optionally with overlays; fallback to slide.
+- **Before Disaster (Preparedness) (1:45–3:00)**:
+  - Show admin map with building/household markers (as "digital census & vulnerability mapping").
+  - Use any existing filters/layers to imply risk and vulnerability; if not present, keep generic.
+  - No live AI vulnerability scoring yet; treat as future/TBD.
+- **AI Preparedness Assistant (SEA-Lion)**:
+  - If no chatbot in product yet, rely on static mock UI or slide only; mark as future.
+- **Volunteer & Asset Registry + AI Simulation Sandbox**:
+  - If any admin lists/forms for volunteers, assets, or resources exist, record navigating and adding a record.
+  - For simulation sandbox, assume not yet implemented; use conceptual slide only.
+- **During Disaster (3:00–5:15)**:
+  - Use mobile app to show a resident opening the map, pinning location, and submitting a distress/needs report.
+  - Use admin or tracker to show those requests appearing as structured tickets on a map/list, with basic filtering.
+  - Use tracker page as the visual for the "command control center" (teams, resources, clusters), even if current data is limited.
+- **After Disaster (5:15–6:15)**:
+  - If mobile/photo reporting exists, show creating a damage report with photo upload and location.
+  - If not, use slide/mock and mark as future; same for blockchain aid ledger.
+- **Why SAGIP / Responsible AI / Vision (6:15–7:35)**:
+  - Focus on clean comparison tables and ecosystem diagrams as slides; briefly cut back to any strong map/dashboard shots if helpful.
+
+### Notes
+
+- For beats tied to not-yet-implemented functionality (SEA-Lion assistant, AI vulnerability scoring, AI simulation sandbox, computer-vision damage mapping, blockchain ledger), rely on static mocks or slides and clearly label them as **future capabilities** in internal notes, even if the spoken script is present-tense.
+- Prefer continuous, narrative-friendly recordings (capture whole flows) and trim in editing, rather than many micro-clips.

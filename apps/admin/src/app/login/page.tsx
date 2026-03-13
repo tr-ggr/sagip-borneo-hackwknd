@@ -3,19 +3,21 @@
 import { useState } from 'react';
 import { useAuthControllerSignIn } from '@wira-borneo/api-client';
 import { useAuth } from '../../lib/auth';
+import { useI18n } from '../../i18n/context';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  
+  const { t } = useI18n();
+
   const { mutateAsync: signIn, isPending } = useAuthControllerSignIn();
   const { isLoading: isStatusLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     try {
       await signIn({
         data: {
@@ -23,43 +25,46 @@ export default function LoginPage() {
           password,
         },
       });
-      // AuthProvider effect will handle redirecting upon session detection
-      window.location.href = '/'; 
-    } catch (err: any) {
-      setError(err?.message || err?.response?.data?.message || 'Invalid email or password / Emel atau kata laluan tidak sah');
+      window.location.href = '/';
+    } catch (err: unknown) {
+      const message =
+        err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string'
+          ? (err as { message: string }).message
+          : err && typeof err === 'object' && 'response' in err
+            ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+            : null;
+      setError(message || t('admin.login.errorInvalid'));
     }
   };
 
   if (isStatusLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen">{t('admin.common.loading')}</div>;
   }
 
   return (
     <div className="login-container">
       <div className="card login-card">
         <header className="section-header">
-          <p className="eyebrow">WIRA Admin Access</p>
-          <h1 className="title">Login / Log Masuk</h1>
-          <p className="subtitle">
-            Secure administrative access only.
-          </p>
+          <p className="eyebrow">{t('admin.login.eyebrow')}</p>
+          <h1 className="title">{t('admin.login.title')}</h1>
+          <p className="subtitle">{t('admin.login.subtitle')}</p>
         </header>
 
         <form onSubmit={handleSubmit} className="login-form">
           <label className="field-label">
-            Email / Emel
+            {t('admin.login.email')}
             <input
               type="email"
               className="field"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@bornea.wira"
+              placeholder={t('admin.login.placeholderEmail')}
             />
           </label>
 
           <label className="field-label">
-            Password / Kata Laluan
+            {t('admin.login.password')}
             <input
               type="password"
               className="field"
@@ -76,13 +81,11 @@ export default function LoginPage() {
             className="btn btn-warning w-full mt-4"
             disabled={isPending}
           >
-            {isPending ? 'Logging in...' : 'Login / Log Masuk'}
+            {isPending ? t('admin.login.loggingIn') : t('admin.login.submit')}
           </button>
         </form>
 
-        <p className="small muted mt-6">
-          Woven Intelligence for Regional Alertness (WIRA) - Admin Console
-        </p>
+        <p className="small muted mt-6">{t('admin.login.footer')}</p>
       </div>
 
       <style jsx>{`

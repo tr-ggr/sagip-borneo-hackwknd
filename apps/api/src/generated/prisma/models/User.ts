@@ -340,8 +340,11 @@ export type UserWhereInput = {
   helpRequestEvents?: Prisma.HelpRequestEventListRelationFilter
   mapPinsReported?: Prisma.MapPinStatusListRelationFilter
   mapPinsReviewed?: Prisma.MapPinStatusListRelationFilter
+  damageReportsSubmitted?: Prisma.DamageReportListRelationFilter
+  damageReportsReviewed?: Prisma.DamageReportListRelationFilter
   locationSnapshot?: Prisma.XOR<Prisma.UserLocationSnapshotNullableScalarRelationFilter, Prisma.UserLocationSnapshotWhereInput> | null
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionListRelationFilter
+  assetRecords?: Prisma.AssetListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -382,8 +385,11 @@ export type UserOrderByWithRelationInput = {
   helpRequestEvents?: Prisma.HelpRequestEventOrderByRelationAggregateInput
   mapPinsReported?: Prisma.MapPinStatusOrderByRelationAggregateInput
   mapPinsReviewed?: Prisma.MapPinStatusOrderByRelationAggregateInput
+  damageReportsSubmitted?: Prisma.DamageReportOrderByRelationAggregateInput
+  damageReportsReviewed?: Prisma.DamageReportOrderByRelationAggregateInput
   locationSnapshot?: Prisma.UserLocationSnapshotOrderByWithRelationInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionOrderByRelationAggregateInput
+  assetRecords?: Prisma.AssetOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -427,8 +433,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   helpRequestEvents?: Prisma.HelpRequestEventListRelationFilter
   mapPinsReported?: Prisma.MapPinStatusListRelationFilter
   mapPinsReviewed?: Prisma.MapPinStatusListRelationFilter
+  damageReportsSubmitted?: Prisma.DamageReportListRelationFilter
+  damageReportsReviewed?: Prisma.DamageReportListRelationFilter
   locationSnapshot?: Prisma.XOR<Prisma.UserLocationSnapshotNullableScalarRelationFilter, Prisma.UserLocationSnapshotWhereInput> | null
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionListRelationFilter
+  assetRecords?: Prisma.AssetListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -525,8 +534,11 @@ export type UserCreateInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -567,8 +579,11 @@ export type UserUncheckedCreateInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -609,8 +624,11 @@ export type UserUpdateInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -651,8 +669,11 @@ export type UserUncheckedUpdateInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -727,6 +748,11 @@ export type UserUncheckedUpdateManyInput = {
   assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -797,30 +823,27 @@ export type UserSumOrderByAggregateInput = {
   age?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type UserCreateNestedOneWithoutAssetRecordsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssetRecordsInput, Prisma.UserUncheckedCreateWithoutAssetRecordsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssetRecordsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAssetRecordsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAssetRecordsInput, Prisma.UserUncheckedCreateWithoutAssetRecordsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssetRecordsInput
+  upsert?: Prisma.UserUpsertWithoutAssetRecordsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssetRecordsInput, Prisma.UserUpdateWithoutAssetRecordsInput>, Prisma.UserUncheckedUpdateWithoutAssetRecordsInput>
 }
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type NullableBoolFieldUpdateOperationsInput = {
@@ -873,6 +896,36 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutAccountsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+}
+
+export type UserCreateNestedOneWithoutDamageReportsSubmittedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsSubmittedInput, Prisma.UserUncheckedCreateWithoutDamageReportsSubmittedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDamageReportsSubmittedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutDamageReportsReviewedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsReviewedInput, Prisma.UserUncheckedCreateWithoutDamageReportsReviewedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDamageReportsReviewedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDamageReportsSubmittedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsSubmittedInput, Prisma.UserUncheckedCreateWithoutDamageReportsSubmittedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDamageReportsSubmittedInput
+  upsert?: Prisma.UserUpsertWithoutDamageReportsSubmittedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDamageReportsSubmittedInput, Prisma.UserUpdateWithoutDamageReportsSubmittedInput>, Prisma.UserUncheckedUpdateWithoutDamageReportsSubmittedInput>
+}
+
+export type UserUpdateOneWithoutDamageReportsReviewedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsReviewedInput, Prisma.UserUncheckedCreateWithoutDamageReportsReviewedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDamageReportsReviewedInput
+  upsert?: Prisma.UserUpsertWithoutDamageReportsReviewedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDamageReportsReviewedInput, Prisma.UserUpdateWithoutDamageReportsReviewedInput>, Prisma.UserUncheckedUpdateWithoutDamageReportsReviewedInput>
 }
 
 export type UserCreateNestedOneWithoutFamiliesCreatedInput = {
@@ -1113,6 +1166,198 @@ export type UserUpdateOneWithoutMapPinsReviewedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMapPinsReviewedInput, Prisma.UserUpdateWithoutMapPinsReviewedInput>, Prisma.UserUncheckedUpdateWithoutMapPinsReviewedInput>
 }
 
+export type UserCreateWithoutAssetRecordsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  age?: number | null
+  ageGroup?: $Enums.AgeGroup | null
+  pregnantStatus?: boolean | null
+  isPWD?: boolean | null
+  housingType?: $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAssetRecordsInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  age?: number | null
+  ageGroup?: $Enums.AgeGroup | null
+  pregnantStatus?: boolean | null
+  isPWD?: boolean | null
+  housingType?: $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAssetRecordsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssetRecordsInput, Prisma.UserUncheckedCreateWithoutAssetRecordsInput>
+}
+
+export type UserUpsertWithoutAssetRecordsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAssetRecordsInput, Prisma.UserUncheckedUpdateWithoutAssetRecordsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAssetRecordsInput, Prisma.UserUncheckedCreateWithoutAssetRecordsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAssetRecordsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAssetRecordsInput, Prisma.UserUncheckedUpdateWithoutAssetRecordsInput>
+}
+
+export type UserUpdateWithoutAssetRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ageGroup?: Prisma.NullableEnumAgeGroupFieldUpdateOperationsInput | $Enums.AgeGroup | null
+  pregnantStatus?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPWD?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  housingType?: Prisma.NullableEnumHousingTypeFieldUpdateOperationsInput | $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAssetRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ageGroup?: Prisma.NullableEnumAgeGroupFieldUpdateOperationsInput | $Enums.AgeGroup | null
+  pregnantStatus?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPWD?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  housingType?: Prisma.NullableEnumHousingTypeFieldUpdateOperationsInput | $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   name: string
@@ -1150,8 +1395,11 @@ export type UserCreateWithoutSessionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1191,8 +1439,11 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1248,8 +1499,11 @@ export type UserUpdateWithoutSessionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1289,8 +1543,11 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1330,8 +1587,11 @@ export type UserCreateWithoutAccountsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1371,8 +1631,11 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1428,8 +1691,11 @@ export type UserUpdateWithoutAccountsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1469,8 +1735,395 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDamageReportsSubmittedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  age?: number | null
+  ageGroup?: $Enums.AgeGroup | null
+  pregnantStatus?: boolean | null
+  isPWD?: boolean | null
+  housingType?: $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDamageReportsSubmittedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  age?: number | null
+  ageGroup?: $Enums.AgeGroup | null
+  pregnantStatus?: boolean | null
+  isPWD?: boolean | null
+  housingType?: $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDamageReportsSubmittedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsSubmittedInput, Prisma.UserUncheckedCreateWithoutDamageReportsSubmittedInput>
+}
+
+export type UserCreateWithoutDamageReportsReviewedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  age?: number | null
+  ageGroup?: $Enums.AgeGroup | null
+  pregnantStatus?: boolean | null
+  isPWD?: boolean | null
+  housingType?: $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDamageReportsReviewedInput = {
+  id?: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string | null
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  age?: number | null
+  ageGroup?: $Enums.AgeGroup | null
+  pregnantStatus?: boolean | null
+  isPWD?: boolean | null
+  housingType?: $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  familiesCreated?: Prisma.FamilyUncheckedCreateNestedManyWithoutCreatedByInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedCreateNestedManyWithoutUserInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedCreateNestedOneWithoutUserInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutUserInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedCreateNestedManyWithoutApprovedByInput
+  helpRequests?: Prisma.HelpRequestUncheckedCreateNestedManyWithoutRequesterInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedCreateNestedManyWithoutVolunteerInput
+  warningsCreated?: Prisma.WarningEventUncheckedCreateNestedManyWithoutCreatedByInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedCreateNestedManyWithoutActorInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDamageReportsReviewedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsReviewedInput, Prisma.UserUncheckedCreateWithoutDamageReportsReviewedInput>
+}
+
+export type UserUpsertWithoutDamageReportsSubmittedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDamageReportsSubmittedInput, Prisma.UserUncheckedUpdateWithoutDamageReportsSubmittedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsSubmittedInput, Prisma.UserUncheckedCreateWithoutDamageReportsSubmittedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDamageReportsSubmittedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDamageReportsSubmittedInput, Prisma.UserUncheckedUpdateWithoutDamageReportsSubmittedInput>
+}
+
+export type UserUpdateWithoutDamageReportsSubmittedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ageGroup?: Prisma.NullableEnumAgeGroupFieldUpdateOperationsInput | $Enums.AgeGroup | null
+  pregnantStatus?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPWD?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  housingType?: Prisma.NullableEnumHousingTypeFieldUpdateOperationsInput | $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDamageReportsSubmittedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ageGroup?: Prisma.NullableEnumAgeGroupFieldUpdateOperationsInput | $Enums.AgeGroup | null
+  pregnantStatus?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPWD?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  housingType?: Prisma.NullableEnumHousingTypeFieldUpdateOperationsInput | $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutDamageReportsReviewedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDamageReportsReviewedInput, Prisma.UserUncheckedUpdateWithoutDamageReportsReviewedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDamageReportsReviewedInput, Prisma.UserUncheckedCreateWithoutDamageReportsReviewedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDamageReportsReviewedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDamageReportsReviewedInput, Prisma.UserUncheckedUpdateWithoutDamageReportsReviewedInput>
+}
+
+export type UserUpdateWithoutDamageReportsReviewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ageGroup?: Prisma.NullableEnumAgeGroupFieldUpdateOperationsInput | $Enums.AgeGroup | null
+  pregnantStatus?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPWD?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  housingType?: Prisma.NullableEnumHousingTypeFieldUpdateOperationsInput | $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDamageReportsReviewedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ageGroup?: Prisma.NullableEnumAgeGroupFieldUpdateOperationsInput | $Enums.AgeGroup | null
+  pregnantStatus?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPWD?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  housingType?: Prisma.NullableEnumHousingTypeFieldUpdateOperationsInput | $Enums.HousingType | null
+  personalInfo?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  vulnerabilities?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  householdComposition?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  emergencySkills?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  assets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  familiesCreated?: Prisma.FamilyUncheckedUpdateManyWithoutCreatedByNestedInput
+  familyMemberships?: Prisma.FamilyMemberUncheckedUpdateManyWithoutUserNestedInput
+  volunteerProfile?: Prisma.VolunteerProfileUncheckedUpdateOneWithoutUserNestedInput
+  volunteerApplications?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutUserNestedInput
+  volunteerReviewsGiven?: Prisma.VolunteerApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  volunteerApprovalsGiven?: Prisma.VolunteerProfileUncheckedUpdateManyWithoutApprovedByNestedInput
+  helpRequests?: Prisma.HelpRequestUncheckedUpdateManyWithoutRequesterNestedInput
+  helpAssignments?: Prisma.HelpAssignmentUncheckedUpdateManyWithoutVolunteerNestedInput
+  warningsCreated?: Prisma.WarningEventUncheckedUpdateManyWithoutCreatedByNestedInput
+  warningEventLogs?: Prisma.WarningEventLogUncheckedUpdateManyWithoutActorNestedInput
+  volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
+  helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
+  mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFamiliesCreatedInput = {
@@ -1510,8 +2163,11 @@ export type UserCreateWithoutFamiliesCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFamiliesCreatedInput = {
@@ -1551,8 +2207,11 @@ export type UserUncheckedCreateWithoutFamiliesCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFamiliesCreatedInput = {
@@ -1608,8 +2267,11 @@ export type UserUpdateWithoutFamiliesCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFamiliesCreatedInput = {
@@ -1649,8 +2311,11 @@ export type UserUncheckedUpdateWithoutFamiliesCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFamilyMembershipsInput = {
@@ -1690,8 +2355,11 @@ export type UserCreateWithoutFamilyMembershipsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFamilyMembershipsInput = {
@@ -1731,8 +2399,11 @@ export type UserUncheckedCreateWithoutFamilyMembershipsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFamilyMembershipsInput = {
@@ -1788,8 +2459,11 @@ export type UserUpdateWithoutFamilyMembershipsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFamilyMembershipsInput = {
@@ -1829,8 +2503,11 @@ export type UserUncheckedUpdateWithoutFamilyMembershipsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLocationSnapshotInput = {
@@ -1871,7 +2548,10 @@ export type UserCreateWithoutLocationSnapshotInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLocationSnapshotInput = {
@@ -1912,7 +2592,10 @@ export type UserUncheckedCreateWithoutLocationSnapshotInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLocationSnapshotInput = {
@@ -1969,7 +2652,10 @@ export type UserUpdateWithoutLocationSnapshotInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLocationSnapshotInput = {
@@ -2010,7 +2696,10 @@ export type UserUncheckedUpdateWithoutLocationSnapshotInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVolunteerApplicationsInput = {
@@ -2050,8 +2739,11 @@ export type UserCreateWithoutVolunteerApplicationsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVolunteerApplicationsInput = {
@@ -2091,8 +2783,11 @@ export type UserUncheckedCreateWithoutVolunteerApplicationsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVolunteerApplicationsInput = {
@@ -2137,8 +2832,11 @@ export type UserCreateWithoutVolunteerReviewsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVolunteerReviewsGivenInput = {
@@ -2178,8 +2876,11 @@ export type UserUncheckedCreateWithoutVolunteerReviewsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVolunteerReviewsGivenInput = {
@@ -2235,8 +2936,11 @@ export type UserUpdateWithoutVolunteerApplicationsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVolunteerApplicationsInput = {
@@ -2276,8 +2980,11 @@ export type UserUncheckedUpdateWithoutVolunteerApplicationsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutVolunteerReviewsGivenInput = {
@@ -2328,8 +3035,11 @@ export type UserUpdateWithoutVolunteerReviewsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVolunteerReviewsGivenInput = {
@@ -2369,8 +3079,11 @@ export type UserUncheckedUpdateWithoutVolunteerReviewsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVolunteerProfileInput = {
@@ -2410,8 +3123,11 @@ export type UserCreateWithoutVolunteerProfileInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVolunteerProfileInput = {
@@ -2451,8 +3167,11 @@ export type UserUncheckedCreateWithoutVolunteerProfileInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVolunteerProfileInput = {
@@ -2497,8 +3216,11 @@ export type UserCreateWithoutVolunteerApprovalsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVolunteerApprovalsGivenInput = {
@@ -2538,8 +3260,11 @@ export type UserUncheckedCreateWithoutVolunteerApprovalsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVolunteerApprovalsGivenInput = {
@@ -2595,8 +3320,11 @@ export type UserUpdateWithoutVolunteerProfileInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVolunteerProfileInput = {
@@ -2636,8 +3364,11 @@ export type UserUncheckedUpdateWithoutVolunteerProfileInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutVolunteerApprovalsGivenInput = {
@@ -2688,8 +3419,11 @@ export type UserUpdateWithoutVolunteerApprovalsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput = {
@@ -2729,8 +3463,11 @@ export type UserUncheckedUpdateWithoutVolunteerApprovalsGivenInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWarningsCreatedInput = {
@@ -2770,8 +3507,11 @@ export type UserCreateWithoutWarningsCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWarningsCreatedInput = {
@@ -2811,8 +3551,11 @@ export type UserUncheckedCreateWithoutWarningsCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWarningsCreatedInput = {
@@ -2868,8 +3611,11 @@ export type UserUpdateWithoutWarningsCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWarningsCreatedInput = {
@@ -2909,8 +3655,11 @@ export type UserUncheckedUpdateWithoutWarningsCreatedInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEvacuationRouteSuggestionsInput = {
@@ -2951,7 +3700,10 @@ export type UserCreateWithoutEvacuationRouteSuggestionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput = {
@@ -2992,7 +3744,10 @@ export type UserUncheckedCreateWithoutEvacuationRouteSuggestionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEvacuationRouteSuggestionsInput = {
@@ -3049,7 +3804,10 @@ export type UserUpdateWithoutEvacuationRouteSuggestionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput = {
@@ -3090,7 +3848,10 @@ export type UserUncheckedUpdateWithoutEvacuationRouteSuggestionsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHelpRequestsInput = {
@@ -3130,8 +3891,11 @@ export type UserCreateWithoutHelpRequestsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHelpRequestsInput = {
@@ -3171,8 +3935,11 @@ export type UserUncheckedCreateWithoutHelpRequestsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHelpRequestsInput = {
@@ -3228,8 +3995,11 @@ export type UserUpdateWithoutHelpRequestsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHelpRequestsInput = {
@@ -3269,8 +4039,11 @@ export type UserUncheckedUpdateWithoutHelpRequestsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHelpAssignmentsInput = {
@@ -3310,8 +4083,11 @@ export type UserCreateWithoutHelpAssignmentsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHelpAssignmentsInput = {
@@ -3351,8 +4127,11 @@ export type UserUncheckedCreateWithoutHelpAssignmentsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHelpAssignmentsInput = {
@@ -3408,8 +4187,11 @@ export type UserUpdateWithoutHelpAssignmentsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHelpAssignmentsInput = {
@@ -3449,8 +4231,11 @@ export type UserUncheckedUpdateWithoutHelpAssignmentsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWarningEventLogsInput = {
@@ -3490,8 +4275,11 @@ export type UserCreateWithoutWarningEventLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWarningEventLogsInput = {
@@ -3531,8 +4319,11 @@ export type UserUncheckedCreateWithoutWarningEventLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWarningEventLogsInput = {
@@ -3588,8 +4379,11 @@ export type UserUpdateWithoutWarningEventLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWarningEventLogsInput = {
@@ -3629,8 +4423,11 @@ export type UserUncheckedUpdateWithoutWarningEventLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVolunteerDecisionLogsInput = {
@@ -3670,8 +4467,11 @@ export type UserCreateWithoutVolunteerDecisionLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVolunteerDecisionLogsInput = {
@@ -3711,8 +4511,11 @@ export type UserUncheckedCreateWithoutVolunteerDecisionLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVolunteerDecisionLogsInput = {
@@ -3768,8 +4571,11 @@ export type UserUpdateWithoutVolunteerDecisionLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVolunteerDecisionLogsInput = {
@@ -3809,8 +4615,11 @@ export type UserUncheckedUpdateWithoutVolunteerDecisionLogsInput = {
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHelpRequestEventsInput = {
@@ -3850,8 +4659,11 @@ export type UserCreateWithoutHelpRequestEventsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHelpRequestEventsInput = {
@@ -3891,8 +4703,11 @@ export type UserUncheckedCreateWithoutHelpRequestEventsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHelpRequestEventsInput = {
@@ -3948,8 +4763,11 @@ export type UserUpdateWithoutHelpRequestEventsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHelpRequestEventsInput = {
@@ -3989,8 +4807,11 @@ export type UserUncheckedUpdateWithoutHelpRequestEventsInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMapPinsReportedInput = {
@@ -4030,8 +4851,11 @@ export type UserCreateWithoutMapPinsReportedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReviewed?: Prisma.MapPinStatusCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMapPinsReportedInput = {
@@ -4071,8 +4895,11 @@ export type UserUncheckedCreateWithoutMapPinsReportedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReviewedByInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMapPinsReportedInput = {
@@ -4117,8 +4944,11 @@ export type UserCreateWithoutMapPinsReviewedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusCreateNestedManyWithoutReporterInput
+  damageReportsSubmitted?: Prisma.DamageReportCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMapPinsReviewedInput = {
@@ -4158,8 +4988,11 @@ export type UserUncheckedCreateWithoutMapPinsReviewedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedCreateNestedManyWithoutActorInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedCreateNestedManyWithoutActorInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReporterInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedCreateNestedManyWithoutReviewedByInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedCreateNestedOneWithoutUserInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedCreateNestedManyWithoutUserInput
+  assetRecords?: Prisma.AssetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMapPinsReviewedInput = {
@@ -4215,8 +5048,11 @@ export type UserUpdateWithoutMapPinsReportedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMapPinsReportedInput = {
@@ -4256,8 +5092,11 @@ export type UserUncheckedUpdateWithoutMapPinsReportedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReviewed?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReviewedByNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutMapPinsReviewedInput = {
@@ -4308,8 +5147,11 @@ export type UserUpdateWithoutMapPinsReviewedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUpdateManyWithoutReporterNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMapPinsReviewedInput = {
@@ -4349,8 +5191,11 @@ export type UserUncheckedUpdateWithoutMapPinsReviewedInput = {
   volunteerDecisionLogs?: Prisma.VolunteerDecisionLogUncheckedUpdateManyWithoutActorNestedInput
   helpRequestEvents?: Prisma.HelpRequestEventUncheckedUpdateManyWithoutActorNestedInput
   mapPinsReported?: Prisma.MapPinStatusUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsSubmitted?: Prisma.DamageReportUncheckedUpdateManyWithoutReporterNestedInput
+  damageReportsReviewed?: Prisma.DamageReportUncheckedUpdateManyWithoutReviewedByNestedInput
   locationSnapshot?: Prisma.UserLocationSnapshotUncheckedUpdateOneWithoutUserNestedInput
   evacuationRouteSuggestions?: Prisma.EvacuationRouteSuggestionUncheckedUpdateManyWithoutUserNestedInput
+  assetRecords?: Prisma.AssetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -4374,7 +5219,10 @@ export type UserCountOutputType = {
   helpRequestEvents: number
   mapPinsReported: number
   mapPinsReviewed: number
+  damageReportsSubmitted: number
+  damageReportsReviewed: number
   evacuationRouteSuggestions: number
+  assetRecords: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4393,7 +5241,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   helpRequestEvents?: boolean | UserCountOutputTypeCountHelpRequestEventsArgs
   mapPinsReported?: boolean | UserCountOutputTypeCountMapPinsReportedArgs
   mapPinsReviewed?: boolean | UserCountOutputTypeCountMapPinsReviewedArgs
+  damageReportsSubmitted?: boolean | UserCountOutputTypeCountDamageReportsSubmittedArgs
+  damageReportsReviewed?: boolean | UserCountOutputTypeCountDamageReportsReviewedArgs
   evacuationRouteSuggestions?: boolean | UserCountOutputTypeCountEvacuationRouteSuggestionsArgs
+  assetRecords?: boolean | UserCountOutputTypeCountAssetRecordsArgs
 }
 
 /**
@@ -4514,8 +5365,29 @@ export type UserCountOutputTypeCountMapPinsReviewedArgs<ExtArgs extends runtime.
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountDamageReportsSubmittedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DamageReportWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDamageReportsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DamageReportWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountEvacuationRouteSuggestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EvacuationRouteSuggestionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAssetRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssetWhereInput
 }
 
 
@@ -4557,8 +5429,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   helpRequestEvents?: boolean | Prisma.User$helpRequestEventsArgs<ExtArgs>
   mapPinsReported?: boolean | Prisma.User$mapPinsReportedArgs<ExtArgs>
   mapPinsReviewed?: boolean | Prisma.User$mapPinsReviewedArgs<ExtArgs>
+  damageReportsSubmitted?: boolean | Prisma.User$damageReportsSubmittedArgs<ExtArgs>
+  damageReportsReviewed?: boolean | Prisma.User$damageReportsReviewedArgs<ExtArgs>
   locationSnapshot?: boolean | Prisma.User$locationSnapshotArgs<ExtArgs>
   evacuationRouteSuggestions?: boolean | Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>
+  assetRecords?: boolean | Prisma.User$assetRecordsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -4652,8 +5527,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   helpRequestEvents?: boolean | Prisma.User$helpRequestEventsArgs<ExtArgs>
   mapPinsReported?: boolean | Prisma.User$mapPinsReportedArgs<ExtArgs>
   mapPinsReviewed?: boolean | Prisma.User$mapPinsReviewedArgs<ExtArgs>
+  damageReportsSubmitted?: boolean | Prisma.User$damageReportsSubmittedArgs<ExtArgs>
+  damageReportsReviewed?: boolean | Prisma.User$damageReportsReviewedArgs<ExtArgs>
   locationSnapshot?: boolean | Prisma.User$locationSnapshotArgs<ExtArgs>
   evacuationRouteSuggestions?: boolean | Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>
+  assetRecords?: boolean | Prisma.User$assetRecordsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -4678,8 +5556,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     helpRequestEvents: Prisma.$HelpRequestEventPayload<ExtArgs>[]
     mapPinsReported: Prisma.$MapPinStatusPayload<ExtArgs>[]
     mapPinsReviewed: Prisma.$MapPinStatusPayload<ExtArgs>[]
+    damageReportsSubmitted: Prisma.$DamageReportPayload<ExtArgs>[]
+    damageReportsReviewed: Prisma.$DamageReportPayload<ExtArgs>[]
     locationSnapshot: Prisma.$UserLocationSnapshotPayload<ExtArgs> | null
     evacuationRouteSuggestions: Prisma.$EvacuationRouteSuggestionPayload<ExtArgs>[]
+    assetRecords: Prisma.$AssetPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5113,8 +5994,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   helpRequestEvents<T extends Prisma.User$helpRequestEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$helpRequestEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HelpRequestEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mapPinsReported<T extends Prisma.User$mapPinsReportedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mapPinsReportedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MapPinStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mapPinsReviewed<T extends Prisma.User$mapPinsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mapPinsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MapPinStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  damageReportsSubmitted<T extends Prisma.User$damageReportsSubmittedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$damageReportsSubmittedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DamageReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  damageReportsReviewed<T extends Prisma.User$damageReportsReviewedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$damageReportsReviewedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DamageReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   locationSnapshot<T extends Prisma.User$locationSnapshotArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$locationSnapshotArgs<ExtArgs>>): Prisma.Prisma__UserLocationSnapshotClient<runtime.Types.Result.GetResult<Prisma.$UserLocationSnapshotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   evacuationRouteSuggestions<T extends Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$evacuationRouteSuggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EvacuationRouteSuggestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assetRecords<T extends Prisma.User$assetRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assetRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5932,6 +6816,54 @@ export type User$mapPinsReviewedArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
+ * User.damageReportsSubmitted
+ */
+export type User$damageReportsSubmittedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DamageReport
+   */
+  select?: Prisma.DamageReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DamageReport
+   */
+  omit?: Prisma.DamageReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DamageReportInclude<ExtArgs> | null
+  where?: Prisma.DamageReportWhereInput
+  orderBy?: Prisma.DamageReportOrderByWithRelationInput | Prisma.DamageReportOrderByWithRelationInput[]
+  cursor?: Prisma.DamageReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DamageReportScalarFieldEnum | Prisma.DamageReportScalarFieldEnum[]
+}
+
+/**
+ * User.damageReportsReviewed
+ */
+export type User$damageReportsReviewedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DamageReport
+   */
+  select?: Prisma.DamageReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DamageReport
+   */
+  omit?: Prisma.DamageReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DamageReportInclude<ExtArgs> | null
+  where?: Prisma.DamageReportWhereInput
+  orderBy?: Prisma.DamageReportOrderByWithRelationInput | Prisma.DamageReportOrderByWithRelationInput[]
+  cursor?: Prisma.DamageReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DamageReportScalarFieldEnum | Prisma.DamageReportScalarFieldEnum[]
+}
+
+/**
  * User.locationSnapshot
  */
 export type User$locationSnapshotArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5972,6 +6904,30 @@ export type User$evacuationRouteSuggestionsArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.EvacuationRouteSuggestionScalarFieldEnum | Prisma.EvacuationRouteSuggestionScalarFieldEnum[]
+}
+
+/**
+ * User.assetRecords
+ */
+export type User$assetRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Asset
+   */
+  select?: Prisma.AssetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Asset
+   */
+  omit?: Prisma.AssetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssetInclude<ExtArgs> | null
+  where?: Prisma.AssetWhereInput
+  orderBy?: Prisma.AssetOrderByWithRelationInput | Prisma.AssetOrderByWithRelationInput[]
+  cursor?: Prisma.AssetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssetScalarFieldEnum | Prisma.AssetScalarFieldEnum[]
 }
 
 /**

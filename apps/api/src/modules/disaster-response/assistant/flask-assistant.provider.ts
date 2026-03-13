@@ -27,14 +27,26 @@ export class FlaskAssistantProvider
         const start = Date.now();
 
         try {
+            const context = input.context ?? {};
+            const weather =
+                typeof context.weather === 'string'
+                    ? context.weather
+                    : context.weather?.summary ??
+                    (context.weather?.temperature != null
+                        ? `Temperature ${context.weather.temperature}°C`
+                        : undefined);
+
             const response = await axios.post(
                 `${this.config.llmServerUrl}/api/chat`,
                 {
                     question: input.question,
                     context: {
-                        hazardType: input.context?.hazardType,
-                        location: input.context?.location,
-                        userId: input.context?.userId,
+                        hazardType: context.hazardType,
+                        location: context.location,
+                        userId: context.userId,
+                        demographics: context.demographics,
+                        weather,
+                        preferredLanguage: context.preferredLanguage,
                     },
                 },
                 { timeout: this.config.llmTimeoutMs },

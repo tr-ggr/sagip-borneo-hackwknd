@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
+ * Model Asset
+ * 
+ */
+export type Asset = Prisma.AssetModel
+/**
  * Model User
  * 
  */
@@ -42,6 +47,11 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type BuildingProfile = Prisma.BuildingProfileModel
+/**
+ * Model DamageReport
+ * 
+ */
+export type DamageReport = Prisma.DamageReportModel
 /**
  * Model Family
  * 

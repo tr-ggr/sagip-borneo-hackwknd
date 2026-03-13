@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { I18nProvider } from '../i18n/context';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,14 +41,18 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         maxAge: 1000 * 60 * 60 * 24,
         dehydrateOptions: {
           shouldDehydrateQuery: (query) => {
+            // Don't persist pending queries; they can be cancelled on rehydration and cause
+            // "A query that was dehydrated as pending ended up rejecting" (CancelledError).
+            if (query.state.status === 'pending') return false;
             const [firstKey] = query.queryKey;
-
             return !(typeof firstKey === 'string' && firstKey.includes('/api/auth/session'));
           },
         },
       }}
     >
-      {children}
+      <I18nProvider>
+        {children}
+      </I18nProvider>
     </PersistQueryClientProvider>
   );
 }

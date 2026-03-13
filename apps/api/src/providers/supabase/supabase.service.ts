@@ -19,18 +19,35 @@ export class SupabaseProviderError extends Error {
 
 @Injectable()
 export class SupabaseService {
-  private readonly client: SupabaseClient;
+  private readonly client: SupabaseClient | null;
   private readonly logger = new Logger(SupabaseService.name);
   private readonly defaultBucket: string;
 
   constructor() {
     const config = getSupabaseRuntimeConfig();
-    this.client = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
-      auth: {
-        persistSession: false,
-      },
-    });
-    this.defaultBucket = config.supabaseBucket;
+    if (config) {
+      this.client = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
+        auth: {
+          persistSession: false,
+        },
+      });
+      this.defaultBucket = config.supabaseBucket;
+    } else {
+      this.client = null;
+      this.defaultBucket = 'wira-borneo';
+      this.logger.warn(
+        'Supabase not configured (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY). File upload/delete will throw.',
+      );
+    }
+  }
+
+  private assertConfigured(): asserts this is { client: SupabaseClient } {
+    if (!this.client) {
+      throw new SupabaseProviderError(
+        'Supabase is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.',
+        'config',
+      );
+    }
   }
 
   /**
@@ -50,6 +67,7 @@ export class SupabaseService {
       upsert?: boolean;
     } = {},
   ): Promise<string> {
+    this.assertConfigured();
     const bucket = options.bucket || this.defaultBucket;
     const { data, error } = await this.client.storage
       .from(bucket)
@@ -82,6 +100,7 @@ export class SupabaseService {
    * @param bucket Optional bucket name.
    */
   async deleteFile(filePath: string, bucket?: string): Promise<void> {
+    this.assertConfigured();
     const targetBucket = bucket || this.defaultBucket;
     const { error } = await this.client.storage
       .from(targetBucket)

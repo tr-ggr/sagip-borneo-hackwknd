@@ -165,6 +165,10 @@ class AdminHelpRequestDto {
   latitude!: number;
   @ApiProperty()
   longitude!: number;
+  @ApiPropertyOptional({
+    enum: ['MEDICAL', 'TRAPPED', 'FLOOD_WATER', 'INFRASTRUCTURE_DAMAGE', 'OTHER'],
+  })
+  triageCategory?: 'MEDICAL' | 'TRAPPED' | 'FLOOD_WATER' | 'INFRASTRUCTURE_DAMAGE' | 'OTHER';
   @ApiProperty()
   createdAt!: Date;
   @ApiProperty({ type: 'object', properties: { name: { type: 'string' } } })

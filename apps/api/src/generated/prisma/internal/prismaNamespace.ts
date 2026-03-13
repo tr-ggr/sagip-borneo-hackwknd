@@ -384,11 +384,13 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Asset: 'Asset',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
   BuildingProfile: 'BuildingProfile',
+  DamageReport: 'DamageReport',
   Family: 'Family',
   FamilyMember: 'FamilyMember',
   UserLocationSnapshot: 'UserLocationSnapshot',
@@ -425,10 +427,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "buildingProfile" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus" | "trackerShipment" | "trackerStats" | "trackerReliefZone" | "trackerValidator"
+    modelProps: "asset" | "user" | "session" | "account" | "verification" | "buildingProfile" | "damageReport" | "family" | "familyMember" | "userLocationSnapshot" | "riskRegionSnapshot" | "volunteerApplication" | "volunteerProfile" | "warningEvent" | "warningTargetArea" | "evacuationArea" | "warningEventEvacuationArea" | "evacuationRouteSuggestion" | "helpRequest" | "helpAssignment" | "warningEventLog" | "volunteerDecisionLog" | "helpRequestEvent" | "mapPinStatus" | "trackerShipment" | "trackerStats" | "trackerReliefZone" | "trackerValidator"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Asset: {
+      payload: Prisma.$AssetPayload<ExtArgs>
+      fields: Prisma.AssetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AssetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AssetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>
+        }
+        findFirst: {
+          args: Prisma.AssetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AssetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>
+        }
+        findMany: {
+          args: Prisma.AssetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>[]
+        }
+        create: {
+          args: Prisma.AssetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>
+        }
+        createMany: {
+          args: Prisma.AssetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AssetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>[]
+        }
+        delete: {
+          args: Prisma.AssetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>
+        }
+        update: {
+          args: Prisma.AssetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>
+        }
+        deleteMany: {
+          args: Prisma.AssetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AssetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AssetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>[]
+        }
+        upsert: {
+          args: Prisma.AssetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>
+        }
+        aggregate: {
+          args: Prisma.AssetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAsset>
+        }
+        groupBy: {
+          args: Prisma.AssetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AssetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AssetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AssetCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -780,6 +856,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BuildingProfileCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BuildingProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    DamageReport: {
+      payload: Prisma.$DamageReportPayload<ExtArgs>
+      fields: Prisma.DamageReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DamageReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DamageReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        findFirst: {
+          args: Prisma.DamageReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DamageReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        findMany: {
+          args: Prisma.DamageReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>[]
+        }
+        create: {
+          args: Prisma.DamageReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        createMany: {
+          args: Prisma.DamageReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DamageReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>[]
+        }
+        delete: {
+          args: Prisma.DamageReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        update: {
+          args: Prisma.DamageReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.DamageReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DamageReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DamageReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.DamageReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DamageReportPayload>
+        }
+        aggregate: {
+          args: Prisma.DamageReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDamageReport>
+        }
+        groupBy: {
+          args: Prisma.DamageReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DamageReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DamageReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DamageReportCountAggregateOutputType> | number
         }
       }
     }
@@ -2376,6 +2526,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AssetScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  photoUrl: 'photoUrl',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -2457,6 +2623,29 @@ export const BuildingProfileScalarFieldEnum = {
 } as const
 
 export type BuildingProfileScalarFieldEnum = (typeof BuildingProfileScalarFieldEnum)[keyof typeof BuildingProfileScalarFieldEnum]
+
+
+export const DamageReportScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  damageCategories: 'damageCategories',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  photoUrl: 'photoUrl',
+  photoKey: 'photoKey',
+  confidenceScore: 'confidenceScore',
+  confidenceThreshold: 'confidenceThreshold',
+  reporterId: 'reporterId',
+  reviewedById: 'reviewedById',
+  reviewStatus: 'reviewStatus',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DamageReportScalarFieldEnum = (typeof DamageReportScalarFieldEnum)[keyof typeof DamageReportScalarFieldEnum]
 
 
 export const FamilyScalarFieldEnum = {
@@ -2630,6 +2819,7 @@ export const HelpRequestScalarFieldEnum = {
   latitude: 'latitude',
   longitude: 'longitude',
   sosExpiresAt: 'sosExpiresAt',
+  triageCategory: 'triageCategory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2791,6 +2981,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -2798,14 +2996,6 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -2829,9 +3019,30 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'AssetStatus'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type EnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AssetStatus[]'
+ */
+export type ListEnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -2846,6 +3057,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -2906,16 +3124,30 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
- * Reference to a field of type 'Float'
+ * Reference to a field of type 'DamageCategory[]'
  */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+export type ListEnumDamageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageCategory[]'>
     
 
 
 /**
- * Reference to a field of type 'Float[]'
+ * Reference to a field of type 'DamageCategory'
  */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+export type EnumDamageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'DamageReportReviewStatus'
+ */
+export type EnumDamageReportReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageReportReviewStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DamageReportReviewStatus[]'
+ */
+export type ListEnumDamageReportReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DamageReportReviewStatus[]'>
     
 
 
@@ -3000,6 +3232,20 @@ export type EnumHelpRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'HelpRequestStatus[]'
  */
 export type ListEnumHelpRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HelpRequestStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TriageCategory'
+ */
+export type EnumTriageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TriageCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'TriageCategory[]'
+ */
+export type ListEnumTriageCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TriageCategory[]'>
     
 
 
@@ -3195,11 +3441,13 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  asset?: Prisma.AssetOmit
   user?: Prisma.UserOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
   buildingProfile?: Prisma.BuildingProfileOmit
+  damageReport?: Prisma.DamageReportOmit
   family?: Prisma.FamilyOmit
   familyMember?: Prisma.FamilyMemberOmit
   userLocationSnapshot?: Prisma.UserLocationSnapshotOmit

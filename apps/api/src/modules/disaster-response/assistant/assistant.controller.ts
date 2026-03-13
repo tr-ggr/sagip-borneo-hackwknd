@@ -39,6 +39,13 @@ class AssistantInquiryDto {
     description: 'Type of hazard relevant to the inquiry',
   })
   hazardType?: string;
+
+  @ApiProperty({
+    example: 'en',
+    required: false,
+    description: 'Preferred language for the response (e.g. en, ms, tl). SEA-Guard language inclusivity.',
+  })
+  preferredLanguage?: string;
 }
 
 export class AssistantStructuredDataDto {
@@ -145,6 +152,7 @@ export class AssistantController {
       question,
       location: body.location,
       hazardType: body.hazardType,
+      preferredLanguage: body.preferredLanguage,
     });
   }
 }

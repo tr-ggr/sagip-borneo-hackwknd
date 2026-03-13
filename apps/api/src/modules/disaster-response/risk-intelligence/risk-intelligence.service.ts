@@ -16,7 +16,7 @@ export class RiskIntelligenceService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const requiredIso3Codes = ['brn', 'idn', 'mys', 'phl', 'sgp'];
+    const requiredIso3Codes = ['brn', 'idn', 'mys', 'sgp'];
     const missingFiles: string[] = [];
 
     for (const iso3 of requiredIso3Codes) {
@@ -49,6 +49,7 @@ export class RiskIntelligenceService implements OnModuleInit {
       latitude,
       longitude,
       forecast_days: forecastDays,
+      current_weather: true,
       hourly: ['temperature_2m', 'precipitation_probability', 'wind_speed_10m'],
       daily: ['temperature_2m_max', 'temperature_2m_min', 'precipitation_sum'],
       timezone: 'auto',

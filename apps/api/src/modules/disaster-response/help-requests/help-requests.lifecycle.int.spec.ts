@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HelpRequestsController } from './help-requests.controller';
 import { HelpRequestsService } from './help-requests.service';
+import { TriageService } from './triage.service';
 import { AuthSessionGuard } from '../../auth/auth-session.guard';
 import { AuthService } from '../../auth/auth.service';
 import { ApprovedVolunteerGuard } from '../shared/approved-volunteer.guard';
@@ -34,7 +35,11 @@ describe('HelpRequests Lifecycle (Integration)', () => {
     $transaction: jest.fn((cb) => cb(mockPrisma)),
   };
 
-  const triageServiceMock = {
+  const mockRuleTriageService = {
+    triage: jest.fn().mockReturnValue({ category: 'TRAPPED', suggestedUrgency: 'CRITICAL' }),
+  };
+
+  const mockAiTriageService = {
     triage: jest.fn(),
   };
 
@@ -44,7 +49,8 @@ describe('HelpRequests Lifecycle (Integration)', () => {
       providers: [
         HelpRequestsService,
         { provide: PrismaService, useValue: mockPrisma },
-        { provide: HelpRequestTriageService, useValue: triageServiceMock },
+        { provide: TriageService, useValue: mockRuleTriageService },
+        { provide: HelpRequestTriageService, useValue: mockAiTriageService },
         { provide: AuthService, useValue: { getSession: jest.fn() } },
         { provide: AuthSessionGuard, useValue: { canActivate: jest.fn().mockResolvedValue(true) } },
         { provide: ApprovedVolunteerGuard, useValue: { canActivate: jest.fn().mockResolvedValue(true) } },
@@ -74,7 +80,7 @@ describe('HelpRequests Lifecycle (Integration)', () => {
     };
     const session = { user: { id: 'requester-1' } } as any;
 
-    triageServiceMock.triage.mockResolvedValue({
+    mockAiTriageService.triage.mockResolvedValue({
       predictedUrgency: 'CRITICAL',
       urgencyConfidence: 0.91,
     });
@@ -84,6 +90,7 @@ describe('HelpRequests Lifecycle (Integration)', () => {
       ...dto,
       requesterId: 'requester-1',
       familyId: null,
+      triageCategory: 'TRAPPED',
       status: 'OPEN',
       sosExpiresAt: null,
       createdAt: new Date('2026-03-13T00:00:00.000Z'),
@@ -98,6 +105,8 @@ describe('HelpRequests Lifecycle (Integration)', () => {
     expect(mockPrisma.helpRequest.create).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
+          urgency: 'CRITICAL',
+          triageCategory: 'TRAPPED',
           predictedUrgency: 'CRITICAL',
           urgencyConfidence: 0.91,
         }),
@@ -109,7 +118,7 @@ describe('HelpRequests Lifecycle (Integration)', () => {
 
   it('should create SOS request and fallback to null AI metadata on triage failure', async () => {
     const session = { user: { id: 'requester-1' } } as any;
-    triageServiceMock.triage.mockResolvedValue(null);
+    mockAiTriageService.triage.mockResolvedValue(null);
 
     mockPrisma.helpRequest.create.mockResolvedValue({
       id: 'hr-sos-1',
